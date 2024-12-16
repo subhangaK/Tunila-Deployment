@@ -1,0 +1,111 @@
+/* Upload Music Container */
+.upload-music-container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 25px;
+  background: linear-gradient(to bottom right, #ede8e9, #f5eeef);
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  font-family: Arial, sans-serif;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Title Section */
+.upload-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px; /* Space between icon and title */
+  margin-bottom: 30px; /* Margin below the title section */
+}
+
+.arrow-icon {
+  width: 30px; /* Icon width */
+  height: 30px; /* Icon height */
+  cursor: pointer;
+}
+
+.upload-music-title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Form */
+.upload-music-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+/* Input Groups */
+.input-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.input-group label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #555;
+}
+
+.input-group input {
+  width: 93%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input:focus {
+  border-color: #8cb1d9;
+  box-shadow: 0 0 5px rgba(210, 196, 199, 0.8);
+}
+
+/* Upload Button */
+.upload-button {
+  background: linear-gradient(135deg, #8cb1d9, #66a2bd);
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 14px 25px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  box-shadow: 0 4px 10px rgba(138, 255, 253, 0.4);
+}
+
+.upload-button:hover {
+  background: linear-gradient(135deg, #66a2bd, #8cb1d9);
+  box-shadow: 0 6px 15px rgba(152, 255, 253, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .upload-music-container {
+    padding: 20px;
+  }
+
+  .input-group input {
+    font-size: 12px;
+  }
+
+  .upload-button {
+    font-size: 16px;
+    padding: 12px 20px;
+  }
+}

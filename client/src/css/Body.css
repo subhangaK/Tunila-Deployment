@@ -1,0 +1,73 @@
+/* Body styles */
+.home-body {
+  position: relative; /* To position the Upload button inside the body */
+  padding: 20px;
+}
+
+/* Upload button styling */
+.upload-btn {
+  position: absolute;
+  top: 20px; /* Adjust top spacing */
+  left: 20px; /* Adjust left spacing */
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #66a2bd, #8cb1d9);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+  z-index: 10;
+}
+
+.upload-btn:hover {
+  background: linear-gradient(135deg, #8cb1d9, #66a2bd);
+}
+
+.section-title{
+  margin-top: 60px;
+}
+
+/* Song card grid styles */
+.songs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 60px; /* Adjust margin so cards don't overlap with the button */
+}
+
+/* Song card styles */
+.song-card {
+  background-color: #fdfcfc;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.song-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.song-cover {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.song-info {
+  padding: 15px;
+}
+
+.song-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.song-artist {
+  font-size: 14px;
+  color: #555;
+  margin-top: 5px;
+}

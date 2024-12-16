@@ -1,0 +1,99 @@
+/* General Container */
+.email-verify-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(to bottom right,#ede8e9, #f5eeef);
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  /* Logo Styling */
+  .verify-logo {
+    width: 150px;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+  
+  /* Form Styling */
+  .verify-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  .verify-form h1 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .verify-instruction {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  /* OTP Input Styling */
+  .otp-input-container {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .otp-input {
+    width: 45px;
+    height: 45px;
+    font-size: 1.5rem;
+    text-align: center;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .otp-input:focus {
+    border-color: #8cb1d9;
+    outline: none;
+    box-shadow: 0 0 5px rgba(210, 196, 199, 0.8);
+  }
+  
+  /* Button Styling */
+  .verify-button {
+    background: #8cb1d9;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .verify-button:hover {
+    background: #66a2bd;
+  }
+  
+  /* Resend Instruction */
+  .resend-instruction {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  .resend-link {
+    color: #ffc1cc;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+  
+  .resend-link:hover {
+    color: #ff97a5;
+  }
+  
