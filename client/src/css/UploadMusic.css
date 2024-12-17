@@ -74,6 +74,11 @@
   box-shadow: 0 0 5px rgba(210, 196, 199, 0.8);
 }
 
+.artistname{
+  color: #8fc5dd;
+  font-weight: bold;
+}
+
 /* Upload Button */
 .upload-button {
   background: linear-gradient(135deg, #8cb1d9, #66a2bd);
@@ -92,6 +97,24 @@
   background: linear-gradient(135deg, #66a2bd, #8cb1d9);
   box-shadow: 0 6px 15px rgba(152, 255, 253, 0.4);
   transform: translateY(-2px);
+}
+
+.not-verified-message{
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 25px;
+  background: linear-gradient(to bottom right, #ede8e9, #f5eeef);
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  font-family: Arial, sans-serif;
+  text-align: center;
+  overflow: hidden;
+}
+
+.goback{
+  color: #66a2bd;
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 /* Responsive Adjustments */

@@ -71,3 +71,9 @@
   color: #555;
   margin-top: 5px;
 }
+
+.song-title, .song-artist {
+  white-space: nowrap; /* Prevents the text from breaking into multiple lines */
+  overflow: hidden; /* Ensures text does not overflow out of the container */
+  text-overflow: ellipsis; /* Adds ellipsis if text overflows */
+}

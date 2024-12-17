@@ -100,7 +100,7 @@ const UploadMusic = () => {
             </div>
             <div className="input-group">
               <label>Artist Name</label>
-              <input
+              <input className='artistname'
                 type="text"
                 placeholder="Enter artist name"
                 value={artist}
@@ -142,6 +142,7 @@ const UploadMusic = () => {
       ) : (
         <div className="not-verified-message">
           <h3>You need to verify your email before uploading music.</h3>
+          <h4 className='goback' onClick={() => navigate('/')}>Go Back</h4>
         </div>
       )}
     </div>

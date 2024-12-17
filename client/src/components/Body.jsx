@@ -56,8 +56,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
             />
              <div className="song-info">
               <p className="song-title">{song.title}</p>
-              <p className="song-artist">
-                <b>Artist</b>: {song.artist}
+              <p className="song-artist"> {song.artist}
               </p>
             </div>
           </div>
