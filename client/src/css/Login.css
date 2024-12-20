@@ -5,6 +5,7 @@
     height: 100vh;
     background: linear-gradient(to bottom right,#ffffff, #f7f6f6);
     font-family: Arial, sans-serif;
+    padding-bottom: 150px;
   }
   
   .login-box {
@@ -112,4 +113,6 @@
   .switch-state span:hover {
     color: #66a2bd;
   }
+
+
   

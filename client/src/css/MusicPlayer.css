@@ -7,9 +7,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 5px 5px;
+    padding: 5px 10px;
     font-family: "Noto Music", sans-serif;
     z-index: 1000; /* Ensure it's on top of other elements */
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1); /* Optional: Adds a shadow above */
 }
 
 /* Left Section: Song Details */
@@ -59,7 +60,6 @@
     gap: 10px;
     font-family: Arial, Helvetica, sans-serif;
     font-size: small;
-
 }
 
 .progress-bar {
@@ -88,13 +88,12 @@
 }
 
 .player-controls img {
-    width: 23px; 
+    width: 23px;
     height: 23px;
     cursor: pointer;
 }
 
 /* Right Section: Volume Controls */
-/* Volume Controls */
 .volume-container {
     display: flex;
     align-items: center;
@@ -123,4 +122,30 @@
     height: 100%;
     background-color: #a4a3a3;
     border-radius: 2px;
+}
+
+/* Content below the music player */
+.page-content {
+    padding-bottom: 60px; /* Ensures content doesn't overlap with the music player */
+    position: relative;
+}
+
+/* Adjust the music player on mobile screens */
+@media (max-width: 768px) {
+    .music-player {
+        flex-direction: column; /* Stack elements vertically on smaller screens */
+        padding: 10px 20px;
+    }
+
+    .song-info {
+        width: 30%; /* Make song info section a bit wider on mobile */
+    }
+
+    .middle-section {
+        margin-right: 0; /* Remove right margin for mobile */
+    }
+
+    .volume-container {
+        margin-right: 20px; /* Reduce margin for volume controls */
+    }
 }
