@@ -3,6 +3,10 @@
     padding-bottom: 150px;
   }
   
+  .playlist-songs-page h2 {
+    font-size: 25px;
+  }
+
   .playlist-header {
     display: flex;
     align-items: center;

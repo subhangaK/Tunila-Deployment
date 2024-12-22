@@ -28,6 +28,7 @@ import person_icon from './person_icon.svg'
 import hand_wave from './hand_wave.png'
 import header_img from './header_img.png'
 import tripledot_icon from './tripledot.png'
+import delete_icon from './delete.png'
 
 export const assets = {
     logo,
@@ -59,6 +60,7 @@ export const assets = {
     person_icon,
     hand_wave,
     header_img,
-    tripledot_icon
+    tripledot_icon,
+    delete_icon
 }
 

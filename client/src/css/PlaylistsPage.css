@@ -2,6 +2,10 @@
   padding: 20px;
 }
 
+.playlists-page h2{
+  font-size: 25px;
+}
+
 .playlists-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
