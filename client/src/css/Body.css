@@ -217,14 +217,6 @@
   font-size: 18px;
 }
 
-.modal ul {
-  list-style: none;
-  padding: 0;
-}
-
-.modal ul li {
-  margin-bottom: 10px;
-}
 
 .modal input {
   width: calc(100% - 20px);
@@ -252,6 +244,41 @@
 
 .modal button:focus {
   outline: none;
+}
+
+.playlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Smaller boxes */
+  gap: 15px; /* Adjust spacing between items */
+  margin-bottom: 20px;
+}
+
+.playlist-item {
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  padding: 5px; /* Add padding for better spacing */
+}
+
+.playlist-item:hover {
+  transform: scale(1.05);
+}
+
+.playlist-cover {
+  width: 70px !important;/* Smaller width */
+  height: 70px !important; /* Smaller height */
+  object-fit: cover;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.playlist-name {
+  font-size: 12px; /* Smaller text */
+  font-weight: bold;
+  color: #333;
+  white-space: nowrap; /* Prevents text wrapping */
+  overflow: hidden; /* Ensures text does not overflow */
+  text-overflow: ellipsis; /* Adds ellipsis for overflowed text */
 }
 
 /* Add responsiveness for smaller screens */
