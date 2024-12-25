@@ -265,8 +265,8 @@
 }
 
 .playlist-cover {
-  width: 70px !important;/* Smaller width */
-  height: 70px !important; /* Smaller height */
+  width: 100px !important;/* Smaller width */
+  height: 100px !important; /* Smaller height */
   object-fit: cover;
   border-radius: 5px;
   margin-bottom: 5px;

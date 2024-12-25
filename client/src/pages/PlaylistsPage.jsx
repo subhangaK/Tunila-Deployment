@@ -152,6 +152,9 @@ const PlaylistsPage = () => {
                       onChange={(e) => setNewCover(e.target.files[0])}
                     />
                     <div className="privacy-toggle-container">
+                      <span className="privacy-label">
+                        {playlist.isPublic ? "Public" : "Private"}
+                      </span>
                       <img
                         src={playlist.isPublic ? assets.switch_on_icon : assets.switch_off_icon}
                         alt={playlist.isPublic ? "Public" : "Private"}
@@ -161,9 +164,6 @@ const PlaylistsPage = () => {
                           togglePlaylistPrivacy(playlist._id, playlist.isPublic);
                         }}
                       />
-                      <span className="privacy-label">
-                        {playlist.isPublic ? "Public" : "Private"}
-                      </span>
                     </div>
                     <button
                       onClick={(e) => {
