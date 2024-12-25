@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import "../css/Body.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets"; // Import the assets
 import { toast } from "react-toastify"; // Import toast
@@ -9,12 +9,14 @@ import { toast } from "react-toastify"; // Import toast
 const Body = ({ setCurrentTrack, filteredSongs }) => {
   const [songs, setSongs] = useState([]);
   const [playlists, setPlaylists] = useState([]);
+  const [publicPlaylists, setPublicPlaylists] = useState([]); // State for public playlists
   const [selectedSong, setSelectedSong] = useState(null);
   const [showMenu, setShowMenu] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState("");
 
-  const { backendUrl, isLoggedin } = useContext(AppContext);
+  const { backendUrl, isLoggedin, userData } = useContext(AppContext);
+  const navigate = useNavigate();
 
   // Fetch songs
   useEffect(() => {
@@ -53,6 +55,27 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
 
     if (isLoggedin) fetchPlaylists();
   }, [backendUrl, isLoggedin]);
+
+  // Fetch all public playlists (exclude those created by the logged-in user)
+  useEffect(() => {
+    const fetchPublicPlaylists = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/playlists/public`);
+        const filteredPlaylists = response.data.playlists.filter(
+          (playlist) => playlist.owner !== userData?.userId
+        );
+        setPublicPlaylists(filteredPlaylists);
+      } catch (error) {
+        console.error("Error fetching public playlists:", error);
+        toast.error("Failed to load public playlists.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }
+    };
+
+    fetchPublicPlaylists();
+  }, [backendUrl, userData]);
 
   // Add a song to an existing playlist
   const addToPlaylist = async (playlistId) => {
@@ -167,6 +190,26 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
         ))}
       </div>
 
+      <h2 className="section-title">Public Playlists</h2>
+      <div className="playlists-grid">
+        {publicPlaylists.map((playlist) => (
+          <div
+            key={playlist._id}
+            className="playlist-card"
+            onClick={() => navigate(`/playlists/${playlist._id}`)}
+          >
+            <img
+              src={`${backendUrl}${playlist.coverImage}`}
+              alt={playlist.name}
+              className="playlist-cover"
+            />
+            <div className="playlist-info">
+              <h3>{playlist.name}</h3>
+            </div>
+          </div>
+        ))}
+      </div>
+
       {showModal && (
         <div className="modal">
           <h3>Select a Playlist</h3>
@@ -184,9 +227,9 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
             type="text"
             value={newPlaylistName}
             onChange={(e) => setNewPlaylistName(e.target.value)}
-            placeholder="  Enter playlist name"
+            placeholder="Enter playlist name"
           />
-          <button onClick={createPlaylist}>Create Playlist</button>
+          <button onClick={createPlaylist}>Create and Add</button>
           <button onClick={() => setShowModal(false)}>Close</button>
         </div>
       )}

@@ -31,7 +31,7 @@ router.get('/public', async (req, res) => {
 // Get all playlists created by the logged-in user
 router.get('/my-playlists', userAuth, async (req, res) => {
   try {
-    const userId = req.body.userId;
+    const userId = req.userId;
     const playlists = await Playlist.find({ owner: userId }).populate('songs');
     res.status(200).json({ success: true, playlists });
   } catch (error) {
@@ -46,7 +46,7 @@ router.post('/', userAuth, async (req, res) => {
   try {
     const newPlaylist = new Playlist({
       name,
-      owner: req.body.userId,
+      owner: req.userId,
       songs: [],
       isPublic,
       coverImage: "/uploads/covers/playlists/default.png", // Default playlist cover
@@ -70,7 +70,7 @@ router.post('/:playlistId/add-songs', userAuth, async (req, res) => {
       return res.status(404).json({ success: false, message: 'Playlist not found' });
     }
 
-    if (playlist.owner.toString() !== req.body.userId) {
+    if (playlist.owner.toString() !== req.userId) {
       return res.status(403).json({ success: false, message: 'Unauthorized' });
     }
 
@@ -130,5 +130,35 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 });
+
+// Remove a song from a playlist
+router.put("/:id/remove-song", userAuth, async (req, res) => {
+  const { id } = req.params; // Playlist ID
+  const { songId } = req.body; // ID of the song to remove
+
+  try {
+    const playlist = await Playlist.findById(id);
+
+    if (!playlist) {
+      return res.status(404).json({ success: false, message: "Playlist not found" });
+    }
+
+    // Ensure the logged-in user is the owner of the playlist
+    if (playlist.owner.toString() !== req.userId) {
+      return res.status(403).json({ success: false, message: "Unauthorized: Not the owner of the playlist" });
+    }
+
+    // Remove the song from the playlist
+    playlist.songs = playlist.songs.filter((song) => song.toString() !== songId);
+
+    await playlist.save();
+
+    res.status(200).json({ success: true, message: "Song removed from playlist", playlist });
+  } catch (error) {
+    console.error("Error removing song from playlist:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 
 export default router;

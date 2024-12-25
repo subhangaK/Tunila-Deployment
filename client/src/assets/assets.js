@@ -29,6 +29,9 @@ import hand_wave from './hand_wave.png'
 import header_img from './header_img.png'
 import tripledot_icon from './tripledot.png'
 import delete_icon from './delete.png'
+import switch_on_icon from './switch_on.png'
+import switch_off_icon from './switch_off.png'
+import add_cover from './add_cover.png'
 
 export const assets = {
     logo,
@@ -61,6 +64,9 @@ export const assets = {
     hand_wave,
     header_img,
     tripledot_icon,
-    delete_icon
+    delete_icon,
+    switch_on_icon,
+    switch_off_icon,
+    add_cover
 }
 

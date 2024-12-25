@@ -5,6 +5,7 @@ import { AppContext } from "../context/AppContext";
 import { toast } from "react-toastify";
 import "../css/PlaylistsPage.css";
 import Header from "../components/Header";
+import { assets } from "../assets/assets";
 
 const PlaylistsPage = () => {
   const { backendUrl, isLoggedin } = useContext(AppContext);
@@ -71,81 +72,137 @@ const PlaylistsPage = () => {
     }
   };
 
+  // Toggle playlist privacy
+  const togglePlaylistPrivacy = async (playlistId, isPublic) => {
+    try {
+      const response = await axios.put(
+        `${backendUrl}/api/playlists/${playlistId}`,
+        { isPublic: !isPublic },
+        { withCredentials: true }
+      );
+
+      setPlaylists(
+        playlists.map((playlist) =>
+          playlist._id === playlistId ? response.data.playlist : playlist
+        )
+      );
+
+      toast.success(`Playlist is now ${!isPublic ? "Public" : "Private"}.`, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } catch (error) {
+      console.error("Error toggling playlist privacy:", error);
+      toast.error("Failed to toggle privacy. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+  };
+
   return (
     <div>
-      <Header/>
-    <div className="playlists-page">
-      <h2>My Playlists</h2>
+      <Header />
+      <div className="playlists-page">
+        <h2>My Playlists</h2>
 
-      <div className="playlists-grid">
-        {playlists.map((playlist) => (
-          <div
-            key={playlist._id}
-            className="playlist-card"
-            onClick={() => {
-              if (editingPlaylist !== playlist._id) navigate(`/playlists/${playlist._id}`);
-            }}
-          >
-            <img
-              src={`${backendUrl}${playlist.coverImage}`}
-              alt={playlist.name}
-              className="playlist-cover"
-            />
-            <div className="playlist-info">
+        <div className="playlists-grid">
+          {playlists.map((playlist) => (
+            <div
+              key={playlist._id}
+              className="playlist-card"
+              onClick={() => {
+                if (editingPlaylist !== playlist._id) navigate(`/playlists/${playlist._id}`);
+              }}
+            >
               {editingPlaylist === playlist._id ? (
-                <div
-                  onClick={(e) => e.stopPropagation()} // Prevent card navigation during editing
-                >
-                  <input
-                    type="text"
-                    value={newName}
-                    placeholder="New Playlist Name"
-                    onChange={(e) => setNewName(e.target.value)}
-                    className="playlist-edit-input"
-                  />
-                  <input
-                    type="file"
-                    onChange={(e) => setNewCover(e.target.files[0])}
-                    className="playlist-edit-file"
-                  />
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent card navigation
-                      handleUpdatePlaylist(playlist._id);
-                    }}
-                    className="playlist-save-btn"
-                  >
-                    Save
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent card navigation
-                      setEditingPlaylist(null);
-                    }}
-                    className="playlist-cancel-btn"
-                  >
-                    Cancel
-                  </button>
-                </div>
+                <img
+                  src={assets.add_cover}
+                  alt="Add Cover"
+                  className="add-cover-image"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent card navigation
+                    document.querySelector(`#cover-input-${playlist._id}`).click();
+                  }}
+                />
               ) : (
-                <div>
-                  <h3>{playlist.name}</h3>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent card navigation
-                      setEditingPlaylist(playlist._id);
-                    }}
-                    className="playlist-edit-btn"
-                  >
-                    Edit
-                  </button>
-                </div>
+                <img
+                  src={`${backendUrl}${playlist.coverImage}`}
+                  alt={playlist.name}
+                  className="playlist-cover"
+                />
               )}
+
+              <div className="playlist-info">
+                {editingPlaylist === playlist._id ? (
+                  <div
+                    onClick={(e) => e.stopPropagation()} // Prevent card navigation during editing
+                  >
+                    <input
+                      type="text"
+                      value={newName}
+                      placeholder="New Playlist Name"
+                      onChange={(e) => setNewName(e.target.value)}
+                      className="playlist-edit-input"
+                    />
+                    <input
+                      type="file"
+                      id={`cover-input-${playlist._id}`}
+                      style={{ display: "none" }}
+                      onChange={(e) => setNewCover(e.target.files[0])}
+                    />
+                    <div className="privacy-toggle-container">
+                      <img
+                        src={playlist.isPublic ? assets.switch_on_icon : assets.switch_off_icon}
+                        alt={playlist.isPublic ? "Public" : "Private"}
+                        className="privacy-toggle"
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent card navigation
+                          togglePlaylistPrivacy(playlist._id, playlist.isPublic);
+                        }}
+                      />
+                      <span className="privacy-label">
+                        {playlist.isPublic ? "Public" : "Private"}
+                      </span>
+                    </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent card navigation
+                        handleUpdatePlaylist(playlist._id);
+                      }}
+                      className="playlist-save-btn"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent card navigation
+                        setEditingPlaylist(null);
+                      }}
+                      className="playlist-cancel-btn"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <h3>{playlist.name}</h3>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent card navigation
+                        setEditingPlaylist(playlist._id);
+                      }}
+                      className="playlist-edit-btn"
+                    >
+                      Edit
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
     </div>
   );
 };
