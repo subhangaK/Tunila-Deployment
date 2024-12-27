@@ -9,12 +9,13 @@ import { toast } from "react-toastify"; // Import toast
 const Body = ({ setCurrentTrack, filteredSongs }) => {
   const [songs, setSongs] = useState([]);
   const [playlists, setPlaylists] = useState([]);
+  const [publicPlaylists, setPublicPlaylists] = useState([]);
   const [selectedSong, setSelectedSong] = useState(null);
   const [showMenu, setShowMenu] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState("");
 
-  const { backendUrl, isLoggedin } = useContext(AppContext);
+  const { backendUrl, isLoggedin, userData } = useContext(AppContext);
 
   // Fetch songs
   useEffect(() => {
@@ -30,7 +31,6 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
         });
       }
     };
-    dsfdfdf
 
     fetchSongs();
   }, [backendUrl]);
@@ -54,6 +54,28 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
 
     if (isLoggedin) fetchPlaylists();
   }, [backendUrl, isLoggedin]);
+
+  // Fetch public playlists excluding those created by the logged-in user
+  useEffect(() => {
+    const fetchPublicPlaylists = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/playlists/public`);
+        const filteredPlaylists = response.data.playlists.filter(
+          (playlist) => playlist.owner !== userData?.userId
+        );
+        setPublicPlaylists(filteredPlaylists);
+      } catch (error) {
+        console.error("Error fetching public playlists:", error);
+        toast.error("Failed to load public playlists.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }
+    };
+  
+    fetchPublicPlaylists();
+  }, [backendUrl, userData]);
+  
 
   // Add a song to an existing playlist
   const addToPlaylist = async (playlistId) => {
@@ -142,7 +164,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
               <div className="song-options">
                 {isLoggedin && (
                   <img
-                    src={assets.tripledot_icon} // Use the imported icon here
+                    src={assets.tripledot_icon}
                     alt="Options"
                     className="options-icon"
                     onClick={() => setShowMenu(song._id)}
@@ -167,6 +189,26 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
           </div>
         ))}
       </div>
+
+      <h2 className="section-title">Public Playlists</h2>
+        <div className="playlists-grid">
+          {publicPlaylists.map((playlist) => (
+            <div
+              key={playlist._id}
+              className="playlist-card"
+              onClick={() => window.location.href = `/playlists/${playlist._id}`}
+            >
+              <img
+                src={`${backendUrl}${playlist.coverImage}`}
+                alt={playlist.name}
+                className="playlist-cover-body"
+              />
+              <div className="playlist-info">
+                <h3>{playlist.name}</h3>
+              </div>
+            </div>
+          ))}
+        </div>
 
       {showModal && (
         <div className="modal">
