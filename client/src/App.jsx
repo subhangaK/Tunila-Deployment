@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import EmailVerify from './pages/EmailVerify';
 import ResetPassword from './pages/ResetPassword';
-import Login from './pages/login.jsx';
+import Login from './pages/Login.jsx';
 import Home from './pages/Home.jsx';
 import UploadMusic from './pages/UploadMusic.jsx';
 import { ToastContainer } from 'react-toastify';

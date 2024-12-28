@@ -17,41 +17,38 @@ const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('') 
 
-  const onSubmitHandler = async (e)=>{
+  const onSubmitHandler = async (e) => {
     try {
-        e.preventDefault();
-
-        axios.defaults.withCredentials = true;
-
-        if(state === 'Sign Up'){
-           const {data} = await axios.post
-           (backendUrl + '/api/auth/register', {name, email, password})
-
-           if(data.success){
-            setIsLoggedin(true)
-            getUserData()
-            navigate('/')
-           }else{
-            toast.error(data.message)
-           }
-        } 
-        else {
-            const {data} = await axios.post
-           (backendUrl + '/api/auth/login', {email, password})
-
-           if(data.success){
-            setIsLoggedin(true)
-            getUserData()
-            navigate('/')
-           }else{
-            toast.error(data.message)
-           }
-        }
-
+      e.preventDefault();
+  
+      axios.defaults.withCredentials = true;
+  
+      let data;
+      if (state === 'Sign Up') {
+        const response = await axios.post(backendUrl + '/api/auth/register', { name, email, password });
+        data = response.data;
+      } else {
+        const response = await axios.post(backendUrl + '/api/auth/login', { email, password });
+        data = response.data;
+      }
+  
+      if (data.success) {
+        setIsLoggedin(true);
+        getUserData();
+        navigate('/');
+      } else {
+        toast.error(data.message);
+      }
     } catch (error) {
-        toast.error(error.message)
+      // Handle network or unexpected errors
+      if (error.response) {
+        toast.error(error.response.data.message || 'An error occurred');
+      } else {
+        toast.error('An unexpected error occurred');
+      }
     }
-  }
+  };
+  
 
   return (
 

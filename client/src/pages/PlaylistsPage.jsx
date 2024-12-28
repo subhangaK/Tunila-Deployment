@@ -24,9 +24,11 @@ const PlaylistsPage = () => {
           withCredentials: true,
         });
         setPlaylists(response.data.playlists);
+      
       } catch (error) {
         console.error("Error fetching playlists:", error);
-        toast.error("Failed to load playlists.", {
+        const errorMessage = error.response?.data?.message || "Failed to load playlists.";
+        toast.error(errorMessage, {
           position: "top-right",
           autoClose: 3000,
         });
@@ -65,7 +67,8 @@ const PlaylistsPage = () => {
       setNewCover(null);
     } catch (error) {
       console.error("Error updating playlist:", error);
-      toast.error("Failed to update playlist. Please try again.", {
+      const errorMessage = error.response?.data?.message || "Failed to update playlist.";
+      toast.error(errorMessage, {
         position: "top-right",
         autoClose: 3000,
       });
@@ -93,7 +96,8 @@ const PlaylistsPage = () => {
       });
     } catch (error) {
       console.error("Error toggling playlist privacy:", error);
-      toast.error("Failed to toggle privacy. Please try again.", {
+      const errorMessage = error.response?.data?.message || "Failed to toggle privacy.";
+      toast.error(errorMessage, {
         position: "top-right",
         autoClose: 3000,
       });

@@ -16,7 +16,7 @@ const EmailVerify = () => {
   const inputRefs = React.useRef([]);
 
   const handleInput = (e, index) =>{
-    if(e.target.value.length > 0 && inputRefs.current.length - 1){
+    if(e.target.value.length > 0 && index >  inputRefs.current.length - 1){
         inputRefs.current[index + 1].focus();
     }
   }

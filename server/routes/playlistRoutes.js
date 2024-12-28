@@ -32,12 +32,19 @@ router.get('/public', async (req, res) => {
 router.get('/my-playlists', userAuth, async (req, res) => {
   try {
     const userId = req.userId;
+
+    if (!userId) {
+      return res.status(400).json({ success: false, message: "User ID is missing" });
+    }
+
     const playlists = await Playlist.find({ owner: userId }).populate('songs');
     res.status(200).json({ success: true, playlists });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error("Error fetching user's playlists:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch playlists. Try again later." });
   }
 });
+
 
 // Create a new playlist
 router.post('/', userAuth, async (req, res) => {
@@ -91,6 +98,10 @@ router.put('/:id', userAuth, upload.single('coverImage'), async (req, res) => {
     const { id } = req.params;
     const { name, isPublic, songs } = req.body;
 
+    if (!id) {
+      return res.status(400).json({ success: false, message: "Playlist ID is missing" });
+    }
+
     const playlist = await Playlist.findById(id);
     if (!playlist) {
       return res.status(404).json({ success: false, message: "Playlist not found" });
@@ -103,7 +114,6 @@ router.put('/:id', userAuth, upload.single('coverImage'), async (req, res) => {
     if (name) playlist.name = name;
     if (isPublic !== undefined) playlist.isPublic = isPublic;
 
-    // Prevent duplicate songs if `songs` are provided
     if (songs) {
       const newSongs = Array.isArray(songs) ? songs : [songs];
       playlist.songs = [...new Set([...playlist.songs.map(String), ...newSongs])];
@@ -113,7 +123,7 @@ router.put('/:id', userAuth, upload.single('coverImage'), async (req, res) => {
     res.status(200).json({ success: true, playlist });
   } catch (error) {
     console.error("Error updating playlist:", error);
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: "Failed to update playlist. Try again later." });
   }
 });
 
