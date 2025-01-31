@@ -78,23 +78,30 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Add light shadow around the card */
 }
 
-/* Position the options (triple dot icon) at the bottom left of the song card */
+/* Container for like and options icons */
 .song-options {
   position: absolute;
-  bottom: 10px; /* Adjust the distance from the bottom of the card */
-  right: 10px;   /* Adjust the distance from the left side of the card */
-  z-index: 10;  /* Ensure it stays on top of other content */
+  bottom: 10px;
+  right: 10px;
+  z-index: 10;
+  display: flex; /* Use flexbox to align items in a row */
+  gap: 10px; /* Add spacing between icons */
+  align-items: center; /* Align icons properly */
 }
 
-.options-icon{ 
-  width: 18px !important;  /* Set the size of the icon */
-  height: 18px !important;
-  object-fit: contain;  /* Ensure the aspect ratio is maintained */
+/* Like and options icons styling */
+.like-icon, 
+.options-icon {
+  width: 22px !important; /* Adjust the size */
+  height: 22px !important;
+  object-fit: contain;
   cursor: pointer;
-  transition: opacity 0.3s ease; /* Smooth hover effect */
+  transition: opacity 0.3s ease, transform 0.2s ease;
 }
 
+.like-icon:hover,
 .options-icon:hover {
+  transform: scale(1.1); /* Slight zoom on hover */
   opacity: 0.8;
 }
 

@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
     isAccountVerified: {type: Boolean, default: false},
     resetOtp: {type: String, default: ''},
     resetOtpExpireAt: {type: Number, default: 0},
+    likedSongs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Song" }],
 })
 
 const userModel = mongoose.models.user || mongoose.model('user', userSchema);

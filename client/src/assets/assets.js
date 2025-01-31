@@ -32,6 +32,11 @@ import delete_icon from './delete.png'
 import switch_on_icon from './switch_on.png'
 import switch_off_icon from './switch_off.png'
 import add_cover from './add_cover.png'
+import notliked_icon from './notliked.png'
+import liked_icon from './liked.png'
+import add_icon from './add.png'
+
+
 
 export const assets = {
     logo,
@@ -67,6 +72,9 @@ export const assets = {
     delete_icon,
     switch_on_icon,
     switch_off_icon,
-    add_cover
+    add_cover,
+    liked_icon,
+    notliked_icon,
+    add_icon
 }
 

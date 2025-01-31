@@ -3,19 +3,21 @@ import axios from "axios";
 import "../css/Body.css";
 import { Link } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
-import { assets } from "../assets/assets"; // Import the assets
-import { toast } from "react-toastify"; // Import toast
+import { assets } from "../assets/assets";
+import { toast } from "react-toastify";
 
 const Body = ({ setCurrentTrack, filteredSongs }) => {
   const [songs, setSongs] = useState([]);
   const [playlists, setPlaylists] = useState([]);
   const [publicPlaylists, setPublicPlaylists] = useState([]);
   const [selectedSong, setSelectedSong] = useState(null);
+  const [likedSongs, setLikedSongs] = useState(new Set()); // Store liked songs as a Set for quick lookup
   const [showMenu, setShowMenu] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState("");
 
   const { backendUrl, isLoggedin, userData } = useContext(AppContext);
+  const userId = userData?.userId;
 
   // Fetch songs
   useEffect(() => {
@@ -35,6 +37,49 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
     fetchSongs();
   }, [backendUrl]);
 
+  // Fetch user's liked songs
+  useEffect(() => {
+    if (isLoggedin && userId) {
+      const fetchLikedSongs = async () => {
+        try {
+          const response = await axios.get(`${backendUrl}/api/songs/liked-songs/${userId}`);
+          setLikedSongs(new Set(response.data.likedSongs.map((song) => song._id)));
+        } catch (error) {
+          console.error("Error fetching liked songs:", error);
+        }
+      };
+
+      fetchLikedSongs();
+    }
+  }, [backendUrl, isLoggedin, userId]);
+
+  // Toggle like/unlike for a song
+  const handleLikeToggle = async (songId) => {
+    if (!isLoggedin) {
+      toast.error("You must be logged in to like a song.");
+      return;
+    }
+
+    const isLiked = likedSongs.has(songId);
+
+    try {
+      if (isLiked) {
+        await axios.post(`${backendUrl}/api/songs/unlike`, { userId, songId });
+        setLikedSongs((prevLiked) => {
+          const updated = new Set(prevLiked);
+          updated.delete(songId);
+          return updated;
+        });
+      } else {
+        await axios.post(`${backendUrl}/api/songs/like`, { userId, songId });
+        setLikedSongs((prevLiked) => new Set(prevLiked).add(songId));
+      }
+    } catch (error) {
+      console.error("Error toggling like:", error);
+      toast.error("Failed to update like status. Please try again.");
+    }
+  };
+
   // Fetch playlists for the logged-in user
   useEffect(() => {
     const fetchPlaylists = async () => {
@@ -45,10 +90,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
         setPlaylists(response.data.playlists);
       } catch (error) {
         console.error("Error fetching playlists:", error);
-        toast.error("Failed to load playlists.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
+        toast.error("Failed to load playlists.");
       }
     };
 
@@ -75,10 +117,9 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
   
     fetchPublicPlaylists();
   }, [backendUrl, userData]);
-  
 
-  // Add a song to an existing playlist
-  const addToPlaylist = async (playlistId) => {
+   // Add a song to an existing playlist
+   const addToPlaylist = async (playlistId) => {
     try {
       await axios.put(
         `${backendUrl}/api/playlists/${playlistId}`,
@@ -125,12 +166,13 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
 
   // Filter songs based on search query
   const songsToDisplay =
-    filteredSongs && filteredSongs.length > 0
-      ? songs.filter((song) =>
-          song.title.toLowerCase().includes(filteredSongs.toLowerCase()) ||
-          song.artist.toLowerCase().includes(filteredSongs.toLowerCase())
-        )
-      : songs;
+  filteredSongs && filteredSongs.length > 0
+    ? songs.filter((song) =>
+        song.title.toLowerCase().includes(filteredSongs.toLowerCase()) ||
+        song.artist.toLowerCase().includes(filteredSongs.toLowerCase())
+      )
+    : songs;
+
 
   return (
     <div className="home-body">
@@ -150,7 +192,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
       <h2 className="section-title">Published Songs</h2>
 
       <div className="songs-grid">
-        {songsToDisplay.map((song) => (
+        {songs.map((song) => (
           <div key={song._id} className="song-card">
             <img
               src={`${backendUrl}${song.coverImage}`}
@@ -161,14 +203,25 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
             <div className="song-info">
               <p className="song-title">{song.title}</p>
               <p className="song-artist">{song.artist}</p>
+
               <div className="song-options">
                 {isLoggedin && (
-                  <img
-                    src={assets.tripledot_icon}
-                    alt="Options"
-                    className="options-icon"
-                    onClick={() => setShowMenu(song._id)}
-                  />
+                  <>
+                  <div className="like-icons">
+                    <img
+                      src={likedSongs.has(song._id) ? assets.liked_icon : assets.notliked_icon}
+                      alt="Like"
+                      className="like-icon"
+                      onClick={() => handleLikeToggle(song._id)}
+                    />
+                  </div>
+                    <img
+                      src={assets.tripledot_icon}
+                      alt="Options"
+                      className="options-icon"
+                      onClick={() => setShowMenu(song._id)}
+                    />
+                  </>
                 )}
               </div>
             </div>
@@ -191,24 +244,24 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
       </div>
 
       <h2 className="section-title">Public Playlists</h2>
-        <div className="playlists-grid">
-          {publicPlaylists.map((playlist) => (
-            <div
-              key={playlist._id}
-              className="playlist-card"
-              onClick={() => window.location.href = `/playlists/${playlist._id}`}
-            >
-              <img
-                src={`${backendUrl}${playlist.coverImage}`}
-                alt={playlist.name}
-                className="playlist-cover-body"
-              />
-              <div className="playlist-info">
-                <h3>{playlist.name}</h3>
-              </div>
+      <div className="playlists-grid">
+        {publicPlaylists.map((playlist) => (
+          <div
+            key={playlist._id}
+            className="playlist-card"
+            onClick={() => (window.location.href = `/playlists/${playlist._id}`)}
+          >
+            <img
+              src={`${backendUrl}${playlist.coverImage}`}
+              alt={playlist.name}
+              className="playlist-cover-body"
+            />
+            <div className="playlist-info">
+              <h3>{playlist.name}</h3>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
+      </div>
 
       {showModal && (
         <div className="modal">
@@ -234,7 +287,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
             type="text"
             value={newPlaylistName}
             onChange={(e) => setNewPlaylistName(e.target.value)}
-            placeholder="  Enter playlist name"
+            placeholder="Enter playlist name"
           />
           <button onClick={createPlaylist}>Create Playlist</button>
           <button onClick={() => setShowModal(false)}>Close</button>
