@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import PlaylistsPage from './pages/PlaylistsPage.jsx';
 import PlaylistSongsPage from './pages/PlaylistSongsPage.jsx';
 import MusicPlayer from './components/MusicPlayer.jsx';
+import LikedSongs from './pages/LikedSongs.jsx';
 
 const App = () => {
   const [currentTrack, setCurrentTrack] = useState(null); // State for the current track
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/upload-music" element={<UploadMusic />} />
         <Route path="/playlists" element={<PlaylistsPage />} />
+        <Route path="/liked-songs" element={<LikedSongs setCurrentTrack={setCurrentTrack} />} />
         <Route
           path="/playlists/:id"
           element={<PlaylistSongsPage setCurrentTrack={setCurrentTrack} />}
