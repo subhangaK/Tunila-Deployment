@@ -11,6 +11,8 @@ export const AppContextProvider = (props) => {
   const [isLoggedin, setIsLoggedin] = useState(false);
   const [userData, setUserData] = useState(null);
   const [likedSongs, setLikedSongs] = useState([]);
+  const [allUsers, setAllUsers] = useState([]); // Admin Only
+  const [allSongs, setAllSongs] = useState([]); // Admin Only
 
   // Check if user is authenticated
   const getAuthState = async () => {
@@ -25,13 +27,17 @@ export const AppContextProvider = (props) => {
     }
   };
 
-  // Fetch user data and liked songs
+  // Fetch user data, role, and liked songs
   const getUserData = async () => {
     try {
       const { data } = await axios.get(backendUrl + "/api/user/data");
       if (data.success) {
         setUserData(data.userData);
         getLikedSongs(data.userData._id);
+        if (data.userData.role === "admin") {
+          fetchUsers();
+          fetchSongs();
+        }
       } else {
         toast.error(data.message);
       }
@@ -74,6 +80,64 @@ export const AppContextProvider = (props) => {
     }
   };
 
+  // Fetch all users (Admin Only)
+  const fetchUsers = async () => {
+    if (userData?.role !== "admin") return;
+    try {
+      const { data } = await axios.get(`${backendUrl}/api/admin/users`);
+      setAllUsers(data.users);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  // Fetch all songs (Admin Only)
+  const fetchSongs = async () => {
+    if (userData?.role !== "admin") return;
+    try {
+      const { data } = await axios.get(`${backendUrl}/api/admin/songs`);
+      setAllSongs(data.songs);
+    } catch (error) {
+      console.error("Error fetching songs:", error);
+    }
+  };
+
+  // Promote user to admin
+  const promoteUser = async (userId) => {
+    try {
+      await axios.put(`${backendUrl}/api/admin/users/${userId}/promote`);
+      toast.success("User promoted to admin.");
+      fetchUsers();
+    } catch (error) {
+      console.error("Error promoting user:", error);
+      toast.error("Failed to promote user.");
+    }
+  };
+
+  // Delete user (Admin Only)
+  const deleteUser = async (userId) => {
+    try {
+      await axios.delete(`${backendUrl}/api/admin/users/${userId}`);
+      toast.success("User deleted.");
+      fetchUsers();
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error("Failed to delete user.");
+    }
+  };
+
+  // Delete song (Admin Only)
+  const deleteSong = async (songId) => {
+    try {
+      await axios.delete(`${backendUrl}/api/admin/songs/${songId}`);
+      toast.success("Song deleted.");
+      fetchSongs();
+    } catch (error) {
+      console.error("Error deleting song:", error);
+      toast.error("Failed to delete song.");
+    }
+  };
+
   useEffect(() => {
     getAuthState();
   }, []);
@@ -87,6 +151,13 @@ export const AppContextProvider = (props) => {
     getUserData,
     likedSongs,
     toggleLike,
+    allUsers,
+    allSongs,
+    fetchUsers,
+    fetchSongs,
+    promoteUser,
+    deleteUser,
+    deleteSong,
   };
 
   return <AppContext.Provider value={value}>{props.children}</AppContext.Provider>;

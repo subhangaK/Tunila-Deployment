@@ -187,7 +187,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
             </Link>
             <Link to="/liked-songs">
               <button className="likedsong-btn">
-                <img className="likedsong-btn-icon" src={assets.liked_icon} alt="" />Liked Songs</button>
+                <img className="likedsong-btn-icon" src={assets.liked_icon} alt="" /></button>
             </Link>
           </>
         )}

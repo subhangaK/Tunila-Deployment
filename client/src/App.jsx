@@ -11,6 +11,7 @@ import PlaylistsPage from './pages/PlaylistsPage.jsx';
 import PlaylistSongsPage from './pages/PlaylistSongsPage.jsx';
 import MusicPlayer from './components/MusicPlayer.jsx';
 import LikedSongs from './pages/LikedSongs.jsx';
+import AdminDashboard from './pages/AdminDashboard.jsx';
 
 const App = () => {
   const [currentTrack, setCurrentTrack] = useState(null); // State for the current track
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/email-verify" element={<EmailVerify />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/upload-music" element={<UploadMusic />} />
         <Route path="/playlists" element={<PlaylistsPage />} />
         <Route path="/liked-songs" element={<LikedSongs setCurrentTrack={setCurrentTrack} />} />
