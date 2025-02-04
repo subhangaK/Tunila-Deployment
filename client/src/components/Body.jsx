@@ -16,7 +16,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
   const [showModal, setShowModal] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState("");
 
-  const { backendUrl, isLoggedin, userData } = useContext(AppContext);
+  const { backendUrl, isLoggedin, userData, recommendedSongs, fetchRecommendedSongs } = useContext(AppContext);
   const userId = userData?.userId;
 
   // Fetch songs
@@ -36,6 +36,14 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
 
     fetchSongs();
   }, [backendUrl]);
+
+// ✅ Fetch recommended songs **only when userData is available**
+  useEffect(() => {
+    if (isLoggedin && userId) {
+      fetchRecommendedSongs(userId);
+    }
+  }, [userId, fetchRecommendedSongs]);
+
 
   // Fetch user's liked songs
   useEffect(() => {
@@ -192,6 +200,47 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
           </>
         )}
       </div>
+
+      
+ {/* ✅ Recommended Songs Section */}
+ {recommendedSongs.length > 0 && (
+        <>
+          <h2 className="section-title">Recommended Songs</h2>
+          <div className="songs-grid">
+            {recommendedSongs.map((song) => (
+              <div key={song._id} className="song-card">
+                <img
+                  src={`${backendUrl}${song.coverImage}`}
+                  alt={song.title}
+                  className="song-cover"
+                  onClick={() => setCurrentTrack(song)}
+                />
+                <div className="song-info">
+                  <p className="song-title">{song.title}</p>
+                  <p className="song-artist">{song.artist}</p>
+
+                  <div className="song-options">
+                    {isLoggedin && (
+                      <>
+                        <div className="like-icons">
+                          <img
+                            src={likedSongs.has(song._id) ? assets.liked_icon : assets.notliked_icon}
+                            alt="Like"
+                            className="like-icon"
+                            onClick={() => handleLikeToggle(song._id)}
+                          />
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+
 
       <h2 className="section-title">Published Songs</h2>
 

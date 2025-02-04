@@ -17,9 +17,11 @@ function Header({ setFilteredSongs }) {
     try {
       axios.defaults.withCredentials = true;
       const { data } = await axios.post(backendUrl + '/api/auth/logout');
-      data.success && setIsLoggedin(false);
-      data.success && setUserData(false);
-      navigate('/');
+      if (data.success) {
+        setIsLoggedin(false);
+        setUserData(false);
+        navigate('/');
+      }
     } catch (error) {
       toast.error(error.message);
     }
@@ -61,22 +63,30 @@ function Header({ setFilteredSongs }) {
         <img className="logo" src={Logo} alt="Tunila Logo" />
         <span className="logo-text" onClick={goToHome}>Tunila</span>
       </div>
+
       <div className="search-container">
         <img className="search-icon" src={Search} alt="Search Icon" />
         <input
           className="search-box"
           type="text"
-          placeholder="Search for music, artists and playlists."
+          placeholder="Search for music, artists, and playlists."
           value={searchQuery}
           onChange={handleSearchChange} // Handle search input change
         />
       </div>
+
       <h2>Hi {userData ? userData.name : 'User'}, Welcome to Tunila</h2>
+
       {userData ? (
         <div className="uppercase-initial" onClick={toggleMenu}>
           {userData.name[0].toUpperCase()}
           {menuVisible && (
             <ul className="dropdown-menu">
+              {/* Show Admin Dashboard link only if the user is an admin */}
+              {userData.role === "admin" && (
+                <li onClick={() => navigate('/admin')}>Admin Page</li>
+              )}
+
               {!userData.isAccountVerified && <li onClick={sendVerificationOtp}>Verify Email</li>}
               <li onClick={logout}>Log out</li>
             </ul>
@@ -84,7 +94,7 @@ function Header({ setFilteredSongs }) {
         </div>
       ) : (
         <button onClick={() => navigate('/login')} className="login-button">
-          Sign  Up
+          Sign Up
         </button>
       )}
     </div>
