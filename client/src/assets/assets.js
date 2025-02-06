@@ -14,7 +14,6 @@ import shuffle_icon from './shuffle.png'
 import speaker_icon from './speaker.png'
 import stack_icon from './stack.png'
 import zoom_icon from './zoom.png'
-import plus_icon from './plus.png'
 import arrow_icon from './arrow.png'
 import mini_player_icon from './mini-player.png'
 import queue_icon from './queue.png'
@@ -35,6 +34,7 @@ import add_cover from './add_cover.png'
 import notliked_icon from './notliked.png'
 import liked_icon from './liked.png'
 import add_icon from './add.png'
+import dropdown_icon from "./dropdown.png"
 
 
 
@@ -54,7 +54,6 @@ export const assets = {
     speaker_icon,
     stack_icon,
     zoom_icon,
-    plus_icon,
     arrow_icon,
     mini_player_icon,
     volume_icon,
@@ -75,6 +74,7 @@ export const assets = {
     add_cover,
     liked_icon,
     notliked_icon,
-    add_icon
+    add_icon,
+    dropdown_icon
 }
 

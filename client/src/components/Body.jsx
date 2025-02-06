@@ -11,8 +11,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
   const [playlists, setPlaylists] = useState([]);
   const [publicPlaylists, setPublicPlaylists] = useState([]);
   const [selectedSong, setSelectedSong] = useState(null);
-  const [likedSongs, setLikedSongs] = useState(new Set()); // Store liked songs as a Set for quick lookup
-  const [showMenu, setShowMenu] = useState(null);
+  const [likedSongs, setLikedSongs] = useState(new Set());
   const [showModal, setShowModal] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState("");
 
@@ -37,13 +36,12 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
     fetchSongs();
   }, [backendUrl]);
 
-// ✅ Fetch recommended songs **only when userData is available**
+  // Fetch recommended songs **only when userData is available**
   useEffect(() => {
     if (isLoggedin && userId) {
       fetchRecommendedSongs(userId);
     }
   }, [userId, fetchRecommendedSongs]);
-
 
   // Fetch user's liked songs
   useEffect(() => {
@@ -122,12 +120,12 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
         });
       }
     };
-  
+
     fetchPublicPlaylists();
   }, [backendUrl, userData]);
 
-   // Add a song to an existing playlist
-   const addToPlaylist = async (playlistId) => {
+  // Add a song to an existing playlist
+  const addToPlaylist = async (playlistId) => {
     try {
       await axios.put(
         `${backendUrl}/api/playlists/${playlistId}`,
@@ -174,13 +172,12 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
 
   // Filter songs based on search query
   const songsToDisplay =
-  filteredSongs && filteredSongs.length > 0
-    ? songs.filter((song) =>
-        song.title.toLowerCase().includes(filteredSongs.toLowerCase()) ||
-        song.artist.toLowerCase().includes(filteredSongs.toLowerCase())
-      )
-    : songs;
-
+    filteredSongs && filteredSongs.length > 0
+      ? songs.filter((song) =>
+          song.title.toLowerCase().includes(filteredSongs.toLowerCase()) ||
+          song.artist.toLowerCase().includes(filteredSongs.toLowerCase())
+        )
+      : songs;
 
   return (
     <div className="home-body">
@@ -195,15 +192,15 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
             </Link>
             <Link to="/liked-songs">
               <button className="likedsong-btn">
-                <img className="likedsong-btn-icon" src={assets.liked_icon} alt="" /></button>
+                <img className="likedsong-btn-icon" src={assets.liked_icon} alt="" />
+              </button>
             </Link>
           </>
         )}
       </div>
 
-      
- {/* ✅ Recommended Songs Section */}
- {recommendedSongs.length > 0 && (
+      {/* Recommended Songs Section */}
+      {recommendedSongs.length > 0 && (
         <>
           <h2 className="section-title">Recommended Songs</h2>
           <div className="songs-grid">
@@ -218,7 +215,6 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
                 <div className="song-info">
                   <p className="song-title">{song.title}</p>
                   <p className="song-artist">{song.artist}</p>
-
                   <div className="song-options">
                     {isLoggedin && (
                       <>
@@ -230,6 +226,15 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
                             onClick={() => handleLikeToggle(song._id)}
                           />
                         </div>
+                        <img
+                          src={assets.add_icon}
+                          alt="Add to Playlist"
+                          className="options-icon"
+                          onClick={() => {
+                            setSelectedSong(song);
+                            setShowModal(true);
+                          }}
+                        />
                       </>
                     )}
                   </div>
@@ -240,12 +245,9 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
         </>
       )}
 
-
-
       <h2 className="section-title">Published Songs</h2>
-
       <div className="songs-grid">
-        {songs.map((song) => (
+        {songsToDisplay.map((song) => (
           <div key={song._id} className="song-card">
             <img
               src={`${backendUrl}${song.coverImage}`}
@@ -256,42 +258,30 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
             <div className="song-info">
               <p className="song-title">{song.title}</p>
               <p className="song-artist">{song.artist}</p>
-
               <div className="song-options">
                 {isLoggedin && (
                   <>
-                  <div className="like-icons">
+                    <div className="like-icons">
+                      <img
+                        src={likedSongs.has(song._id) ? assets.liked_icon : assets.notliked_icon}
+                        alt="Like"
+                        className="like-icon"
+                        onClick={() => handleLikeToggle(song._id)}
+                      />
+                    </div>
                     <img
-                      src={likedSongs.has(song._id) ? assets.liked_icon : assets.notliked_icon}
-                      alt="Like"
-                      className="like-icon"
-                      onClick={() => handleLikeToggle(song._id)}
-                    />
-                  </div>
-                    <img
-                      src={assets.tripledot_icon}
-                      alt="Options"
+                      src={assets.add_icon}
+                      alt="Add to Playlist"
                       className="options-icon"
-                      onClick={() => setShowMenu(song._id)}
+                      onClick={() => {
+                        setSelectedSong(song);
+                        setShowModal(true);
+                      }}
                     />
                   </>
                 )}
               </div>
             </div>
-
-            {showMenu === song._id && (
-              <div className="dropdown-menu">
-                <button
-                  onClick={() => {
-                    setSelectedSong(song);
-                    setShowModal(true);
-                    setShowMenu(null);
-                  }}
-                >
-                  Add to Playlist
-                </button>
-              </div>
-            )}
           </div>
         ))}
       </div>

@@ -17,7 +17,7 @@ export const AppContextProvider = (props) => {
   const [allSongs, setAllSongs] = useState([]); // Admin Only
   const [recommendedSongs, setRecommendedSongs] = useState([]); // Store recommended songs
 
-  // ✅ Check if user is authenticated
+  // Check if user is authenticated
   const getAuthState = async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/auth/is-auth`);
@@ -30,7 +30,7 @@ export const AppContextProvider = (props) => {
     }
   };
 
-  // ✅ Fetch user data, role, and liked songs
+  // Fetch user data, role, and liked songs
   const getUserData = async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/user/data`);
@@ -44,7 +44,7 @@ export const AppContextProvider = (props) => {
           fetchSongs();
         }
 
-        // ✅ Fetch recommendations only after user data is available
+        // Fetch recommendations only after user data is available
         if (data.userData._id) {
           fetchRecommendedSongs(data.userData._id);
         }
@@ -57,7 +57,7 @@ export const AppContextProvider = (props) => {
   };
       
   
-  // ✅ Fetch user's liked songs
+  // Fetch user's liked songs
   const getLikedSongs = async (userId) => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/songs/liked-songs/${userId}`);
@@ -86,7 +86,7 @@ export const AppContextProvider = (props) => {
     }
   };
 
-  // ✅ Toggle like/unlike song
+  // Toggle like/unlike song
   const toggleLike = async (songId) => {
     if (!userData) {
       toast.error("You need to log in to like songs!");
@@ -109,7 +109,7 @@ export const AppContextProvider = (props) => {
     }
   };
 
-  // ✅ Fetch all users (Admin Only)
+  // Fetch all users (Admin Only)
   const fetchUsers = async () => {
     if (userData?.role !== "admin") return;
     try {
@@ -120,7 +120,7 @@ export const AppContextProvider = (props) => {
     }
   };
 
-  // ✅ Fetch all songs (Admin Only)
+  // Fetch all songs (Admin Only)
   const fetchSongs = async () => {
     if (userData?.role !== "admin") return;
     try {
@@ -131,19 +131,7 @@ export const AppContextProvider = (props) => {
     }
   };
 
-  // ✅ Promote user to admin
-  const promoteUser = async (userId) => {
-    try {
-      await axios.put(`${backendUrl}/api/admin/users/${userId}/promote`);
-      toast.success("User promoted to admin.");
-      fetchUsers();
-    } catch (error) {
-      console.error("Error promoting user:", error);
-      toast.error("Failed to promote user.");
-    }
-  };
-
-  // ✅ Delete user (Admin Only)
+  // Delete user (Admin Only)
   const deleteUser = async (userId) => {
     try {
       await axios.delete(`${backendUrl}/api/admin/users/${userId}`);
@@ -155,7 +143,7 @@ export const AppContextProvider = (props) => {
     }
   };
 
-  // ✅ Delete song (Admin Only)
+  // Delete song (Admin Only)
   const deleteSong = async (songId) => {
     try {
       await axios.delete(`${backendUrl}/api/admin/songs/${songId}`);
@@ -186,7 +174,6 @@ export const AppContextProvider = (props) => {
     fetchUsers,
     fetchSongs,
     fetchRecommendedSongs, // Added function to fetch recommended songs
-    promoteUser,
     deleteUser,
     deleteSong,
   };

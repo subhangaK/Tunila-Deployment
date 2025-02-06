@@ -51,7 +51,7 @@ def get_recommendations(user_id):
         similarity_scores = cosine_similarity(liked_matrix, tfidf_matrix)
 
         # Get top recommendations
-        recommended_indices = similarity_scores.mean(axis=0).argsort()[-10:][::-1]  # Top 10
+        recommended_indices = similarity_scores.mean(axis=0).argsort()[-12:][::-1]  # Top 12
         recommended_songs = [all_songs[i] for i in recommended_indices]
 
         # Convert ObjectId to string
