@@ -35,6 +35,7 @@ import notliked_icon from './notliked.png'
 import liked_icon from './liked.png'
 import add_icon from './add.png'
 import dropdown_icon from "./dropdown.png"
+import verified_icon from "./verified.png"
 
 
 
@@ -75,6 +76,7 @@ export const assets = {
     liked_icon,
     notliked_icon,
     add_icon,
-    dropdown_icon
+    dropdown_icon,
+    verified_icon
 }
 

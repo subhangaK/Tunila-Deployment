@@ -19,7 +19,7 @@ function Header({ setFilteredSongs }) {
       const { data } = await axios.post(backendUrl + '/api/auth/logout');
       if (data.success) {
         setIsLoggedin(false);
-        setUserData(false);
+        setUserData(null);
         navigate('/');
       }
     } catch (error) {
@@ -32,7 +32,7 @@ function Header({ setFilteredSongs }) {
       axios.defaults.withCredentials = true;
       const { data } = await axios.post(backendUrl + '/api/auth/send-verify-otp');
       if (data.success) {
-        navigate('email-verify');
+        navigate('/email-verify');
         toast.success(data.message);
       } else {
         toast.error(data.message);
@@ -82,6 +82,9 @@ function Header({ setFilteredSongs }) {
           {userData.name[0].toUpperCase()}
           {menuVisible && (
             <ul className="dropdown-menu">
+              {/* ✅ New Profile Option */}
+              <li onClick={() => navigate(`/profile/${userData.userId}`)}>Profile</li>
+
               {/* Show Admin Dashboard link only if the user is an admin */}
               {userData.role === "admin" && (
                 <li onClick={() => navigate('/admin')}>Admin Page</li>
