@@ -17,9 +17,9 @@ export const getUserData = async (req, res) => {
         userId: user._id,
         name: user.name,
         email: user.email,
-        role: user.role, // Include role
+        role: user.role,
         isAccountVerified: user.isAccountVerified,
-        coverImage: user.coverImage, // Include cover image
+        coverImage: user.coverImage || "/uploads/covers/default.png", // ✅ Use default image if none
       },
     });
   } catch (error) {
@@ -50,7 +50,7 @@ export const getUserProfile = async (req, res) => {
         userId: user._id,
         name: user.name,
         isAccountVerified: user.isAccountVerified,
-        coverImage: user.coverImage,
+        coverImage: user.coverImage || "/uploads/covers/default.png", // ✅ Use default image if none
         songs,
         playlists
       }
@@ -84,7 +84,7 @@ export const updateUserProfile = async (req, res) => {
       userProfile: {
         userId: user._id,
         name: user.name,
-        coverImage: user.coverImage,
+        coverImage: user.coverImage || "/uploads/covers/default.png", // ✅ Use default image if none
       },
     });
   } catch (error) {

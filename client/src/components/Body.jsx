@@ -257,7 +257,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
             />
             <div className="song-info">
               <p className="song-title">{song.title}</p>
-              <p className="song-artist">{song.artist}</p>
+              <Link to={`/profile/${song.artistId}`}><p className="song-artist">{song.artist}</p></Link>
               <div className="song-options">
                 {isLoggedin && (
                   <>
