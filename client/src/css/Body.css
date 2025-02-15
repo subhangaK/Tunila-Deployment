@@ -214,6 +214,43 @@
   margin: 10px 0;
 }
 
+/* Centered Dropdown Icon */
+.see-more-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.see-more-container .horizontal-line {
+  position: relative;
+  width: 100%;
+}
+
+.see-more-btn {
+  position: relative;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  margin: 0 10px; /* Adds space around the icon */
+  z-index: 1; /* Ensures it stays above the line */
+  background-color: white; 
+}
+
+/* Horizontal Line */
+.horizontal-line {
+  width: 100%;
+  flex-grow: 1;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.228); /* Light color with low opacity */
+  margin: 30px 0;
+  position: relative;
+}
+
+
 
 /* Dropdown Menu */
 .dropdown-menu {
@@ -329,6 +366,7 @@
   overflow: hidden; /* Ensures text does not overflow */
   text-overflow: ellipsis; /* Adds ellipsis for overflowed text */
 }
+
 
 /* Add responsiveness for smaller screens */
 @media (max-width: 768px) {

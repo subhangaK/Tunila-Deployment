@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
+import { Link } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
 import "../css/MusicPlayer.css";
@@ -156,7 +157,7 @@ const MusicPlayer = () => {
           />
           <div>
             <h4>{currentSong.title}</h4>
-            <p>{currentSong.artist}</p>
+            <Link to={`/profile/${currentSong.artistId}`}><p>{currentSong.artist}</p></Link>
           </div>
         </div>
 

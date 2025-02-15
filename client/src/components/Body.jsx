@@ -14,16 +14,21 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
   const [likedSongs, setLikedSongs] = useState(new Set());
   const [showModal, setShowModal] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState("");
+  const [randomSongs, setRandomSongs] = useState([]);
 
   const { backendUrl, isLoggedin, userData, recommendedSongs, fetchRecommendedSongs, addToQueue } = useContext(AppContext);
   const userId = userData?.userId;
 
-  // Fetch songs
   useEffect(() => {
     const fetchSongs = async () => {
       try {
         const response = await axios.get(`${backendUrl}/api/songs`);
-        setSongs(response.data.songs);
+        const fetchedSongs = response.data.songs;
+  
+        // Shuffle the songs only ONCE when fetched
+        const shuffledSongs = [...fetchedSongs].sort(() => Math.random() - 0.5);
+        setSongs(fetchedSongs);
+        setRandomSongs(shuffledSongs.slice(0, 12)); // Store 12 random songs
       } catch (error) {
         console.error("Error fetching songs:", error);
         toast.error("Failed to load songs.", {
@@ -32,9 +37,9 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
         });
       }
     };
-
+  
     fetchSongs();
-  }, [backendUrl]);
+  }, [backendUrl]); // Runs only when the page is loaded
 
     // Function to handle song play
     const handlePlaySong = (song) => {
@@ -254,12 +259,13 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
               </div>
             ))}
           </div>
+          <div className="horizontal-line"></div>
         </>
       )}
 
       <h2 className="section-title">Published Songs</h2>
       <div className="songs-grid">
-        {songsToDisplay.map((song) => (
+      {randomSongs.map((song) => (
           <div key={song._id} className="song-card">
             <img
               src={`${backendUrl}${song.coverImage}`}
@@ -303,10 +309,19 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
           </div>
         ))}
       </div>
+      {songs.length > 12 && (
+        <div className="see-more-container">
+          <div className="horizontal-line">
+            <Link to="/published-music">
+              <img className="see-more-btn" src={assets.dropdown_icon} alt="See More" />
+            </Link>
+          </div>
+        </div>
+      )}
 
       <h2 className="section-title">Public Playlists</h2>
       <div className="playlists-grid">
-        {publicPlaylists.map((playlist) => (
+        {publicPlaylists.slice(0, 6).map((playlist) => (
           <div
             key={playlist._id}
             className="playlist-card"
@@ -323,6 +338,15 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
           </div>
         ))}
       </div>
+      {playlists.length > 6 && (
+        <div className="see-more-container">
+          <div className="horizontal-line">
+            <Link to="/public-playlists">
+              <img className="see-more-btn" src={assets.dropdown_icon} alt="See More" />
+            </Link>
+          </div>
+        </div>
+      )}
 
       {showModal && (
         <div className="modal">

@@ -13,6 +13,7 @@ import MusicPlayer from "./components/MusicPlayer.jsx";
 import LikedSongs from "./pages/LikedSongs.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import UserProfilePage from "./pages/UserProfilePage";
+import PublishedMusic from "./pages/PublishedMusic.jsx";
 import { AppContext } from "./context/AppContext";  // ✅ Import AppContext
 
 const App = () => {
@@ -47,6 +48,7 @@ const App = () => {
         <Route path="/upload-music" element={<UploadMusic />} />
         <Route path="/playlists" element={<PlaylistsPage setCurrentTrack={handleTrackChange} />} />
         <Route path="/liked-songs" element={<LikedSongs setCurrentTrack={handleTrackChange} />} />
+        <Route path="/published-music" element={<PublishedMusic setCurrentTrack={handleTrackChange} />} />
         <Route path="/profile/:userId" element={<UserProfilePage setCurrentTrack={handleTrackChange} />} />
         <Route
           path="/playlists/:id"
