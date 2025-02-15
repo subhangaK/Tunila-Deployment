@@ -8,7 +8,7 @@ import Header from "../components/Header";
 
 const LikedSongs = ({ setCurrentTrack }) => {
   const [likedSongs, setLikedSongs] = useState([]);
-  const { backendUrl, isLoggedin, userData } = useContext(AppContext);
+  const { backendUrl, isLoggedin, userData, addToQueue } = useContext(AppContext);
   const userId = userData?.userId;
 
   useEffect(() => {
@@ -24,6 +24,12 @@ const LikedSongs = ({ setCurrentTrack }) => {
 
     if (isLoggedin) fetchLikedSongs();
   }, [backendUrl, isLoggedin, userId]);
+
+   // Function to handle song play
+   const handlePlaySong = (song) => {
+    setCurrentTrack(song);
+    addToQueue(song);
+  };
 
   const handleUnlike = async (songId) => {
     try {
@@ -57,6 +63,12 @@ const LikedSongs = ({ setCurrentTrack }) => {
                 <p className="song-title">{song.title}</p>
                 <p className="song-artist">{song.artist}</p>
                 <div className="song-options">
+                  <img 
+                  src={assets.add_queue_icon}
+                  alt="Add To Queue"
+                  className="add_queue_icon"
+                  onClick={() =>addToQueue(song)}
+                  />
                   <img
                     src={assets.liked_icon}
                     alt="Unlike"

@@ -8,16 +8,28 @@ export const AppContextProvider = (props) => {
   axios.defaults.withCredentials = true;
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const recommendationApiUrl = "http://127.0.0.1:5000/api/recommend"; // Python API URL
+  const recommendationApiUrl = "http://127.0.0.1:5000/api/recommend"; // Python API for recommendations
 
+  // ✅ Authentication State
   const [isLoggedin, setIsLoggedin] = useState(false);
   const [userData, setUserData] = useState(null);
-  const [likedSongs, setLikedSongs] = useState([]);
-  const [allUsers, setAllUsers] = useState([]); // Admin Only
-  const [allSongs, setAllSongs] = useState([]); // Admin Only
-  const [recommendedSongs, setRecommendedSongs] = useState([]); // Store recommended songs
 
-  // Check if user is authenticated
+  // ✅ Song & Playlist Data
+  const [likedSongs, setLikedSongs] = useState([]);
+  const [allUsers, setAllUsers] = useState([]); // Admin
+  const [allSongs, setAllSongs] = useState([]); // Admin
+  const [recommendedSongs, setRecommendedSongs] = useState([]);
+
+  // ✅ Music Player State
+  const [queue, setQueue] = useState([]); // Song queue
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [shuffle, setShuffle] = useState(false);
+  const [repeat, setRepeat] = useState("off"); // 'off', 'all', 'one'
+  const [volume, setVolume] = useState(1);
+  const [autoplay, setAutoplay] = useState(true);
+
+  // ✅ Check Authentication State
   const getAuthState = async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/auth/is-auth`);
@@ -30,23 +42,18 @@ export const AppContextProvider = (props) => {
     }
   };
 
-  // Fetch user data, role, and liked songs
+  // ✅ Fetch User Data & Liked Songs
   const getUserData = async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/user/data`);
       if (data.success) {
         setUserData(data.userData);
         getLikedSongs(data.userData._id);
-        fetchRecommendedSongs(data.userData._id); // Fetch recommendations for the user
+        fetchRecommendedSongs(data.userData._id);
 
         if (data.userData.role === "admin") {
           fetchUsers();
           fetchSongs();
-        }
-
-        // Fetch recommendations only after user data is available
-        if (data.userData._id) {
-          fetchRecommendedSongs(data.userData._id);
         }
       } else {
         toast.error(data.message);
@@ -55,21 +62,20 @@ export const AppContextProvider = (props) => {
       toast.error(error.message);
     }
   };
-      
-  
-  // Fetch user's liked songs
+
+  // ✅ Fetch User's Liked Songs
   const getLikedSongs = async (userId) => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/songs/liked-songs/${userId}`);
       if (data.likedSongs) {
-        setLikedSongs(data.likedSongs.map((song) => song._id)); // Store only song IDs
+        setLikedSongs(data.likedSongs.map((song) => song._id));
       }
     } catch (error) {
       console.error("Error fetching liked songs:", error);
     }
   };
 
-  // ✅ Fetch recommended songs from Python API
+  // ✅ Fetch Recommended Songs
   const fetchRecommendedSongs = async (userId) => {
     if (!userId) {
       console.warn("User ID is undefined, skipping recommendation request.");
@@ -79,14 +85,14 @@ export const AppContextProvider = (props) => {
     try {
       const { data } = await axios.get(`${recommendationApiUrl}/${userId}`);
       if (data.success) {
-        setRecommendedSongs(data.recommended_songs); // Store recommendations in state
+        setRecommendedSongs(data.recommended_songs);
       }
     } catch (error) {
       console.error("Error fetching recommendations:", error);
     }
   };
 
-  // Toggle like/unlike song
+  // ✅ Toggle Like/Unlike Song
   const toggleLike = async (songId) => {
     if (!userData) {
       toast.error("You need to log in to like songs!");
@@ -95,21 +101,42 @@ export const AppContextProvider = (props) => {
 
     try {
       if (likedSongs.includes(songId)) {
-        // Unlike the song
         await axios.post(`${backendUrl}/api/songs/unlike`, { userId: userData._id, songId });
         setLikedSongs(likedSongs.filter((id) => id !== songId));
       } else {
-        // Like the song
         await axios.post(`${backendUrl}/api/songs/like`, { userId: userData._id, songId });
         setLikedSongs([...likedSongs, songId]);
       }
-      fetchRecommendedSongs(userData._id); // Refresh recommendations after like change
+      fetchRecommendedSongs(userData._id);
     } catch (error) {
       console.error("Error updating like status:", error);
     }
   };
 
-  // Fetch all users (Admin Only)
+  // ✅ Queue Management
+  const addToQueue = (song) => {
+    setQueue((prevQueue) => [...prevQueue, song]);
+
+    if (queue.length === 0) {
+      setCurrentTrackIndex(0);
+      setIsPlaying(true);
+    }
+  };
+
+  const removeFromQueue = (index) => {
+    setQueue((prevQueue) => prevQueue.filter((_, i) => i !== index));
+    if (index < currentTrackIndex) {
+      setCurrentTrackIndex((prevIndex) => prevIndex - 1);
+    }
+  };
+
+  const clearQueue = () => {
+    setQueue([]);
+    setCurrentTrackIndex(0);
+    setIsPlaying(false);
+  };
+
+  // ✅ Fetch All Users (Admin)
   const fetchUsers = async () => {
     if (userData?.role !== "admin") return;
     try {
@@ -120,7 +147,7 @@ export const AppContextProvider = (props) => {
     }
   };
 
-  // Fetch all songs (Admin Only)
+  // ✅ Fetch All Songs (Admin)
   const fetchSongs = async () => {
     if (userData?.role !== "admin") return;
     try {
@@ -131,7 +158,7 @@ export const AppContextProvider = (props) => {
     }
   };
 
-  // Delete user (Admin Only)
+  // ✅ Delete User (Admin)
   const deleteUser = async (userId) => {
     try {
       await axios.delete(`${backendUrl}/api/admin/users/${userId}`);
@@ -143,7 +170,7 @@ export const AppContextProvider = (props) => {
     }
   };
 
-  // Delete song (Admin Only)
+  // ✅ Delete Song (Admin)
   const deleteSong = async (songId) => {
     try {
       await axios.delete(`${backendUrl}/api/admin/songs/${songId}`);
@@ -159,6 +186,7 @@ export const AppContextProvider = (props) => {
     getAuthState();
   }, []);
 
+  // ✅ Providing State & Functions to Context
   const value = {
     backendUrl,
     isLoggedin,
@@ -170,12 +198,31 @@ export const AppContextProvider = (props) => {
     toggleLike,
     allUsers,
     allSongs,
-    recommendedSongs, // Added recommended songs to context
+    recommendedSongs,
     fetchUsers,
     fetchSongs,
-    fetchRecommendedSongs, // Added function to fetch recommended songs
+    fetchRecommendedSongs,
     deleteUser,
     deleteSong,
+
+    // Music Player State
+    queue,
+    setQueue,
+    currentTrackIndex,
+    setCurrentTrackIndex,
+    isPlaying,
+    setIsPlaying,
+    shuffle,
+    setShuffle,
+    repeat,
+    setRepeat,
+    volume,
+    setVolume,
+    autoplay,
+    setAutoplay,
+    addToQueue,
+    removeFromQueue,
+    clearQueue,
   };
 
   return <AppContext.Provider value={value}>{props.children}</AppContext.Provider>;

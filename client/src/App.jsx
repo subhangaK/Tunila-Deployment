@@ -1,41 +1,61 @@
-import React, { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import EmailVerify from './pages/EmailVerify';
-import ResetPassword from './pages/ResetPassword';
-import Login from './pages/Login.jsx';
-import Home from './pages/Home.jsx';
-import UploadMusic from './pages/UploadMusic.jsx';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import PlaylistsPage from './pages/PlaylistsPage.jsx';
-import PlaylistSongsPage from './pages/PlaylistSongsPage.jsx';
-import MusicPlayer from './components/MusicPlayer.jsx';
-import LikedSongs from './pages/LikedSongs.jsx';
-import AdminDashboard from './pages/AdminDashboard.jsx';
+import React, { useState, useContext } from "react";
+import { Routes, Route } from "react-router-dom";
+import EmailVerify from "./pages/EmailVerify";
+import ResetPassword from "./pages/ResetPassword";
+import Login from "./pages/Login.jsx";
+import Home from "./pages/Home.jsx";
+import UploadMusic from "./pages/UploadMusic.jsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import PlaylistsPage from "./pages/PlaylistsPage.jsx";
+import PlaylistSongsPage from "./pages/PlaylistSongsPage.jsx";
+import MusicPlayer from "./components/MusicPlayer.jsx";
+import LikedSongs from "./pages/LikedSongs.jsx";
+import AdminDashboard from "./pages/AdminDashboard.jsx";
 import UserProfilePage from "./pages/UserProfilePage";
+import { AppContext } from "./context/AppContext";  // ✅ Import AppContext
 
 const App = () => {
-  const [currentTrack, setCurrentTrack] = useState(null); // State for the current track
+  const { queue, isPlaying, setIsPlaying, currentTrackIndex, setCurrentTrackIndex, addToQueue } = useContext(AppContext);  // ✅ Get addToQueue from AppContext
+  const [currentTrack, setCurrentTrack] = useState(null);
+
+  // ✅ Function to handle playing a track and adding to queue
+  const handleTrackChange = (track) => {
+    setCurrentTrack(track);
+    
+    // ✅ Add track to queue if not already present
+    if (!queue.some((song) => song._id === track._id)) {
+      addToQueue(track);
+    }
+
+    // ✅ Set index of currently playing song
+    const trackIndex = queue.findIndex((song) => song._id === track._id);
+    setCurrentTrackIndex(trackIndex >= 0 ? trackIndex : queue.length - 1);
+    
+    setIsPlaying(true);
+  };
 
   return (
     <div>
       <ToastContainer />
       <Routes>
-        <Route path="/" element={<Home setCurrentTrack={setCurrentTrack} />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Home setCurrentTrack={handleTrackChange} />} />
+        <Route path="/login" element={<Login setCurrentTrack={handleTrackChange} />} />
         <Route path="/email-verify" element={<EmailVerify />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin" element={<AdminDashboard setCurrentTrack={handleTrackChange} />} />
         <Route path="/upload-music" element={<UploadMusic />} />
-        <Route path="/playlists" element={<PlaylistsPage />} />
-        <Route path="/liked-songs" element={<LikedSongs setCurrentTrack={setCurrentTrack} />} />
-        <Route path="/profile/:userId" element={<UserProfilePage setCurrentTrack={setCurrentTrack} />} />;
+        <Route path="/playlists" element={<PlaylistsPage setCurrentTrack={handleTrackChange} />} />
+        <Route path="/liked-songs" element={<LikedSongs setCurrentTrack={handleTrackChange} />} />
+        <Route path="/profile/:userId" element={<UserProfilePage setCurrentTrack={handleTrackChange} />} />
         <Route
           path="/playlists/:id"
-          element={<PlaylistSongsPage setCurrentTrack={setCurrentTrack} />}
+          element={<PlaylistSongsPage setCurrentTrack={handleTrackChange} />}
         />
       </Routes>
-      {currentTrack && <MusicPlayer currentTrack={currentTrack} />}
+
+      {/* ✅ Ensure MusicPlayer only renders when there are songs in queue */}
+      {queue.length > 0 && <MusicPlayer />}
     </div>
   );
 };

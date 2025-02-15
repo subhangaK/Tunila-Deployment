@@ -9,7 +9,7 @@ import { assets } from "../assets/assets";
 
 const UserProfilePage = ({ setCurrentTrack }) => {
   const { userId } = useParams();
-  const { backendUrl, isLoggedin, userData } = useContext(AppContext);
+  const { backendUrl, isLoggedin, userData, addToQueue } = useContext(AppContext);
   const [profile, setProfile] = useState(null);
   const [likedSongs, setLikedSongs] = useState(new Set());
   const [playlists, setPlaylists] = useState([]);
@@ -36,8 +36,8 @@ const UserProfilePage = ({ setCurrentTrack }) => {
     fetchProfile();
   }, [backendUrl, userId]);
 
-   // Handle cover image upload
-   const handleCoverUpload = async (e) => {
+  // Handle cover image upload
+  const handleCoverUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -130,18 +130,12 @@ const UserProfilePage = ({ setCurrentTrack }) => {
         { withCredentials: true }
       );
       setPlaylists([...playlists, response.data.playlist]);
-      toast.success("New playlist created and song added!", {
-        position: "top-right",
-        autoClose: 3000,
-      });
+      toast.success("New playlist created and song added!");
       setShowModal(false);
       setNewPlaylistName("");
     } catch (error) {
       console.error("Error creating playlist:", error);
-      toast.error("Failed to create playlist. Please try again.", {
-        position: "top-right",
-        autoClose: 3000,
-      });
+      toast.error("Failed to create playlist. Please try again.");
     }
   };
 
@@ -169,19 +163,19 @@ const UserProfilePage = ({ setCurrentTrack }) => {
       <Header />
       <div className="user-profile">
         {/* Cover Image & User Name */}
-        <div className="cover-image-container">
-          <img src={`${backendUrl}${profile.coverImage}`} alt="Cover" className="cover-image" />
-          <div className="artist-info">
+        <div className="user-profile-cover-image-container">
+          <img src={`${backendUrl}${profile.coverImage}`} alt="Cover" className="user-profile-cover-image" />
+          <div className="user-profile-artist-info">
             {profile.isAccountVerified && (
-              <div className="verified-tag">
-                Verified Artist <img src={assets.verified_icon} alt="Verified" className="verified-icon" />
+              <div className="user-profile-verified-tag">
+                Verified Artist <img src={assets.verified_icon} alt="Verified" className="user-profile-verified-icon" />
               </div>
             )}
-            <h1 className="username">{profile.name}</h1>
+            <h1 className="user-profile-username">{profile.name}</h1>
           </div>
 
           {isLoggedin && userData?.userId === userId && (
-            <label htmlFor="cover-upload" className="cover-upload-label">
+            <label htmlFor="cover-upload" className="user-profile-cover-upload-label">
               Change Cover
               <input
                 type="file"
@@ -197,8 +191,8 @@ const UserProfilePage = ({ setCurrentTrack }) => {
         {/* Popular Songs Section */}
         {profile.songs.length > 0 && (
           <>
-            <h2>Popular Songs from Artist</h2>
-            <table className="songs-table">
+            <h2 className="user-profile-section-title">Popular Songs from Artist</h2>
+            <table className="user-profile-songs-table">
               <thead>
                 <tr>
                   <th>Cover</th>
@@ -213,18 +207,20 @@ const UserProfilePage = ({ setCurrentTrack }) => {
                   .sort((a, b) => b.likedBy.length - a.likedBy.length)
                   .slice(0, 5)
                   .map((song) => (
-                    <tr key={song._id} onClick={() => setCurrentTrack(song)} className="clickable-row">
+                    <tr key={song._id} onClick={() => setCurrentTrack(song)} className="user-profile-clickable-row">
                       <td>
-                        <img src={`${backendUrl}${song.coverImage}`} alt={song.title} className="table-song-cover" />
+                        <img src={`${backendUrl}${song.coverImage}`} alt={song.title} className="user-profile-table-song-cover" />
                       </td>
                       <td>{song.title}</td>
                       <td>{song.genre}</td>
                       <td>{song.likedBy.length}</td>
                       <td>
+                      {isLoggedin && (
+                      <>
                         <img
                           src={likedSongs.has(song._id) ? assets.liked_icon : assets.notliked_icon}
                           alt="Like"
-                          className="like-icon"
+                          className="user-profile-like-icon"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleLikeToggle(song._id);
@@ -233,11 +229,22 @@ const UserProfilePage = ({ setCurrentTrack }) => {
                         <img
                           src={assets.add_icon}
                           alt="Add to Playlist"
-                          className="add-to-playlist-icon"
+                          className="user-profile-add-to-playlist-icon"
                           onClick={(e) => {
                             e.stopPropagation();
                             setSelectedSong(song);
                             setShowModal(true);
+                          }}
+                        />
+                        </>
+                      )}
+                        <img
+                          src={assets.add_queue_icon}
+                          alt="Add to Queue"
+                          className="user-profile-add-queue-icon"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            addToQueue(song);
                           }}
                         />
                       </td>
@@ -248,54 +255,88 @@ const UserProfilePage = ({ setCurrentTrack }) => {
           </>
         )}
 
-{showModal && (
-        <div className="modal">
-          <h3>Select a Playlist</h3>
-          <div className="playlist-grid">
-            {playlists.map((playlist) => (
-              <div
-                key={playlist._id}
-                className="playlist-item"
-                onClick={() => addToPlaylist(playlist._id)}
-              >
-                <img
-                  src={`${backendUrl}${playlist.coverImage}`}
-                  alt={playlist.name}
-                  className="playlist-cover"
-                />
-                <p className="playlist-name">{playlist.name}</p>
-              </div>
-            ))}
-          </div>
-          <h4>Create New Playlist</h4>
-          <input
-            type="text"
-            value={newPlaylistName}
-            onChange={(e) => setNewPlaylistName(e.target.value)}
-            placeholder="Enter playlist name"
-          />
-          <button onClick={createPlaylist}>Create Playlist</button>
-          <button onClick={() => setShowModal(false)}>Close</button>
-        </div>
-      )}
-    </div>
-        {/* Uploaded Songs */}
-        <h2>Uploaded Songs</h2>
+        {/* Uploaded Songs Section */}
+        <h2 className="user-profile-section-title">Uploaded Songs</h2>
         {profile.songs.length > 0 ? (
-          <div className="songs-grid">
+          <div className="user-profile-uploaded-songs">
             {profile.songs.map((song) => (
-              <div key={song._id} className="song-card" onClick={() => setCurrentTrack(song)}>
-                <img src={`${backendUrl}${song.coverImage}`} alt={song.title} className="song-cover" />
-                <div className="song-info">
-                  <p className="song-title">{song.title}</p>
-                  <p className="song-artist">{song.artist}</p>
+              <div key={song._id} className="user-profile-song-card">
+                <img
+                  src={`${backendUrl}${song.coverImage}`}
+                  alt={song.title}
+                  className="user-profile-song-cover"
+                  onClick={() => setCurrentTrack(song)}
+                />
+                <div className="user-profile-song-info">
+                  <p className="user-profile-song-title">{song.title}</p>
+                  <p className="user-profile-song-artist">{song.artist}</p>
+                  <div className="user-profile-song-options">
+                    {isLoggedin && (
+                      <>
+                        <img
+                          src={likedSongs.has(song._id) ? assets.liked_icon : assets.notliked_icon}
+                          alt="Like"
+                          className="user-profile-like-icon"
+                          onClick={() => handleLikeToggle(song._id)}
+                        />
+                        <img
+                          src={assets.add_icon}
+                          alt="Add to Playlist"
+                          className="user-profile-add-to-playlist-icon"
+                          onClick={() => {
+                            setSelectedSong(song);
+                            setShowModal(true);
+                          }}
+                        />
+                      </>
+                    )}
+                    <img
+                      src={assets.add_queue_icon}
+                      alt="Add to Queue"
+                      className="user-profile-add-queue-icon"
+                      onClick={() => addToQueue(song)}
+                    />
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <p className="no-content">No songs uploaded yet.</p>
+          <p className="user-profile-no-content">No songs uploaded yet.</p>
         )}
+
+        {/* Playlist Modal */}
+        {showModal && (
+          <div className="user-profile-modal">
+            <h3>Select a Playlist</h3>
+            <div className="user-profile-playlist-grid">
+              {playlists.map((playlist) => (
+                <div
+                  key={playlist._id}
+                  className="user-profile-playlist-item"
+                  onClick={() => addToPlaylist(playlist._id)}
+                >
+                  <img
+                    src={`${backendUrl}${playlist.coverImage}`}
+                    alt={playlist.name}
+                    className="user-profile-playlist-cover"
+                  />
+                  <p className="user-profile-playlist-name">{playlist.name}</p>
+                </div>
+              ))}
+            </div>
+            <h4>Create New Playlist</h4>
+            <input
+              type="text"
+              value={newPlaylistName}
+              onChange={(e) => setNewPlaylistName(e.target.value)}
+              placeholder="Enter playlist name"
+            />
+            <button onClick={createPlaylist}>Create Playlist</button>
+            <button onClick={() => setShowModal(false)}>Close</button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

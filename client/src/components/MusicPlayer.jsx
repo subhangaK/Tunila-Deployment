@@ -1,152 +1,279 @@
-import React, { useState, useRef, useEffect } from "react";
-import "../css/MusicPlayer.css";
+import React, { useState, useEffect, useRef, useContext } from "react";
+import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
+import "../css/MusicPlayer.css";
 
-const MusicPlayer = ({ currentTrack, setCurrentTrack, songs }) => {
+const MusicPlayer = () => {
+  const {
+    backendUrl,
+    userData,
+    recommendedSongs,
+    queue,
+    setQueue,
+    currentTrackIndex,
+    setCurrentTrackIndex,
+    isPlaying,
+    setIsPlaying,
+    volume,
+    setVolume,
+    shuffle,
+    setShuffle,
+    repeat,
+    setRepeat,
+    autoplay,
+    setAutoplay,
+  } = useContext(AppContext);
+
   const audioRef = useRef(null);
-  const progressRef = useRef(null);
-  const volumeRef = useRef(null);
-
-  const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const [volume, setVolume] = useState(1);
+  const [duration, setDuration] = useState(0);
+  const [showQueue, setShowQueue] = useState(false);
+  const [draggedItem, setDraggedItem] = useState(null);
 
-  // Set the audio source and play it when the track changes
   useEffect(() => {
-    if (audioRef.current && currentTrack) {
-      audioRef.current.src = `http://localhost:4000${currentTrack.filePath}`;
-      playSong(); // Auto-play when a new track is set
-    }
-  }, [currentTrack]);
-
-  // Handle play
-  const playSong = () => {
     if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.play();
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  }, [isPlaying, currentTrackIndex, queue]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+    }
+  }, [volume]);
+
+  const handleTimeUpdate = () => {
+    setCurrentTime(audioRef.current.currentTime);
+    setDuration(audioRef.current.duration);
+  };
+
+  const handleEnded = () => {
+    if (repeat === "one") {
+      audioRef.current.currentTime = 0;
       audioRef.current.play();
-      setIsPlaying(true);
+    } else {
+      handleNext();
     }
   };
 
-  // Handle pause
-  const pauseSong = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-    }
-  };
+  const handleNext = () => {
+    if (queue.length === 0) return;
 
-  // Handle volume change
-  const changeVolume = (e) => {
-    const progressWidth = volumeRef.current.offsetWidth;
-    const clickX = e.nativeEvent.offsetX;
-    const newVolume = clickX / progressWidth;
-    if (audioRef.current) {
-      audioRef.current.volume = newVolume;
-      setVolume(newVolume);
-    }
-  };
-
-  // Handle seeking through the song (progress bar click)
-  const seekSong = (e) => {
-    const progressWidth = progressRef.current.offsetWidth;
-    const clickX = e.nativeEvent.offsetX;
-    const duration = audioRef.current.duration;
-    if (audioRef.current) {
-      audioRef.current.currentTime = (clickX / progressWidth) * duration;
-    }
-  };
-
-  // Update the current time of the song as it plays
-  useEffect(() => {
-    const updateTime = () => {
-      if (audioRef.current) {
-        setCurrentTime(audioRef.current.currentTime);
+    if (shuffle) {
+      const randomIndex = Math.floor(Math.random() * queue.length);
+      setCurrentTrackIndex(randomIndex);
+    } else if (currentTrackIndex < queue.length - 1) {
+      setCurrentTrackIndex(currentTrackIndex + 1);
+    } else {
+      if (repeat === "all") {
+        setCurrentTrackIndex(0);
+      } else if (autoplay && recommendedSongs.length > 0) {
+        const newQueue = [...queue, ...recommendedSongs];
+        setQueue(newQueue);
+        setCurrentTrackIndex(currentTrackIndex + 1);
+      } else {
+        setIsPlaying(false);
       }
-    };
-
-    const audioElement = audioRef.current;
-    if (audioElement) {
-      audioElement.addEventListener("timeupdate", updateTime);
     }
-
-    return () => {
-      if (audioElement) {
-        audioElement.removeEventListener("timeupdate", updateTime);
-      }
-    };
-  }, []);
-
-  // Skip to next song
-  const nextSong = () => {
-    const nextIndex = (songs.findIndex(song => song._id === currentTrack._id) + 1) % songs.length;
-    setCurrentTrack(songs[nextIndex]);
   };
 
-  // Skip to previous song
-  const prevSong = () => {
-    const prevIndex = (songs.findIndex(song => song._id === currentTrack._id) - 1 + songs.length) % songs.length;
-    setCurrentTrack(songs[prevIndex]);
+  const handlePrevious = () => {
+    if (currentTrackIndex > 0) {
+      setCurrentTrackIndex(currentTrackIndex - 1);
+    }
   };
 
-  // Format time to minutes:seconds
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
-  // Prevent rendering if no song is selected
-  if (!currentTrack) return null;
+  const handleProgressClick = (e) => {
+    const rect = e.target.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const percentage = x / rect.width;
+    const newTime = percentage * duration;
+    audioRef.current.currentTime = newTime;
+  };
+
+  const toggleShuffle = () => setShuffle(!shuffle);
+
+  const toggleRepeat = () => {
+    const modes = ["off", "all", "one"];
+    setRepeat(modes[(modes.indexOf(repeat) + 1) % modes.length]);
+  };
+
+  const handleDragStart = (e, index) => {
+    setDraggedItem(index);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  };
+
+  const handleDrop = (e, targetIndex) => {
+    if (draggedItem === null) return;
+
+    const newQueue = [...queue];
+    const [removed] = newQueue.splice(draggedItem, 1);
+    newQueue.splice(targetIndex, 0, removed);
+    
+    setQueue(newQueue);
+    if (draggedItem === currentTrackIndex) {
+      setCurrentTrackIndex(targetIndex);
+    } else if (targetIndex <= currentTrackIndex && draggedItem > currentTrackIndex) {
+      setCurrentTrackIndex(currentTrackIndex + 1);
+    } else if (targetIndex >= currentTrackIndex && draggedItem < currentTrackIndex) {
+      setCurrentTrackIndex(currentTrackIndex - 1);
+    }
+    setDraggedItem(null);
+  };
+
+  const removeFromQueue = (index) => {
+    const newQueue = queue.filter((_, i) => i !== index);
+    setQueue(newQueue);
+    if (index < currentTrackIndex) {
+      setCurrentTrackIndex(currentTrackIndex - 1);
+    }
+  };
+
+  const currentSong = queue[currentTrackIndex] || {};
 
   return (
-    <div className="music-player">
-      <audio ref={audioRef}></audio>
-
-      <div className="song-info">
-        <img
-          src={`http://localhost:4000${currentTrack.coverImage}`}
-          alt={currentTrack.title}
-        />
-        <p className="song-title">{currentTrack.title}</p>
-        <p className="song-album">{currentTrack.artist || "Unknown"}</p>
-      </div>
-
-      <div className="middle-section">
-        <div className="progress-container">
-          <span>{formatTime(currentTime)}</span>
-          <div className="progress-bar" ref={progressRef} onClick={seekSong}>
-            <div
-              className="progress"
-              style={{
-                width: `${(currentTime / (audioRef.current?.duration || 1)) * 100}%`,
-              }}
-            ></div>
+    <div className={`music-player ${queue.length > 0 ? "active" : ""}`}>
+      <div className="music-player-player-main">
+        <div className="music-player-song-info">
+          <img
+            src={`${backendUrl}${currentSong.coverImage}`}
+            alt={currentSong.title}
+          />
+          <div>
+            <h4>{currentSong.title}</h4>
+            <p>{currentSong.artist}</p>
           </div>
-          <span>{formatTime(audioRef.current?.duration || 0)}</span>
         </div>
 
-        <div className="player-controls">
-          <img onClick={prevSong} src={assets.prev_icon} alt="Previous" />
-          {isPlaying ? (
-            <img onClick={pauseSong} src={assets.pause_icon} alt="Pause" />
-          ) : (
-            <img onClick={playSong} src={assets.play_icon} alt="Play" />
-          )}
-          <img onClick={nextSong} src={assets.next_icon} alt="Next" />
-        </div>
-      </div>
+        <div className="music-player-controls">
+          <div className="music-player-top-controls">
+            <button onClick={toggleShuffle} className={shuffle ? "active" : ""}>
+              <img src={shuffle? assets.shuffle_icon: assets.shuffle_off_icon} alt="Shuffle" />
+            </button>
+            <button onClick={handlePrevious}>
+              <img className="music-player-prevIcon" src={assets.prev_icon} alt="Previous" />
+            </button>
+            <button
+              className="music-player-play-pause"
+              onClick={() => setIsPlaying(!isPlaying)}
+            >
+              <img
+                src={isPlaying ? assets.pause_icon : assets.play_icon}
+                alt={isPlaying ? "Pause" : "Play"}
+              />
+            </button>
+            <button onClick={handleNext}>
+              <img className="music-player-nextIcon" src={assets.next_icon} alt="Next" />
+            </button>
+            <button
+              onClick={toggleRepeat}
+              className={repeat !== "off" ? "active" : ""}
+            >
+              <img src={assets.loop_icon} alt="Repeat" />
+              {repeat === "one" && <span>1</span>}
+            </button>
+          </div>
 
-      <div className="volume-container">
-        <img src={assets.volume_icon} alt="Volume" />
-        <div className="volume-bar" ref={volumeRef} onClick={changeVolume}>
+          <div className="music-player-progress-container" onClick={handleProgressClick}>
+            <div
+              className="music-player-progress-bar"
+              style={{ width: `${(currentTime / duration) * 100}%` }}
+            />
+            <div className="music-player-time-display">
+              <span>{formatTime(currentTime)}</span>
+              <span>{formatTime(duration)}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="music-player-right-controls">
+          <div className="music-player-volume-control">
+            <img src={assets.volume_icon} alt="Volume" />
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.1"
+              value={volume}
+              onChange={(e) => setVolume(parseFloat(e.target.value))}
+            />
+          </div>
           <div
-            className="volume-progress"
-            style={{
-              width: `${volume * 100}%`,
-            }}
-          ></div>
+            className="music-player-queue-btn"
+            onClick={() => setShowQueue(!showQueue)}
+          >
+          <img src={assets.queue_icon} alt="Queue" />
+          </div>
+          <div className="music-player-autoplay-toggle">
+            <span>Autoplay</span>
+            <img
+              src={autoplay ? assets.switch_on_icon : assets.switch_off_icon}
+              alt="Autoplay"
+              onClick={() => setAutoplay(!autoplay)}
+            />
+          </div>
         </div>
       </div>
+
+      {showQueue && (
+        <div className="music-player-queue-panel">
+          <div className="music-player-queue-header">
+            <h3>Queue ({queue.length})</h3>
+            <button onClick={() => setShowQueue(false)}>
+              <img src={assets.close_icon} alt="Close" />
+            </button>
+          </div>
+          <div className="music-player-queue-list">
+            {queue.map((song, index) => (
+              <div
+                key={index}
+                className={`music-player-queue-item ${index === currentTrackIndex ? "current" : ""}`}
+                draggable
+                onDragStart={(e) => handleDragStart(e, index)}
+                onDragOver={(e) => handleDragOver(e, index)}
+                onDrop={(e) => handleDrop(e, index)}
+              >
+                <div className="music-player-drag-handle">≡</div>
+                <img
+                  className="song-cover-queue"
+                  src={`${backendUrl}${song.coverImage}`}
+                />
+                <div className="music-player-song-info">
+                  <h4>{song.title}</h4>
+                </div>
+                <div
+                  className="music-player-remove-btn"
+                  onClick={() => removeFromQueue(index)}
+                >
+                 <img className="remove-from-queue-icon" src={assets.delete_icon} /> 
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <audio
+        ref={audioRef}
+        src={currentSong.filePath ? `${backendUrl}${currentSong.filePath}` : ""}
+        onTimeUpdate={handleTimeUpdate}
+        onEnded={handleEnded}
+      />
     </div>
   );
 };

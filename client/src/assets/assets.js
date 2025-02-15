@@ -36,7 +36,9 @@ import liked_icon from './liked.png'
 import add_icon from './add.png'
 import dropdown_icon from "./dropdown.png"
 import verified_icon from "./verified.png"
-
+import add_queue_icon from "./add_queue.png"
+import close_icon from "./close.png"
+import shuffle_off_icon from "./shuffle_off.png"
 
 
 export const assets = {
@@ -77,6 +79,9 @@ export const assets = {
     notliked_icon,
     add_icon,
     dropdown_icon,
-    verified_icon
+    verified_icon,
+    add_queue_icon,
+    close_icon,
+    shuffle_off_icon
 }
 

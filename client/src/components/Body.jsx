@@ -15,7 +15,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
   const [showModal, setShowModal] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState("");
 
-  const { backendUrl, isLoggedin, userData, recommendedSongs, fetchRecommendedSongs } = useContext(AppContext);
+  const { backendUrl, isLoggedin, userData, recommendedSongs, fetchRecommendedSongs, addToQueue } = useContext(AppContext);
   const userId = userData?.userId;
 
   // Fetch songs
@@ -35,6 +35,12 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
 
     fetchSongs();
   }, [backendUrl]);
+
+    // Function to handle song play
+    const handlePlaySong = (song) => {
+      setCurrentTrack(song);
+      addToQueue(song);
+    };
 
   // Fetch recommended songs **only when userData is available**
   useEffect(() => {
@@ -238,6 +244,12 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
                       </>
                     )}
                   </div>
+                   <img 
+                    src={assets.add_queue_icon}
+                    alt="Add To Queue"
+                    className="add_queue_icon"
+                    onClick={() =>addToQueue(song)}
+                  />
                 </div>
               </div>
             ))}
@@ -281,6 +293,12 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
                   </>
                 )}
               </div>
+              <img 
+                    src={assets.add_queue_icon}
+                    alt="Add To Queue"
+                    className="add_queue_icon"
+                    onClick={() =>addToQueue(song)}
+                  />
             </div>
           </div>
         ))}

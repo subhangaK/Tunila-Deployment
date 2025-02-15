@@ -4,6 +4,7 @@ import axios from "axios";
 import "../css/PlaylistSongsPage.css";
 import Header from "../components/Header";
 import { assets } from "../assets/assets";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AppContext } from "../context/AppContext";
 
@@ -18,7 +19,7 @@ const PlaylistSongsPage = ({ setCurrentTrack }) => {
   const [selectedSong, setSelectedSong] = useState(null);
   
 
-  const { backendUrl, userData, isLoggedin } = useContext(AppContext);
+  const { backendUrl, userData, isLoggedin, addToQueue  } = useContext(AppContext);
   const userId = userData?.userId;
 
   // Fetch playlist data
@@ -32,6 +33,12 @@ const PlaylistSongsPage = ({ setCurrentTrack }) => {
         toast.error("Failed to fetch playlist. Please try again.");
       }
     };
+
+  // Function to handle song play
+  const handlePlaySong = (song) => {
+    setCurrentTrack(song);
+    addToQueue(song);
+  };
 
     fetchPlaylist();
   }, [id, backendUrl]);
@@ -174,7 +181,7 @@ const PlaylistSongsPage = ({ setCurrentTrack }) => {
               />
               <div className="song-info">
                 <p className="song-title">{song.title}</p>
-                <p className="song-artist">{song.artist}</p>
+                <Link to={`/profile/${song.artistId}`}><p className="song-artist">{song.artist}</p></Link>
 
                 <div className="song-options-container">
                   <div className="song-options">
@@ -198,6 +205,13 @@ const PlaylistSongsPage = ({ setCurrentTrack }) => {
                       </>
                     )}
                   </div>
+
+                  <img 
+                    src={assets.add_queue_icon}
+                    alt="Add To Queue"
+                    className="add_queue_icon"
+                    onClick={() =>addToQueue(song)}
+                  />
 
                   {userData?.userId === playlist.owner && (
                     <img 
