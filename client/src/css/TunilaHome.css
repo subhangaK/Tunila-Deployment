@@ -1,0 +1,336 @@
+.tunila-home-page{
+padding-bottom: 150px;
+}
+
+/* ================= HERO SECTION ================= */
+.tunila-home-hero {
+    position: relative;
+    height: 90vh;
+    overflow: hidden;
+}
+
+.tunila-home-hero-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tunila-home-hero-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #fff;
+    max-width: 800px;
+}
+
+.tunila-home-hero-content h1 {
+    font-size: 50px;
+    font-weight: bold;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+    color: #ffc1cc;
+}
+
+.tunila-home-hero-content p {
+    font-size: 22px;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+}
+
+.tunila-home-cta-container {
+    margin-top: 20px;
+}
+
+.tunila-home-cta-btn {
+    padding: 12px 24px;
+    background-color: #ffc1cc;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 8px;
+    margin: 5px;
+    transition: background 0.3s ease;
+}
+
+.tunila-home-cta-btn.secondary {
+    background-color: #ff758c;
+}
+
+.tunila-home-cta-btn:hover {
+    background-color: #ff758c;
+}
+
+/* ================= MOST POPULAR SONGS ================= */
+.tunila-home-popular {
+    text-align: center;
+    padding: 50px 20px;
+    background: #f7f7f7;
+}
+
+.tunila-home-popular h2 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.tunila-home-songs-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.tunila-home-song-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    width: 220px;
+    text-align: center;
+}
+
+.tunila-home-song-card:hover {
+    transform: scale(1.05);
+}
+
+.tunila-home-song-cover {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.tunila-home-song-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    padding: 10px 0 5px;
+}
+
+.tunila-home-song-artist {
+    font-size: 14px;
+    color: #777;
+    padding-bottom: 10px;
+}
+
+.tunila-home-no-songs {
+    font-size: 18px;
+    color: #888;
+}
+
+/* ================= WHY TUNILA ================= */
+.tunila-home-why {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.tunila-home-why h2 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.tunila-home-features {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.tunila-home-feature {
+    text-align: center;
+    max-width: 250px;
+}
+
+.tunila-home-feature img {
+    width: 100px;
+    height: 100px;
+}
+
+.tunila-home-feature h3 {
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+.tunila-home-feature p {
+    font-size: 14px;
+    color: #666;
+}
+
+/* ================= FEATURED ARTISTS ================= */
+.tunila-home-featured {
+    padding: 50px 20px;
+    text-align: center;
+    background: #f9f9f9;
+}
+
+.tunila-home-featured h2 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.tunila-home-artists-carousel {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.tunila-home-artist {
+    text-align: center;
+}
+
+.tunila-home-artist img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.tunila-home-artist p {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* ================= HOW IT WORKS ================= */
+.tunila-home-how-it-works {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.tunila-home-how-it-works h2 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.tunila-home-steps {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.tunila-home-step {
+    text-align: center;
+    max-width: 200px;
+}
+
+.tunila-home-step span {
+    display: block;
+    font-size: 28px;
+    font-weight: bold;
+    color: #ff758c;
+    margin-bottom: 10px;
+}
+
+.tunila-home-step h3 {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+/* ================= TESTIMONIALS ================= */
+.tunila-home-testimonials {
+    padding: 50px 20px;
+    text-align: center;
+    background: #f7f7f7;
+}
+
+.tunila-home-testimonials h2 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.tunila-home-reviews {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.tunila-home-review {
+    max-width: 300px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.tunila-home-review p {
+    font-size: 14px;
+    color: #555;
+}
+
+.tunila-home-review span {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* ================= FINAL CALL TO ACTION ================= */
+.tunila-home-final-cta {
+    padding: 60px 20px;
+    text-align: center;
+    background: linear-gradient(to right, #ff758c, #ff7eb3);
+    color: white;
+}
+
+.tunila-home-final-cta h2 {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.tunila-home-final-cta p {
+    font-size: 18px;
+    margin: 10px 0 20px;
+}
+
+.tunila-home-final-cta .tunila-home-cta-btn {
+    background: white;
+    color: #ff758c;
+    padding: 12px 24px;
+    font-size: 18px;
+    border-radius: 8px;
+}
+
+.tunila-home-final-cta .tunila-home-cta-btn:hover {
+    background: #f7f7f7;
+}
+
+/* ================= RESPONSIVE DESIGN ================= */
+@media (max-width: 768px) {
+    .tunila-home-hero-content h1 {
+        font-size: 36px;
+    }
+
+    .tunila-home-hero-content p {
+        font-size: 18px;
+    }
+
+    .tunila-home-cta-btn {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+
+    .tunila-home-features,
+    .tunila-home-steps,
+    .tunila-home-reviews {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .tunila-home-feature,
+    .tunila-home-step,
+    .tunila-home-review {
+        max-width: 90%;
+    }
+}

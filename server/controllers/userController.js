@@ -19,7 +19,8 @@ export const getUserData = async (req, res) => {
         email: user.email,
         role: user.role,
         isAccountVerified: user.isAccountVerified,
-        coverImage: user.coverImage || "/uploads/covers/default.png", // ✅ Use default image if none
+        coverImage: user.coverImage || "/uploads/covers/default.png",
+        profilePicture: user.profilePicture || "/uploads/profile_pictures/default.png", // ✅ Default profile picture
       },
     });
   } catch (error) {
@@ -50,7 +51,8 @@ export const getUserProfile = async (req, res) => {
         userId: user._id,
         name: user.name,
         isAccountVerified: user.isAccountVerified,
-        coverImage: user.coverImage || "/uploads/covers/default.png", // ✅ Use default image if none
+        coverImage: user.coverImage || "/uploads/covers/default.png",
+        profilePicture: user.profilePicture || "/uploads/profile_pictures/default.png", // ✅ Default profile picture
         songs,
         playlists
       }
@@ -60,7 +62,7 @@ export const getUserProfile = async (req, res) => {
   }
 };
 
-// ✅ Update User Profile (e.g., Cover Image)
+// ✅ Update User Profile (e.g., Cover Image & Profile Picture)
 export const updateUserProfile = async (req, res) => {
   try {
     const userId = req.userId;
@@ -72,8 +74,13 @@ export const updateUserProfile = async (req, res) => {
     }
 
     // Update cover image if a new file is uploaded
-    if (req.file) {
-      user.coverImage = `/uploads/covers/users/${req.file.filename}`;
+    if (req.files && req.files.coverImage) {
+      user.coverImage = `/uploads/covers/users/${req.files.coverImage[0].filename}`;
+    }
+
+    // Update profile picture if a new file is uploaded
+    if (req.files && req.files.profilePicture) {
+      user.profilePicture = `/uploads/profile_pictures/${req.files.profilePicture[0].filename}`;
     }
 
     await user.save();
@@ -84,7 +91,8 @@ export const updateUserProfile = async (req, res) => {
       userProfile: {
         userId: user._id,
         name: user.name,
-        coverImage: user.coverImage || "/uploads/covers/default.png", // ✅ Use default image if none
+        coverImage: user.coverImage || "/uploads/covers/default.png",
+        profilePicture: user.profilePicture || "/uploads/profile_pictures/default.png", // ✅ Default profile picture
       },
     });
   } catch (error) {

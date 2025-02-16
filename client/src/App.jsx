@@ -4,6 +4,7 @@ import EmailVerify from "./pages/EmailVerify";
 import ResetPassword from "./pages/ResetPassword";
 import Login from "./pages/Login.jsx";
 import Home from "./pages/Home.jsx";
+import TunilaHome from "./pages/TunilaHome.jsx";
 import UploadMusic from "./pages/UploadMusic.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -40,7 +41,8 @@ const App = () => {
     <div>
       <ToastContainer />
       <Routes>
-        <Route path="/" element={<Home setCurrentTrack={handleTrackChange} />} />
+      <Route path="/" element={<TunilaHome setCurrentTrack={handleTrackChange} />} />
+        <Route path="/home" element={<Home setCurrentTrack={handleTrackChange} />} />
         <Route path="/login" element={<Login setCurrentTrack={handleTrackChange} />} />
         <Route path="/email-verify" element={<EmailVerify />} />
         <Route path="/reset-password" element={<ResetPassword />} />

@@ -36,6 +36,28 @@ const UserProfilePage = ({ setCurrentTrack }) => {
     fetchProfile();
   }, [backendUrl, userId]);
 
+  const handleProfilePictureUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("profilePicture", file);
+
+    try {
+      const response = await axios.put(`${backendUrl}/api/user/profile`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
+      });
+      setProfile((prev) => ({ 
+        ...prev, 
+        profilePicture: response.data.userProfile.profilePicture 
+      }));
+      toast.success("Profile picture updated successfully!");
+    } catch (error) {
+      toast.error("Failed to update profile picture.");
+    }
+  };
+
   // Handle cover image upload
   const handleCoverUpload = async (e) => {
     const file = e.target.files[0];
@@ -158,35 +180,68 @@ const UserProfilePage = ({ setCurrentTrack }) => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
-  return (
-    <div className="UserProfilePage">
-      <Header />
-      <div className="user-profile">
-        {/* Cover Image & User Name */}
-        <div className="user-profile-cover-image-container">
-          <img src={`${backendUrl}${profile.coverImage}`} alt="Cover" className="user-profile-cover-image" />
-          <div className="user-profile-artist-info">
-            {profile.isAccountVerified && (
-              <div className="user-profile-verified-tag">
-                Verified Artist <img src={assets.verified_icon} alt="Verified" className="user-profile-verified-icon" />
-              </div>
+ return (
+  <div className="UserProfilePage">
+    <Header />
+    <div className="user-profile">
+      {/* Cover Image Section */}
+      <div className="user-profile-cover-container">
+        <img 
+          src={`${backendUrl}${profile.coverImage}`} 
+          alt="Cover" 
+          className="user-profile-cover-image" 
+        />
+        
+        {/* Profile Picture Section */}
+        <div className="user-profile-picture-container">
+          <div className="user-profile-image-wrapper">
+            <img
+              src={`${backendUrl}${profile.profilePicture || assets.default_avatar}`}
+              alt="Profile"
+              className="user-profile-picture"
+            />
+            {isLoggedin && userData?.userId === userId && (
+              <label className="user-profile-picture-upload-label">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleProfilePictureUpload}
+                  style={{ display: "none" }}
+                />
+                <div className="user-profile-picture-overlay">
+                  <img src={assets.edit_icon} alt="Edit" className="edit-icon" />
+                </div>
+              </label>
             )}
-            <h1 className="user-profile-username">{profile.name}</h1>
           </div>
-
-          {isLoggedin && userData?.userId === userId && (
-            <label htmlFor="cover-upload" className="user-profile-cover-upload-label">
-              Change Cover
-              <input
-                type="file"
-                id="cover-upload"
-                accept="image/*"
-                style={{ display: "none" }}
-                onChange={handleCoverUpload}
-              />
-            </label>
-          )}
+          <div className="user-profile-info">
+            <h1 className="user-profile-name">
+              {profile.name}
+              {profile.isAccountVerified && (
+                <img 
+                  src={assets.verified_icon} 
+                  alt="Verified" 
+                  className="user-profile-verified-badge" 
+                />
+              )}
+            </h1>
+            <p className="user-profile-bio">{profile.bio || "Music Artist"}</p>
+          </div>
         </div>
+
+        {/* Cover Image Upload */}
+        {isLoggedin && userData?.userId === userId && (
+          <label className="user-profile-cover-upload-label">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleCoverUpload}
+              style={{ display: "none" }}
+            />
+            <img src={assets.edit_icon} alt="Edit Cover" className="edit-cover-icon" />
+          </label>
+        )}
+      </div>
 
         {/* Popular Songs Section */}
         {profile.songs.length > 0 && (
@@ -269,7 +324,6 @@ const UserProfilePage = ({ setCurrentTrack }) => {
                 />
                 <div className="user-profile-song-info">
                   <p className="user-profile-song-title">{song.title}</p>
-                  <p className="user-profile-song-artist">{song.artist}</p>
                   <div className="user-profile-song-options">
                     {isLoggedin && (
                       <>

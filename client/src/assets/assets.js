@@ -39,6 +39,11 @@ import verified_icon from "./verified.png"
 import add_queue_icon from "./add_queue.png"
 import close_icon from "./close.png"
 import shuffle_off_icon from "./shuffle_off.png"
+import hero_video from "./HeroVideo.mp4"
+import upload_music_image from "./upload-music.png"
+import streaming_image from "./streaming-music.png"
+import playlist_image from "./playlist_image.png"
+import edit_icon from "./edit.png"
 
 
 export const assets = {
@@ -82,6 +87,11 @@ export const assets = {
     verified_icon,
     add_queue_icon,
     close_icon,
-    shuffle_off_icon
+    shuffle_off_icon,
+    hero_video,
+    upload_music_image,
+    streaming_image,
+    playlist_image,
+    edit_icon
 }
 
