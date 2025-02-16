@@ -15,6 +15,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
   const [showModal, setShowModal] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState("");
   const [randomSongs, setRandomSongs] = useState([]);
+  const [featuredArtists, setFeaturedArtists] = useState([]);
 
   const { backendUrl, isLoggedin, userData, recommendedSongs, fetchRecommendedSongs, addToQueue } = useContext(AppContext);
   const userId = userData?.userId;
@@ -96,6 +97,46 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
       toast.error("Failed to update like status. Please try again.");
     }
   };
+
+  // Updated Featured Artists useEffect
+useEffect(() => {
+  const fetchFeaturedArtists = async () => {
+    try {
+      const songsResponse = await axios.get(`${backendUrl}/api/songs`);
+      const allSongs = songsResponse.data.songs;
+
+      // Get unique artist IDs from songs
+      const artistIds = [...new Set(allSongs.map(song => song.artistId))];
+
+      // Fetch user data for each artist
+      const artistsData = await Promise.all(
+        artistIds.map(async (artistId) => {
+          try {
+            const userResponse = await axios.get(`${backendUrl}/api/user/profile/${artistId}`);
+            return {
+              artistId,
+              name: userResponse.data.userProfile.name,
+              profilePicture: userResponse.data.userProfile.profilePicture || assets.default_profile
+            };
+          } catch (error) {
+            console.error("Error fetching artist data:", error);
+            return null;
+          }
+        })
+      );
+
+      // Filter out null values and get random 5 artists
+      const validArtists = artistsData.filter(artist => artist !== null);
+      const shuffledArtists = validArtists.sort(() => 0.5 - Math.random()).slice(0, 5);
+      
+      setFeaturedArtists(shuffledArtists);
+    } catch (error) {
+      console.error("Error fetching featured artists:", error);
+    }
+  };
+
+  fetchFeaturedArtists();
+}, [backendUrl]);
 
   // Fetch playlists for the logged-in user
   useEffect(() => {
@@ -318,6 +359,29 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
           </div>
         </div>
       )}
+
+      {/* Featured Artists Section */}
+      <section className="body-featured-artists">
+        <h2 className="section-title">Featured Artists</h2>
+        <div className="body-artists-grid">
+          {featuredArtists.length > 0 ? (
+            featuredArtists.map((artist) => (
+              <Link key={artist.artistId} to={`/profile/${artist.artistId}`} className="body-artist">
+                <div className="body-artist-image-container">
+                  <img 
+                    src={`${backendUrl}${artist.profilePicture}`} 
+                    alt={artist.name} 
+                    className="body-artist-image" 
+                  />
+                </div>
+                <p className="body-artist-name">{artist.name}</p>
+              </Link>
+            ))
+          ) : (
+            <p>No featured artists available.</p>
+          )}
+        </div>
+      </section>
 
       <h2 className="section-title">Public Playlists</h2>
       <div className="playlists-grid">

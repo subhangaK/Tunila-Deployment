@@ -83,7 +83,7 @@
 }
 
 .user-profile-name {
-  font-size: 32px;
+  font-size: 60px;
   margin: 0;
   color: white;
   text-shadow: 0 2px 4px rgb(0, 0, 0);
@@ -93,16 +93,16 @@
 }
 
 .user-profile-verified-badge {
-  width: 24px;
-  height: 24px;
-  margin-top: 5px;
+  width: 35px;
+  height: 35px;
+  margin-top: 20px;
 }
 
 .user-profile-bio {
-  color: #e0e0e0;
+  color: #f3e8e8;
   margin: 8px 0 0;
   font-size: 16px;
-  font-weight:600;
+  font-weight: bold;
   text-shadow: 0 2px 4px rgb(0, 0, 0);
 }
 

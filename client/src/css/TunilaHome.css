@@ -128,6 +128,7 @@ padding-bottom: 150px;
 .tunila-home-why {
     padding: 60px 20px;
     text-align: center;
+    color: #f9f9f9;;
 }
 
 .tunila-home-why h2 {
@@ -156,6 +157,7 @@ padding-bottom: 150px;
 .tunila-home-feature h3 {
     font-size: 18px;
     margin-top: 10px;
+    color: black;
 }
 
 .tunila-home-feature p {
@@ -165,37 +167,62 @@ padding-bottom: 150px;
 
 /* ================= FEATURED ARTISTS ================= */
 .tunila-home-featured {
-    padding: 50px 20px;
     text-align: center;
-    background: #f9f9f9;
+    margin-top: 50px;
+    background: white;
+    padding: 10px 40px;
 }
 
-.tunila-home-featured h2 {
+.tunila-home-featured h2{
     font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 30px;
 }
 
-.tunila-home-artists-carousel {
+
+.tunila-home-artists-grid {
     display: flex;
-    justify-content: center;
-    gap: 30px;
+    justify-content: center; /* Centers content horizontally */
+    align-items: center;
+    gap: 50px; /* Space between artists */
+    overflow-x: auto; /* Allows horizontal scrolling on small screens */
+    padding: 10px 0;
+    scrollbar-width: none; /* Hide scrollbar for a cleaner look */
+}
+
+.tunila-home-artists-grid::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Webkit browsers */
 }
 
 .tunila-home-artist {
     text-align: center;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease-in-out;
 }
 
-.tunila-home-artist img {
-    width: 120px;
-    height: 120px;
+.tunila-home-artist:hover {
+    transform: scale(1.02);
+}
+
+.tunila-home-artist-image-container {
+    width: 200px;
+    height: 200px;
     border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid white;
+}
+
+.tunila-home-artist-image {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
 }
 
-.tunila-home-artist p {
+.tunila-home-artist-name {
     margin-top: 10px;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: bold;
 }
 
@@ -203,6 +230,7 @@ padding-bottom: 150px;
 .tunila-home-how-it-works {
     padding: 60px 20px;
     text-align: center;
+    background-color: #f9f9f9;
 }
 
 .tunila-home-how-it-works h2 {
@@ -240,7 +268,7 @@ padding-bottom: 150px;
 .tunila-home-testimonials {
     padding: 50px 20px;
     text-align: center;
-    background: #f7f7f7;
+    background: white;
 }
 
 .tunila-home-testimonials h2 {

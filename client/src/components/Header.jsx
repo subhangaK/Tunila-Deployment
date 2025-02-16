@@ -54,7 +54,7 @@ function Header({ setFilteredSongs }) {
 
   // Navigate to home when logo is clicked
   const goToHome = () => {
-    navigate('/');
+    navigate('/home');
   };
 
   return (
@@ -78,8 +78,13 @@ function Header({ setFilteredSongs }) {
       <h2>Hi {userData ? userData.name : 'User'}, Welcome to Tunila</h2>
 
       {userData ? (
-        <div className="uppercase-initial" onClick={toggleMenu}>
-          {userData.name[0].toUpperCase()}
+        <div className="profile-container" onClick={toggleMenu}>
+          {/* ✅ Show Profile Picture Instead of Initial */}
+          <img 
+            className="profile-picture" 
+            src={`${backendUrl}${userData.profilePicture || "/uploads/profile_pictures/default.png"}`} 
+            alt="Profile" 
+          />
           {menuVisible && (
             <ul className="dropdown-menu">
               {/* ✅ New Profile Option */}
@@ -91,7 +96,7 @@ function Header({ setFilteredSongs }) {
               )}
 
               {!userData.isAccountVerified && <li onClick={sendVerificationOtp}>Verify Email</li>}
-              <li onClick={logout}>Log out</li>
+              <li className='logout' onClick={logout}>Log out</li>
             </ul>
           )}
         </div>

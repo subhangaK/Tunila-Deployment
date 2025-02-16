@@ -28,34 +28,45 @@ const TunilaHome = ({ setCurrentTrack }) => {
     fetchPopularSongs();
   }, [backendUrl]);
 
-  // Fetch featured artists (random 5 artists with at least one song)
-  useEffect(() => {
-    const fetchFeaturedArtists = async () => {
-      try {
-        const response = await axios.get(`${backendUrl}/api/songs`);
-        const allSongs = response.data.songs;
+  // Updated Featured Artists useEffect
+useEffect(() => {
+  const fetchFeaturedArtists = async () => {
+    try {
+      const songsResponse = await axios.get(`${backendUrl}/api/songs`);
+      const allSongs = songsResponse.data.songs;
 
-        const artistMap = new Map();
-        allSongs.forEach((song) => {
-          if (!artistMap.has(song.artistId)) {
-            artistMap.set(song.artistId, {
-              artistId: song.artistId,
-              name: song.artist,
-              profilePicture: song.artistProfilePicture || assets.default_profile, // Default profile picture if none
-            });
+      // Get unique artist IDs from songs
+      const artistIds = [...new Set(allSongs.map(song => song.artistId))];
+
+      // Fetch user data for each artist
+      const artistsData = await Promise.all(
+        artistIds.map(async (artistId) => {
+          try {
+            const userResponse = await axios.get(`${backendUrl}/api/user/profile/${artistId}`);
+            return {
+              artistId,
+              name: userResponse.data.userProfile.name,
+              profilePicture: userResponse.data.userProfile.profilePicture || assets.default_profile
+            };
+          } catch (error) {
+            console.error("Error fetching artist data:", error);
+            return null;
           }
-        });
+        })
+      );
 
-        const artistArray = Array.from(artistMap.values());
-        const shuffledArtists = artistArray.sort(() => 0.5 - Math.random()).slice(0, 5);
-        setFeaturedArtists(shuffledArtists);
-      } catch (error) {
-        console.error("Error fetching featured artists:", error);
-      }
-    };
+      // Filter out null values and get random 5 artists
+      const validArtists = artistsData.filter(artist => artist !== null);
+      const shuffledArtists = validArtists.sort(() => 0.5 - Math.random()).slice(0, 5);
+      
+      setFeaturedArtists(shuffledArtists);
+    } catch (error) {
+      console.error("Error fetching featured artists:", error);
+    }
+  };
 
-    fetchFeaturedArtists();
-  }, [backendUrl]);
+  fetchFeaturedArtists();
+}, [backendUrl]);
 
   return (
     <div className="tunila-home-page">
@@ -74,24 +85,6 @@ const TunilaHome = ({ setCurrentTrack }) => {
             <a href="/home" className="tunila-home-cta-btn">Start Listening</a>
             <a href="/upload-music" className="tunila-home-cta-btn secondary">Publish Your Music</a>
           </div>
-        </div>
-      </section>
-
-      {/* Most Popular on Tunila */}
-      <section className="tunila-home-popular">
-        <h2>Most Popular on Tunila</h2>
-        <div className="tunila-home-songs-grid">
-          {popularSongs.length > 0 ? (
-            popularSongs.map((song) => (
-              <div key={song._id} className="tunila-home-song-card" onClick={() => setCurrentTrack(song)}>
-                <img src={`${backendUrl}${song.coverImage}`} alt={song.title} className="tunila-home-song-cover" />
-                <p className="tunila-home-song-title">{song.title}</p>
-                <Link to={`/profile/${song.artistId}`}><p className="tunila-home-song-artist">{song.artist}</p></Link>
-              </div>
-            ))
-          ) : (
-            <p className="tunila-home-no-songs">No popular songs yet.</p>
-          )}
         </div>
       </section>
 
@@ -117,15 +110,43 @@ const TunilaHome = ({ setCurrentTrack }) => {
         </div>
       </section>
 
-      {/* Featured Artists */}
+      {/* Most Popular on Tunila */}
+      <section className="tunila-home-popular">
+        <h2>Most Popular on Tunila</h2>
+        <div className="tunila-home-songs-grid">
+          {popularSongs.length > 0 ? (
+            popularSongs.map((song) => (
+              <div key={song._id} className="tunila-home-song-card" onClick={() => setCurrentTrack(song)}>
+                <img src={`${backendUrl}${song.coverImage}`} alt={song.title} className="tunila-home-song-cover" />
+                <p className="tunila-home-song-title">{song.title}</p>
+                <Link to={`/profile/${song.artistId}`}><p className="tunila-home-song-artist">{song.artist}</p></Link>
+              </div>
+            ))
+          ) : (
+            <p className="tunila-home-no-songs">No popular songs yet.</p>
+          )}
+        </div>
+      </section>
+
+     {/* Featured Artists */}
       <section className="tunila-home-featured">
         <h2>Featured Artists</h2>
         <div className="tunila-home-artists-grid">
           {featuredArtists.length > 0 ? (
             featuredArtists.map((artist) => (
-              <Link key={artist.artistId} to={`/profile/${artist.artistId}`} className="tunila-home-artist">
-                <img src={`${backendUrl}${artist.profilePicture}`} alt={artist.name} className="tunila-home-artist-image" />
-                <p>{artist.name}</p>
+              <Link 
+                key={artist.artistId} 
+                to={`/profile/${artist.artistId}`} 
+                className="tunila-home-artist"
+              >
+                <div className="tunila-home-artist-image-container">
+                  <img 
+                    src={`${backendUrl}${artist.profilePicture}`} 
+                    alt={artist.name} 
+                    className="tunila-home-artist-image" 
+                  />
+                </div>
+                <p className="tunila-home-artist-name">{artist.name}</p>
               </Link>
             ))
           ) : (
