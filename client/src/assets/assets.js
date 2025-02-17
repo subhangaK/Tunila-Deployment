@@ -44,6 +44,7 @@ import upload_music_image from "./upload-music.png"
 import streaming_image from "./streaming-music.png"
 import playlist_image from "./playlist_image.png"
 import edit_icon from "./edit.png"
+import verified_icon_black from "./verified_black.png"
 
 
 export const assets = {
@@ -92,6 +93,7 @@ export const assets = {
     upload_music_image,
     streaming_image,
     playlist_image,
-    edit_icon
+    edit_icon,
+    verified_icon_black
 }
 

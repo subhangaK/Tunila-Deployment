@@ -222,15 +222,6 @@ useEffect(() => {
     }
   };
 
-  // Filter songs based on search query
-  const songsToDisplay =
-    filteredSongs && filteredSongs.length > 0
-      ? songs.filter((song) =>
-          song.title.toLowerCase().includes(filteredSongs.toLowerCase()) ||
-          song.artist.toLowerCase().includes(filteredSongs.toLowerCase())
-        )
-      : songs;
-
   return (
     <div className="home-body">
       <div className="action-buttons-container">
@@ -362,7 +353,7 @@ useEffect(() => {
 
       {/* Featured Artists Section */}
       <section className="body-featured-artists">
-        <h2 className="section-title">Featured Artists</h2>
+        <h2 className="section-title">Featured Artists in Tunila</h2>
         <div className="body-artists-grid">
           {featuredArtists.length > 0 ? (
             featuredArtists.map((artist) => (
@@ -382,6 +373,15 @@ useEffect(() => {
           )}
         </div>
       </section>
+      <div className="see-more-container">
+          <div className="horizontal-line">
+            <Link to="/featured-artists">
+              <img className="see-more-btn" src={assets.dropdown_icon} alt="See More" />
+            </Link>
+          </div>
+        </div>
+
+
 
       <h2 className="section-title">Public Playlists</h2>
       <div className="playlists-grid">

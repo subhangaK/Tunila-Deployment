@@ -28,7 +28,7 @@ const TunilaHome = ({ setCurrentTrack }) => {
     fetchPopularSongs();
   }, [backendUrl]);
 
-  // Updated Featured Artists useEffect
+// Updated Featured Artists useEffect
 useEffect(() => {
   const fetchFeaturedArtists = async () => {
     try {
@@ -196,7 +196,7 @@ useEffect(() => {
       <section className="tunila-home-final-cta">
         <h2>Join Tunila Today</h2>
         <p>Start streaming or share your own music with the world.</p>
-        <a href="/signup" className="tunila-home-cta-btn">Get Started</a>
+        <a href="/login" className="tunila-home-cta-btn">Get Started</a>
       </section>
     </div>
   );

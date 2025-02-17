@@ -16,6 +16,8 @@ import AdminDashboard from "./pages/AdminDashboard.jsx";
 import UserProfilePage from "./pages/UserProfilePage";
 import PublishedMusic from "./pages/PublishedMusic.jsx";
 import { AppContext } from "./context/AppContext";  // ✅ Import AppContext
+import FeaturedArtists from "./pages/FeaturedArtists.jsx";
+import SearchResultsPage from './components/SearchResultsPage';
 
 const App = () => {
   const { queue, isPlaying, setIsPlaying, currentTrackIndex, setCurrentTrackIndex, addToQueue } = useContext(AppContext);  // ✅ Get addToQueue from AppContext
@@ -52,6 +54,8 @@ const App = () => {
         <Route path="/liked-songs" element={<LikedSongs setCurrentTrack={handleTrackChange} />} />
         <Route path="/published-music" element={<PublishedMusic setCurrentTrack={handleTrackChange} />} />
         <Route path="/profile/:userId" element={<UserProfilePage setCurrentTrack={handleTrackChange} />} />
+        <Route path="/featured-artists" element={<FeaturedArtists setCurrentTrack={handleTrackChange} />} />
+        <Route path="/search" element={<SearchResultsPage setCurrentTrack={handleTrackChange}  />} />
         <Route
           path="/playlists/:id"
           element={<PlaylistSongsPage setCurrentTrack={handleTrackChange} />}

@@ -46,10 +46,16 @@ function Header({ setFilteredSongs }) {
     setMenuVisible(!menuVisible);
   };
 
+  // Define handleSearchChange function
   const handleSearchChange = (e) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-    setFilteredSongs(query); // Update filtered songs based on query
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearchSubmit = (e) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+    }
   };
 
   // Navigate to home when logo is clicked
@@ -71,7 +77,8 @@ function Header({ setFilteredSongs }) {
           type="text"
           placeholder="Search for music, artists, and playlists."
           value={searchQuery}
-          onChange={handleSearchChange} // Handle search input change
+          onChange={handleSearchChange} // Now this function is defined
+          onKeyDown={handleSearchSubmit}
         />
       </div>
 

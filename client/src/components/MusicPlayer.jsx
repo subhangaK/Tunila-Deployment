@@ -42,6 +42,23 @@ const MusicPlayer = () => {
   }, [isPlaying, currentTrackIndex, queue]);
 
   useEffect(() => {
+    // Toggle play/pause on spacebar press
+    const handleKeyDown = (e) => {
+      if (e.code === "Space") {
+        setIsPlaying((prevState) => !prevState);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [setIsPlaying]);
+
+  
+
+  useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume;
     }

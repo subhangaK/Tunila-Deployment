@@ -9,6 +9,7 @@ import userRouter from './routes/userRoutes.js';
 import songRoutes from './routes/songRoutes.js'; // Import song routes
 import playlistRouter from './routes/playlistRoutes.js'; 
 import adminRouter from "./routes/adminRoutes.js"; 
+import searchRoutes from './routes/searchRoutes.js'; 
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -33,6 +34,7 @@ app.use('/api/user', userRouter);
 app.use('/api/songs', songRoutes);  // Use songRoutes for /api/songs endpoint
 app.use('/api/playlists', playlistRouter);
 app.use("/api/admin", adminRouter);
+app.use('/api/search', searchRoutes);
 
 // Start the server
 app.listen(port, () => console.log(`Server started on PORT: ${port}`));

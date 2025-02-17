@@ -232,6 +232,7 @@ const UserProfilePage = ({ setCurrentTrack }) => {
         {/* Cover Image Upload */}
         {isLoggedin && userData?.userId === userId && (
           <label className="user-profile-cover-upload-label">
+            <p>Change Cover Image</p>
             <input
               type="file"
               accept="image/*"

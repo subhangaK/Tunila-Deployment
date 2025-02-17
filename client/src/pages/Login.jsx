@@ -35,7 +35,7 @@ const Login = () => {
       if (data.success) {
         setIsLoggedin(true);
         getUserData();
-        navigate('/');
+        navigate('/home');
       } else {
         toast.error(data.message);
       }

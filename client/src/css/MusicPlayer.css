@@ -96,8 +96,8 @@
 }
 
 .music-player-play-pause img {
-    width: 24px;
-    height: 24px;
+    width: 25px !important;
+    height: 25px !important;
 }
 
 /* Progress Bar */
