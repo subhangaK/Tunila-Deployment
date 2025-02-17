@@ -142,8 +142,8 @@
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative; /* This ensures the absolute positioning of child elements */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Add light shadow around the card */
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .search-top-song:hover {
@@ -258,7 +258,7 @@
 }
 
 /* Grid Layout for Playlists */
-.playlists-grid {
+.search-playlists-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
@@ -266,7 +266,7 @@
 }
 
 /* Playlist Card */
-.playlist-card {
+.search-playlist {
   background-color: #ffffff;
   border-radius: 12px;
   overflow: hidden;
@@ -276,12 +276,12 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
-.playlist-card:hover {
+.search-playlist:hover {
   transform: translateY(-5px);
 }
 
 /* Playlist Cover Image */
-.playlist-card img {
+.search-playlist img {
   width: 100%;
   height: 180px;
   object-fit: cover;
@@ -289,7 +289,7 @@
 }
 
 /* Playlist Info */
-.playlist-card h3 {
+.search-playlist h3 {
   font-size: 16px;
   font-weight: bold;
   color: #2d3436;
@@ -299,7 +299,7 @@
   text-overflow: ellipsis;
 }
 
-.playlist-card p {
+.search-playlist p {
   font-size: 14px;
   color: #666;
   margin-bottom: 10px;

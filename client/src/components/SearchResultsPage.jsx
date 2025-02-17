@@ -251,9 +251,9 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
     {results.playlists.length > 0 && (
         <section className="search-playlist-section">
           <h2>Playlists</h2>
-          <div className="playlists-grid">
+          <div className="search-playlists-grid">
             {results.playlists.map(playlist => (
-              <div key={playlist._id} className="playlist-card" 
+              <div key={playlist._id} className="search-playlist" 
                 onClick={() => navigate(`/playlists/${playlist._id}`)}>
                 <img src={`${backendUrl}${playlist.coverImage}`} alt={playlist.name} />
                 <h3>{playlist.name}</h3>

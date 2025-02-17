@@ -127,7 +127,7 @@ useEffect(() => {
 
       // Filter out null values and get random 5 artists
       const validArtists = artistsData.filter(artist => artist !== null);
-      const shuffledArtists = validArtists.sort(() => 0.5 - Math.random()).slice(0, 5);
+      const shuffledArtists = validArtists.sort(() => 0.5 - Math.random()).slice(0, 10);
       
       setFeaturedArtists(shuffledArtists);
     } catch (error) {
@@ -246,32 +246,35 @@ useEffect(() => {
       {recommendedSongs.length > 0 && (
         <>
           <h2 className="section-title">Recommended Songs</h2>
-          <div className="songs-grid">
+
+           {/* New horizontally scrollable songs section */}
+          <div className="published-songs-container">
+            <div className="published-songs-scroll">
             {recommendedSongs.map((song) => (
-              <div key={song._id} className="song-card">
-                <img
-                  src={`${backendUrl}${song.coverImage}`}
-                  alt={song.title}
-                  className="song-cover"
-                  onClick={() => setCurrentTrack(song)}
-                />
-                <div className="song-info">
-                  <p className="song-title">{song.title}</p>
-                  <Link to={`/profile/${song.artistId}`}><p className="song-artist">{song.artist}</p></Link>
+                <div key={song._id} className="published-song-card">
+                  <div className="song-image-container" onClick={() => setCurrentTrack(song)}>
+                    <img 
+                      src={`${backendUrl}${song.coverImage}`}
+                      alt={song.title}
+                      className="published-song-cover"
+                    />
+                  </div>
+                  <div className="body-song-info">
+                    <h3 className="song-title">{song.title}</h3>
+                    <Link to={`/profile/${song.artistId}`}> <p className="song-artist">{song.artist}</p> </Link>
+                  </div>
                   <div className="song-options">
                     {isLoggedin && (
                       <>
-                        <div className="like-icons">
-                          <img
-                            src={likedSongs.has(song._id) ? assets.liked_icon : assets.notliked_icon}
-                            alt="Like"
-                            className="like-icon"
-                            onClick={() => handleLikeToggle(song._id)}
-                          />
-                        </div>
+                        <img
+                          src={likedSongs.has(song._id) ? assets.liked_icon : assets.notliked_icon}
+                          alt="like"
+                          className="like-icon"
+                          onClick={() => handleLikeToggle(song._id)}
+                        />
                         <img
                           src={assets.add_icon}
-                          alt="Add to Playlist"
+                          alt="options"
                           className="options-icon"
                           onClick={() => {
                             setSelectedSong(song);
@@ -280,48 +283,50 @@ useEffect(() => {
                         />
                       </>
                     )}
+                    <img
+                      src={assets.add_queue_icon}
+                      alt="add to queue"
+                      className="add_queue_icon"
+                      onClick={() => addToQueue(song)}
+                    />
                   </div>
-                   <img 
-                    src={assets.add_queue_icon}
-                    alt="Add To Queue"
-                    className="add_queue_icon"
-                    onClick={() =>addToQueue(song)}
-                  />
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-          <div className="horizontal-line"></div>
-        </>
-      )}
+          </>
+          )}
 
-      <h2 className="section-title">Published Songs</h2>
-      <div className="songs-grid">
-      {randomSongs.map((song) => (
-          <div key={song._id} className="song-card">
-            <img
-              src={`${backendUrl}${song.coverImage}`}
-              alt={song.title}
-              className="song-cover"
-              onClick={() => setCurrentTrack(song)}
-            />
-            <div className="song-info">
-              <p className="song-title">{song.title}</p>
-              <Link to={`/profile/${song.artistId}`}><p className="song-artist">{song.artist}</p></Link>
+<h2 className="section-title">Published Songs</h2>
+      
+      {/* New horizontally scrollable songs section */}
+      <div className="published-songs-container">
+        <div className="published-songs-scroll">
+          {randomSongs.map((song) => (
+            <div key={song._id} className="published-song-card">
+              <div className="song-image-container" onClick={() => setCurrentTrack(song)}>
+                <img 
+                  src={`${backendUrl}${song.coverImage}`}
+                  alt={song.title}
+                  className="published-song-cover"
+                />
+              </div>
+              <div className="body-song-info">
+                <h3 className="song-title">{song.title}</h3>
+                <Link to={`/profile/${song.artistId}`}> <p className="song-artist">{song.artist}</p> </Link>
+              </div>
               <div className="song-options">
                 {isLoggedin && (
                   <>
-                    <div className="like-icons">
-                      <img
-                        src={likedSongs.has(song._id) ? assets.liked_icon : assets.notliked_icon}
-                        alt="Like"
-                        className="like-icon"
-                        onClick={() => handleLikeToggle(song._id)}
-                      />
-                    </div>
+                    <img
+                      src={likedSongs.has(song._id) ? assets.liked_icon : assets.notliked_icon}
+                      alt="like"
+                      className="like-icon"
+                      onClick={() => handleLikeToggle(song._id)}
+                    />
                     <img
                       src={assets.add_icon}
-                      alt="Add to Playlist"
+                      alt="options"
                       className="options-icon"
                       onClick={() => {
                         setSelectedSong(song);
@@ -330,16 +335,16 @@ useEffect(() => {
                     />
                   </>
                 )}
+                <img
+                  src={assets.add_queue_icon}
+                  alt="add to queue"
+                  className="add_queue_icon"
+                  onClick={() => addToQueue(song)}
+                />
               </div>
-              <img 
-                    src={assets.add_queue_icon}
-                    alt="Add To Queue"
-                    className="add_queue_icon"
-                    onClick={() =>addToQueue(song)}
-                  />
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
       {songs.length > 12 && (
         <div className="see-more-container">
@@ -366,6 +371,7 @@ useEffect(() => {
                   />
                 </div>
                 <p className="body-artist-name">{artist.name}</p>
+                <br /><br />
               </Link>
             ))
           ) : (
@@ -380,8 +386,6 @@ useEffect(() => {
             </Link>
           </div>
         </div>
-
-
 
       <h2 className="section-title">Public Playlists</h2>
       <div className="playlists-grid">

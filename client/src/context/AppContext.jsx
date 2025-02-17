@@ -29,7 +29,6 @@ export const AppContextProvider = (props) => {
   const [volume, setVolume] = useState(1);
   const [autoplay, setAutoplay] = useState(true);
 
-  // ✅ Check Authentication State
   const getAuthState = async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/auth/is-auth`);
@@ -38,7 +37,12 @@ export const AppContextProvider = (props) => {
         getUserData();
       }
     } catch (error) {
-      toast.error(error.message);
+      if (error.response && error.response.status === 401) {
+        // User is not logged in, but no need to show a toast
+        console.warn("User is not authenticated.");
+      } else {
+        console.error("Auth check failed:", error);
+      }
     }
   };
 
