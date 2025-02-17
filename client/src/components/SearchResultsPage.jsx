@@ -5,7 +5,7 @@ import { AppContext } from "../context/AppContext";
 import "../css/SearchResults.css";
 import Header from "./Header";
 
-const SearchResultsPage = ({setCurrentTrack}) => {
+const SearchResultsPage = ({ setCurrentTrack }) => {
   const { backendUrl, userData, isLoggedin, addToQueue } = useContext(AppContext);
   const [results, setResults] = useState({ songs: [], artists: [] });
   const [loading, setLoading] = useState(true);
@@ -17,11 +17,11 @@ const SearchResultsPage = ({setCurrentTrack}) => {
   const searchQuery = new URLSearchParams(location.search).get("q");
   const userId = userData?.userId;
 
-// Function to handle song play
-const handlePlaySong = (song) => {
+  // Function to handle song play
+  const handlePlaySong = (song) => {
     setCurrentTrack(song);
     addToQueue(song);
-};
+  };
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -88,13 +88,12 @@ const handlePlaySong = (song) => {
     if (searchQuery) fetchResults();
   }, [searchQuery, backendUrl]);
 
- 
-
   if (loading) return <div className="search-loading">Searching...</div>;
 
   return (
+    <>
+    <Header></Header>
     <div className="search-results-page">
-      <Header />
       <h1 className="search-title">Results for "{searchQuery}"</h1>
 
       {/* Top Result and Related Songs Section */}
@@ -115,9 +114,8 @@ const handlePlaySong = (song) => {
                 <p className="search-result-type">Artist</p>
               </div>
             ) : (
-              <div className="search-top-song">
+              <div className="search-top-song" onClick={() => setCurrentTrack(topResult.data)}>
                 <img
-                  onClick={() => setCurrentTrack(topResult.data)}
                   src={`${backendUrl}${topResult.data.coverImage}`}
                   alt={topResult.data.title}
                   className="search-song-cover"
@@ -146,7 +144,7 @@ const handlePlaySong = (song) => {
                     <tr 
                       key={song._id} 
                       className="search-related-row"
-                      onClick={() => navigate(`/song/${song._id}`)}
+                      onClick={() => setCurrentTrack(song)}
                     >
                       <td className="search-related-index">{index + 1}</td>
                       <td className="search-related-cover">
@@ -183,12 +181,11 @@ const handlePlaySong = (song) => {
           <h2 className="search-section-title">Songs</h2>
           <div className="search-songs-grid">
             {results.songs.map((song) => (
-              <div key={song._id} className="search-song-card">
+              <div key={song._id} className="search-song-card" onClick={() => setCurrentTrack(song)}>
                 <img
                   src={`${backendUrl}${song.coverImage}`}
                   alt={song.title}
                   className="search-song-cover"
-                  onClick={() => navigate(`/song/${song._id}`)}
                 />
                 <div className="search-song-info">
                   <p className="search-song-title">{song.title}</p>
@@ -232,8 +229,44 @@ const handlePlaySong = (song) => {
         </>
       )}
 
+
+  {/* Users Section */}
+  {results.users.length > 0 && (
+        <>
+          <h2 className="search-section-title">Users</h2>
+          <div className="search-artists-grid">
+            {results.users.map(user => (
+              <div key={user._id} className="search-artist" onClick={() => navigate(`/profile/${user._id}`)}>
+                <div className="search-artist-image-container">
+                  <img src={`${backendUrl}${user.profilePicture}`} alt={user.name} className="search-artist-image"/>
+                </div>
+                <p className="search-artist-name">{user.name}</p>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+    {/* Playlists Section */}
+    {results.playlists.length > 0 && (
+        <section className="search-playlist-section">
+          <h2>Playlists</h2>
+          <div className="playlists-grid">
+            {results.playlists.map(playlist => (
+              <div key={playlist._id} className="playlist-card" 
+                onClick={() => navigate(`/playlists/${playlist._id}`)}>
+                <img src={`${backendUrl}${playlist.coverImage}`} alt={playlist.name} />
+                <h3>{playlist.name}</h3>
+                <p>{playlist.songs.length} songs</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {!results && <p className="search-no-results">No results found.</p>}
     </div>
+    </>
   );
 };
 

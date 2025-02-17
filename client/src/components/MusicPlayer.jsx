@@ -174,7 +174,9 @@ const MusicPlayer = () => {
           />
           <div>
             <h4>{currentSong.title}</h4>
-            <Link to={`/profile/${currentSong.artistId}`}><p>{currentSong.artist}</p></Link>
+            <Link to={`/profile/${currentSong.artistId}`}>
+              <p>{typeof currentSong.artist === 'object' ? currentSong.artist?.name : currentSong.artist}</p>
+            </Link>
           </div>
         </div>
 
