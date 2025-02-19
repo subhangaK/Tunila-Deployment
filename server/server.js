@@ -10,6 +10,7 @@ import songRoutes from './routes/songRoutes.js'; // Import song routes
 import playlistRouter from './routes/playlistRoutes.js'; 
 import adminRouter from "./routes/adminRoutes.js"; 
 import searchRoutes from './routes/searchRoutes.js'; 
+import merchandiseRoutes from './routes/merchandiseRoutes.js';
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -18,7 +19,7 @@ const port = process.env.PORT || 4000;
 connectDB();
 
 // Middleware
-const allowedOrigins = ['http://localhost:5173']; // Frontend allowed origins
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000']; // Frontend allowed origins
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: allowedOrigins, credentials: true }));
@@ -35,6 +36,7 @@ app.use('/api/songs', songRoutes);  // Use songRoutes for /api/songs endpoint
 app.use('/api/playlists', playlistRouter);
 app.use("/api/admin", adminRouter);
 app.use('/api/search', searchRoutes);
+app.use('/api/merch', merchandiseRoutes);
 
 // Start the server
 app.listen(port, () => console.log(`Server started on PORT: ${port}`));

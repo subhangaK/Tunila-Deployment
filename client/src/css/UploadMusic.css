@@ -1,135 +1,207 @@
-/* Upload Music Container */
+/* UploadMusic CSS Styling */
+
+/* Main container */
 .upload-music-container {
-  max-width: 600px;
-  margin: 50px auto;
-  padding: 25px;
-  background: linear-gradient(to bottom right, #ede8e9, #f5eeef);
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  font-family: Arial, sans-serif;
-  text-align: center;
-  overflow: hidden;
+  position: relative;
+  padding: 20px;
   padding-bottom: 150px;
+  overflow: visible;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-/* Title Section */
+/* Upload header */
 .upload-header {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 20px; /* Space between icon and title */
-  margin-bottom: 30px; /* Margin below the title section */
+  margin-bottom: 30px;
+  margin-top: 20px;
 }
 
 .arrow-icon {
-  width: 30px; /* Icon width */
-  height: 30px; /* Icon height */
+  width: 24px;
+  height: 24px;
+  margin-right: 15px;
   cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.arrow-icon:hover {
+  transform: translateX(-3px);
 }
 
 .upload-music-title {
   font-size: 32px;
   font-weight: bold;
   color: #333;
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+  margin: 0;
 }
 
-/* Form */
+/* Upload form */
 .upload-music-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  width: 100%;
+  background-color: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
 }
 
-/* Input Groups */
 .input-group {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .input-group label {
-  font-size: 16px;
+  display: block;
+  margin-bottom: 8px;
   font-weight: bold;
   color: #555;
+  font-size: 16px;
 }
 
 .input-group input {
-  width: 93%;
-  padding: 12px 15px;
+  width: 100%;
+  padding: 12px;
   border: 1px solid #ddd;
-  border-radius: 10px;
-  background: #fff;
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
 }
 
 .input-group input:focus {
-  border-color: #8cb1d9;
-  box-shadow: 0 0 5px rgba(210, 196, 199, 0.8);
+  border-color: #66a2bd;
+  outline: none;
 }
 
-.artistname{
-  color: #8fc5dd;
-  font-weight: bold;
-}
-
-/* Upload Button */
-.upload-button {
-  background: linear-gradient(135deg, #8cb1d9, #66a2bd);
-  color: #fff;
-  font-size: 18px;
-  font-weight: bold;
-  padding: 14px 25px;
-  border: none;
-  border-radius: 25px;
+.input-group input[type="file"] {
+  padding: 10px;
+  border: 2px dashed #ddd;
+  background-color: #f9f9f9;
   cursor: pointer;
-  transition: 0.3s ease;
-  box-shadow: 0 4px 10px rgba(138, 255, 253, 0.4);
+}
+
+.input-group input[type="file"]:hover {
+  border-color: #bbb;
+}
+
+.input-group .artistname {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+/* Upload button */
+.upload-button {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #66a2bd, #8cb1d9);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 10px;
 }
 
 .upload-button:hover {
-  background: linear-gradient(135deg, #66a2bd, #8cb1d9);
-  box-shadow: 0 6px 15px rgba(152, 255, 253, 0.4);
+  background: linear-gradient(135deg, #8cb1d9, #66a2bd);
   transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-.not-verified-message{
-  max-width: 600px;
-  margin: 50px auto;
-  padding: 25px;
-  background: linear-gradient(to bottom right, #ede8e9, #f5eeef);
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  font-family: Arial, sans-serif;
+/* Not verified message */
+.not-verified-message {
   text-align: center;
-  overflow: hidden;
+  padding: 60px 20px;
+  max-width: 600px;
+  margin: 40px auto;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.goback{
-  color: #66a2bd;
+.not-verified-message h3 {
+  font-size: 20px;
+  color: #e74c3c;
+  margin-bottom: 20px;
+}
+
+.not-verified-message .goback {
+  display: inline-block;
+  font-size: 16px;
+  color: #3498db;
   cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.not-verified-message .goback:hover {
+  background-color: #f0f7ff;
   text-decoration: underline;
 }
 
-/* Responsive Adjustments */
+/* Animation */
+.fade-in {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* File upload areas */
+.file-upload-area {
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  padding: 30px 20px;
+  text-align: center;
+  background-color: #f9f9f9;
+  position: relative;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.file-upload-area.dragging {
+  background-color: #e6f7ff;
+  border-color: #66a2bd;
+}
+
+.file-upload-area input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.file-upload-area p {
+  margin: 0;
+  color: #666;
+  font-size: 16px;
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
   .upload-music-container {
+    padding: 15px;
+  }
+  
+  .upload-music-form {
     padding: 20px;
   }
-
-  .input-group input {
-    font-size: 12px;
-  }
-
-  .upload-button {
-    font-size: 16px;
-    padding: 12px 20px;
+  
+  .upload-header h2 {
+    font-size: 24px;
   }
 }

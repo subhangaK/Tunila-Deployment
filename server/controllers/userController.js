@@ -21,6 +21,8 @@ export const getUserData = async (req, res) => {
         isAccountVerified: user.isAccountVerified,
         coverImage: user.coverImage || "/uploads/covers/default.png",
         profilePicture: user.profilePicture || "/uploads/profile_pictures/default.png", // ✅ Default profile picture
+        canSellMerch: user.canSellMerch,
+        wishlist : user.wishlist
       },
     });
   } catch (error) {
@@ -123,5 +125,28 @@ export const deleteUser = async (req, res) => {
     res.status(200).json({ success: true, message: "User deleted successfully." });
   } catch (error) {
     res.status(500).json({ success: false, message: "Error deleting user" });
+  }
+};
+
+export const verifySeller = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+      .populate('songs')
+      .populate('merchItems');
+
+    // Verification criteria
+    const isVerified = user.isAccountVerified && user.songs.length > 0;
+    
+    if (isVerified && !user.canSellMerch) {
+      user.canSellMerch = true;
+      await user.save();
+    }
+
+    res.json({ 
+      canSellMerch: user.canSellMerch,
+      requirementsMet: isVerified
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

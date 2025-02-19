@@ -18,6 +18,31 @@ import PublishedMusic from "./pages/PublishedMusic.jsx";
 import { AppContext } from "./context/AppContext";  // ✅ Import AppContext
 import FeaturedArtists from "./pages/FeaturedArtists.jsx";
 import SearchResultsPage from './components/SearchResultsPage';
+import MerchStore from "./pages/MerchStore.jsx";
+import PaymentVerify from "./pages/PaymentVerify.jsx";
+import ArtistMerchPage from "./pages/ArtistMerchPage.jsx";
+import MerchItemDetail from "./pages/MerchItemDetail.jsx"; 
+
+// Create these simple page components for payment success/failure
+const PaymentSuccess = () => {
+  return (
+    <div className="payment-result">
+      <h1>Payment Successful!</h1>
+      <p>Your purchase was completed successfully.</p>
+      <button onClick={() => window.location.href = '/merch'}>Back to Store</button>
+    </div>
+  );
+};
+
+const PaymentFailed = () => {
+  return (
+    <div className="payment-result">
+      <h1>Payment Failed</h1>
+      <p>We couldn't process your payment. Please try again.</p>
+      <button onClick={() => window.location.href = '/merch'}>Back to Store</button>
+    </div>
+  );
+};
 
 const App = () => {
   const { queue, isPlaying, setIsPlaying, currentTrackIndex, setCurrentTrackIndex, addToQueue } = useContext(AppContext);  // ✅ Get addToQueue from AppContext
@@ -43,7 +68,7 @@ const App = () => {
     <div>
       <ToastContainer />
       <Routes>
-      <Route path="/" element={<TunilaHome setCurrentTrack={handleTrackChange} />} />
+        <Route path="/" element={<TunilaHome setCurrentTrack={handleTrackChange} />} />
         <Route path="/home" element={<Home setCurrentTrack={handleTrackChange} />} />
         <Route path="/login" element={<Login setCurrentTrack={handleTrackChange} />} />
         <Route path="/email-verify" element={<EmailVerify />} />
@@ -56,10 +81,13 @@ const App = () => {
         <Route path="/profile/:userId" element={<UserProfilePage setCurrentTrack={handleTrackChange} />} />
         <Route path="/featured-artists" element={<FeaturedArtists setCurrentTrack={handleTrackChange} />} />
         <Route path="/search" element={<SearchResultsPage setCurrentTrack={handleTrackChange}  />} />
-        <Route
-          path="/playlists/:id"
-          element={<PlaylistSongsPage setCurrentTrack={handleTrackChange} />}
-        />
+        <Route path="/merch" element={<MerchStore />} />
+        <Route path="/payment-verify" element={<PaymentVerify />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/payment-failed" element={<PaymentFailed />} />
+        <Route path="/merch/:itemId" element={<MerchItemDetail />} />
+        <Route path="/artist/:userId/merch" element={<ArtistMerchPage />} />
+        <Route path="/playlists/:id" element={<PlaylistSongsPage setCurrentTrack={handleTrackChange} />} />
       </Routes>
 
       {/* ✅ Ensure MusicPlayer only renders when there are songs in queue */}

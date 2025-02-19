@@ -360,6 +360,15 @@ const UserProfilePage = ({ setCurrentTrack }) => {
           <p className="user-profile-no-content">No songs uploaded yet.</p>
         )}
 
+        {profile.canSellMerch && (
+          <button 
+            onClick={() => navigate(`/artist/${userId}/merch`)}
+            className="view-merch-button"
+          >
+            View Artist Merchandise
+          </button>
+        )}
+
         {/* Playlist Modal */}
         {showModal && (
           <div className="user-profile-modal">

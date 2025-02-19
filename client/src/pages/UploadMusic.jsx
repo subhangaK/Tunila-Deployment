@@ -1,26 +1,29 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 import '../css/UploadMusic.css';
 import Header from '../components/Header';
-import { AppContext } from '../context/AppContext'; // Import context
+import { AppContext } from '../context/AppContext';
 import { assets } from "../assets/assets";
 
-
 const UploadMusic = () => {
-  const { userData } = useContext(AppContext); // Get user data from context
-  const navigate = useNavigate(); // Initialize navigate hook
+  const { userData } = useContext(AppContext);
+  const navigate = useNavigate();
   const [song, setSong] = useState(null);
   const [cover, setCover] = useState(null);
+  const [coverPreview, setCoverPreview] = useState(null);
   const [title, setTitle] = useState('');
   const [artist, setArtist] = useState('');
   const [genre, setGenre] = useState('');
+  const [isDraggingSong, setIsDraggingSong] = useState(false);
+  const [isDraggingCover, setIsDraggingCover] = useState(false);
+  const [fileName, setFileName] = useState('');
 
   useEffect(() => {
     if (userData) {
-      setArtist(userData.name); // Set artist to logged-in user's name
+      setArtist(userData.name);
     }
   }, [userData]);
 
@@ -53,21 +56,102 @@ const UploadMusic = () => {
         autoClose: 3000,
       });
 
-      // Optionally reset the form fields
+      // Reset form fields
       setSong(null);
       setCover(null);
+      setCoverPreview(null);
       setTitle('');
-      setArtist('');
+      setArtist(userData?.name || '');
       setGenre('');
+      setFileName('');
 
       // Navigate back to the home page after successful upload
-      navigate('/'); // Redirect to the home page ("/")
+      setTimeout(() => {
+        navigate('/');
+      }, 3000);
     } catch (error) {
       toast.error('Failed to upload music. Please try again.', {
         position: 'top-right',
         autoClose: 3000,
       });
     }
+  };
+
+  // Song file handlers
+  const handleSongDragOver = (e) => {
+    e.preventDefault();
+    setIsDraggingSong(true);
+  };
+
+  const handleSongDragLeave = (e) => {
+    e.preventDefault();
+    setIsDraggingSong(false);
+  };
+
+  const handleSongDrop = (e) => {
+    e.preventDefault();
+    setIsDraggingSong(false);
+    
+    const files = Array.from(e.dataTransfer.files).filter(file => 
+      file.type.startsWith('audio/')
+    );
+    
+    if (files.length > 0) {
+      setSong(files[0]);
+      setFileName(files[0].name);
+    }
+  };
+
+  const handleSongChange = (e) => {
+    if (e.target.files[0]) {
+      setSong(e.target.files[0]);
+      setFileName(e.target.files[0].name);
+    }
+  };
+
+  // Cover image handlers
+  const handleCoverDragOver = (e) => {
+    e.preventDefault();
+    setIsDraggingCover(true);
+  };
+
+  const handleCoverDragLeave = (e) => {
+    e.preventDefault();
+    setIsDraggingCover(false);
+  };
+
+  const handleCoverDrop = (e) => {
+    e.preventDefault();
+    setIsDraggingCover(false);
+    
+    const files = Array.from(e.dataTransfer.files).filter(file => 
+      file.type.startsWith('image/')
+    );
+    
+    if (files.length > 0) {
+      setCover(files[0]);
+      previewImage(files[0]);
+    }
+  };
+
+  const handleCoverChange = (e) => {
+    if (e.target.files[0]) {
+      setCover(e.target.files[0]);
+      previewImage(e.target.files[0]);
+    }
+  };
+
+  const previewImage = (file) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setCoverPreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeCoverImage = () => {
+    setCover(null);
+    setCoverPreview(null);
   };
 
   // Check if the user is verified
@@ -77,13 +161,13 @@ const UploadMusic = () => {
     <div>
       <Header />
       {isVerified ? (
-        <div className="upload-music-container">
-           <div className="upload-header">
+        <div className="upload-music-container fade-in">
+          <div className="upload-header">
             <img
               src={assets.arrow_icon}
               alt="back"
               className="arrow-icon"
-              onClick={() => navigate('/')} // Navigate to home when icon is clicked
+              onClick={() => navigate('/')}
             />
             <h2 className="upload-music-title">Upload Music</h2>
           </div>
@@ -106,41 +190,81 @@ const UploadMusic = () => {
                 value={artist}
                 onChange={(e) => setArtist(e.target.value)}
                 required
-                disabled // Disable input if you only want the logged-in user's name
+                disabled
               />
             </div>
             <div className="input-group">
               <label>Genre</label>
               <input
                 type="text"
-                placeholder="Enter genre"
+                placeholder="Enter genre (e.g., Rock, Hip-Hop, Jazz)"
                 value={genre}
                 onChange={(e) => setGenre(e.target.value)}
                 required
               />
             </div>
+            
             <div className="input-group">
               <label>Song File</label>
-              <input
-                type="file"
-                onChange={(e) => setSong(e.target.files[0])}
-                required
-              />
+              <div 
+                className={`file-upload-area ${isDraggingSong ? 'dragging' : ''}`}
+                onDragOver={handleSongDragOver}
+                onDragLeave={handleSongDragLeave}
+                onDrop={handleSongDrop}
+              >
+                <input
+                  type="file"
+                  onChange={handleSongChange}
+                  accept="audio/*"
+                  required={!song}
+                />
+                <p>
+                  {fileName ? 
+                    `Selected: ${fileName}` : 
+                    'Drag & drop your music file here or click to browse'}
+                </p>
+              </div>
             </div>
+            
             <div className="input-group">
               <label>Cover Image</label>
-              <input
-                type="file"
-                onChange={(e) => setCover(e.target.files[0])}
-                required
-              />
+              {!coverPreview ? (
+                <div 
+                  className={`file-upload-area ${isDraggingCover ? 'dragging' : ''}`}
+                  onDragOver={handleCoverDragOver}
+                  onDragLeave={handleCoverDragLeave}
+                  onDrop={handleCoverDrop}
+                >
+                  <input
+                    type="file"
+                    onChange={handleCoverChange}
+                    accept="image/*"
+                    required={!cover}
+                  />
+                  <p>Drag & drop your cover art here or click to browse</p>
+                </div>
+              ) : (
+                <div className="image-preview">
+                  <div className="preview-item">
+                    <img src={coverPreview} alt="Cover preview" />
+                    <button 
+                      type="button" 
+                      className="remove-image-btn" 
+                      onClick={removeCoverImage}
+                    >
+                      ×
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
-            <button type="submit" className="upload-button">Upload</button>
+            
+            <button type="submit" className="upload-button">Upload Track</button>
           </form>
           <ToastContainer />
         </div>
       ) : (
-        <div className="not-verified-message">
+        <div className="not-verified-message fade-in">
           <h3>You need to verify your email before uploading music.</h3>
           <h4 className='goback' onClick={() => navigate('/')}>Go Back</h4>
         </div>
