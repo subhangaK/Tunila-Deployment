@@ -1,13 +1,13 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import { AppContext } from '../context/AppContext';
-import MerchItem from '../components/MerchItem';
-import MerchForm from '../components/MerchForm';
-import Header from '../components/Header';
+import React, { useEffect, useState, useContext } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { AppContext } from "../context/AppContext";
+import MerchItem from "../components/MerchItem";
+import MerchForm from "../components/MerchForm";
+import Header from "../components/Header";
 import "../css/ArtistMerchPage.css";
-import { toast } from 'react-toastify';
-import { assets } from '../assets/assets';
+import { toast } from "react-toastify";
+import { assets } from "../assets/assets";
 
 const ArtistMerchPage = () => {
   const { userId } = useParams();
@@ -18,7 +18,7 @@ const ArtistMerchPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,20 +27,26 @@ const ArtistMerchPage = () => {
         setError(null);
 
         // Fetch artist profile
-        const artistRes = await axios.get(`${backendUrl}/api/user/profile/${userId}`);
+        const artistRes = await axios.get(
+          `${backendUrl}/api/user/profile/${userId}`
+        );
         setArtist(artistRes.data.userProfile);
 
         // Fetch artist merchandise
-        const merchRes = await axios.get(`${backendUrl}/api/merch/artist/${userId}`);
+        const merchRes = await axios.get(
+          `${backendUrl}/api/merch/artist/${userId}`
+        );
         setMerch(merchRes.data);
-        
+
         // Extract unique categories
-        const uniqueCategories = [...new Set(merchRes.data.map(item => item.category))];
+        const uniqueCategories = [
+          ...new Set(merchRes.data.map((item) => item.category)),
+        ];
         setCategories(uniqueCategories);
       } catch (error) {
-        console.error('Error fetching data:', error);
-        setError('Failed to load artist merchandise. Please try again.');
-        toast.error('Error loading artist merchandise');
+        console.error("Error fetching data:", error);
+        setError("Failed to load artist merchandise. Please try again.");
+        toast.error("Error loading artist merchandise");
       } finally {
         setIsLoading(false);
       }
@@ -54,16 +60,17 @@ const ArtistMerchPage = () => {
   const handleAddItem = (newItem) => {
     setMerch([...merch, newItem]);
     setShowForm(false);
-    toast.success('New merchandise added successfully!');
+    toast.success("New merchandise added successfully!");
   };
 
   const handleItemClick = () => {
     navigate(`/merch/${item._id}`);
   };
 
-  const filteredMerch = selectedCategory === 'all' 
-    ? merch 
-    : merch.filter(item => item.category === selectedCategory);
+  const filteredMerch =
+    selectedCategory === "all"
+      ? merch
+      : merch.filter((item) => item.category === selectedCategory);
 
   if (isLoading) return <div className="loading-container">Loading...</div>;
   if (error) return <div className="error-message">{error}</div>;
@@ -76,7 +83,9 @@ const ArtistMerchPage = () => {
         <div className="artist-profile-section">
           <div className="artist-profile-wrapper">
             <img
-              src={`${backendUrl}${artist?.profilePicture || assets.default_avatar}`}
+              src={`${backendUrl}${
+                artist?.profilePicture || assets.default_avatar
+              }`}
               alt={artist?.name}
               className="artist-profile-picture"
             />
@@ -84,24 +93,26 @@ const ArtistMerchPage = () => {
               <h1 className="artist-name">
                 {artist?.name}
                 {artist?.isAccountVerified && (
-                  <img 
-                    src={assets.verified_icon} 
-                    alt="Verified" 
-                    className="artist-verified-badge" 
+                  <img
+                    src={assets.verified_icon}
+                    alt="Verified"
+                    className="artist-verified-badge"
                   />
                 )}
               </h1>
               <p className="artist-bio">{artist?.bio || "Music Artist"}</p>
-              <p className="merch-count">{merch.length} items available in store</p>
+              <p className="merch-count">
+                {merch.length} items available in store
+              </p>
             </div>
           </div>
-          
+
           {isCurrentArtist && (
-            <button 
+            <button
               onClick={() => setShowForm(!showForm)}
               className="add-merch-button"
             >
-              {showForm ? 'Cancel' : 'Add New Merchandise'}
+              {showForm ? "Cancel" : "Add New Merchandise"}
             </button>
           )}
         </div>
@@ -118,16 +129,16 @@ const ArtistMerchPage = () => {
           <div className="category-filter">
             <h3>Filter by Category:</h3>
             <div className="category-buttons">
-              <button 
-                className={selectedCategory === 'all' ? 'active' : ''}
-                onClick={() => setSelectedCategory('all')}
+              <button
+                className={selectedCategory === "all" ? "active" : ""}
+                onClick={() => setSelectedCategory("all")}
               >
                 All Items
               </button>
-              {categories.map(category => (
+              {categories.map((category) => (
                 <button
                   key={category}
-                  className={selectedCategory === category ? 'active' : ''}
+                  className={selectedCategory === category ? "active" : ""}
                   onClick={() => setSelectedCategory(category)}
                 >
                   {category}
@@ -140,15 +151,20 @@ const ArtistMerchPage = () => {
         {/* Merchandise Grid */}
         {filteredMerch.length === 0 ? (
           <div className="no-merch-message">
-            <p>No merchandise available{selectedCategory !== 'all' ? ` in ${selectedCategory}` : ''}.</p>
-            {isCurrentArtist && <p>Start by adding your first merchandise item!</p>}
+            <p>
+              No merchandise available
+              {selectedCategory !== "all" ? ` in ${selectedCategory}` : ""}.
+            </p>
+            {isCurrentArtist && (
+              <p>Start by adding your first merchandise item!</p>
+            )}
           </div>
         ) : (
           <div className="merch-grid">
-            {filteredMerch.map(item => (
-              <MerchItem 
+            {filteredMerch.map((item) => (
+              <MerchItem
                 onClick={handleItemClick}
-                key={item._id} 
+                key={item._id}
                 item={item}
                 isOwner={isCurrentArtist}
                 backendUrl={backendUrl}

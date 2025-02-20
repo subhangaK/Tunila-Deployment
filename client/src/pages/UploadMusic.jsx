@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from 'react-router-dom';
-import '../css/UploadMusic.css';
-import Header from '../components/Header';
-import { AppContext } from '../context/AppContext';
+import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+import "../css/UploadMusic.css";
+import Header from "../components/Header";
+import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
 
 const UploadMusic = () => {
@@ -14,12 +14,12 @@ const UploadMusic = () => {
   const [song, setSong] = useState(null);
   const [cover, setCover] = useState(null);
   const [coverPreview, setCoverPreview] = useState(null);
-  const [title, setTitle] = useState('');
-  const [artist, setArtist] = useState('');
-  const [genre, setGenre] = useState('');
+  const [title, setTitle] = useState("");
+  const [artist, setArtist] = useState("");
+  const [genre, setGenre] = useState("");
   const [isDraggingSong, setIsDraggingSong] = useState(false);
   const [isDraggingCover, setIsDraggingCover] = useState(false);
-  const [fileName, setFileName] = useState('');
+  const [fileName, setFileName] = useState("");
 
   useEffect(() => {
     if (userData) {
@@ -31,28 +31,32 @@ const UploadMusic = () => {
     e.preventDefault();
 
     if (!song || !cover) {
-      toast.error('Please upload both song and cover image.', {
-        position: 'top-right',
+      toast.error("Please upload both song and cover image.", {
+        position: "top-right",
         autoClose: 3000,
       });
       return;
     }
 
     const formData = new FormData();
-    formData.append('song', song);
-    formData.append('cover', cover);
-    formData.append('title', title);
-    formData.append('artist', artist);
-    formData.append('genre', genre);
+    formData.append("song", song);
+    formData.append("cover", cover);
+    formData.append("title", title);
+    formData.append("artist", artist);
+    formData.append("genre", genre);
 
     try {
-      const response = await axios.post('http://localhost:4000/api/songs/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      toast.success('Music uploaded successfully!', {
-        position: 'top-right',
+      const response = await axios.post(
+        "http://localhost:4000/api/songs/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      toast.success("Music uploaded successfully!", {
+        position: "top-right",
         autoClose: 3000,
       });
 
@@ -60,18 +64,18 @@ const UploadMusic = () => {
       setSong(null);
       setCover(null);
       setCoverPreview(null);
-      setTitle('');
-      setArtist(userData?.name || '');
-      setGenre('');
-      setFileName('');
+      setTitle("");
+      setArtist(userData?.name || "");
+      setGenre("");
+      setFileName("");
 
       // Navigate back to the home page after successful upload
       setTimeout(() => {
-        navigate('/');
+        navigate("/");
       }, 3000);
     } catch (error) {
-      toast.error('Failed to upload music. Please try again.', {
-        position: 'top-right',
+      toast.error("Failed to upload music. Please try again.", {
+        position: "top-right",
         autoClose: 3000,
       });
     }
@@ -91,11 +95,11 @@ const UploadMusic = () => {
   const handleSongDrop = (e) => {
     e.preventDefault();
     setIsDraggingSong(false);
-    
-    const files = Array.from(e.dataTransfer.files).filter(file => 
-      file.type.startsWith('audio/')
+
+    const files = Array.from(e.dataTransfer.files).filter((file) =>
+      file.type.startsWith("audio/")
     );
-    
+
     if (files.length > 0) {
       setSong(files[0]);
       setFileName(files[0].name);
@@ -123,11 +127,11 @@ const UploadMusic = () => {
   const handleCoverDrop = (e) => {
     e.preventDefault();
     setIsDraggingCover(false);
-    
-    const files = Array.from(e.dataTransfer.files).filter(file => 
-      file.type.startsWith('image/')
+
+    const files = Array.from(e.dataTransfer.files).filter((file) =>
+      file.type.startsWith("image/")
     );
-    
+
     if (files.length > 0) {
       setCover(files[0]);
       previewImage(files[0]);
@@ -167,7 +171,7 @@ const UploadMusic = () => {
               src={assets.arrow_icon}
               alt="back"
               className="arrow-icon"
-              onClick={() => navigate('/')}
+              onClick={() => navigate("/")}
             />
             <h2 className="upload-music-title">Upload Music</h2>
           </div>
@@ -184,7 +188,8 @@ const UploadMusic = () => {
             </div>
             <div className="input-group">
               <label>Artist Name</label>
-              <input className='artistname'
+              <input
+                className="artistname"
                 type="text"
                 placeholder="Enter artist name"
                 value={artist}
@@ -203,11 +208,13 @@ const UploadMusic = () => {
                 required
               />
             </div>
-            
+
             <div className="input-group">
               <label>Song File</label>
-              <div 
-                className={`file-upload-area ${isDraggingSong ? 'dragging' : ''}`}
+              <div
+                className={`file-upload-area ${
+                  isDraggingSong ? "dragging" : ""
+                }`}
                 onDragOver={handleSongDragOver}
                 onDragLeave={handleSongDragLeave}
                 onDrop={handleSongDrop}
@@ -219,18 +226,20 @@ const UploadMusic = () => {
                   required={!song}
                 />
                 <p>
-                  {fileName ? 
-                    `Selected: ${fileName}` : 
-                    'Drag & drop your music file here or click to browse'}
+                  {fileName
+                    ? `Selected: ${fileName}`
+                    : "Drag & drop your music file here or click to browse"}
                 </p>
               </div>
             </div>
-            
+
             <div className="input-group">
               <label>Cover Image</label>
               {!coverPreview ? (
-                <div 
-                  className={`file-upload-area ${isDraggingCover ? 'dragging' : ''}`}
+                <div
+                  className={`file-upload-area ${
+                    isDraggingCover ? "dragging" : ""
+                  }`}
                   onDragOver={handleCoverDragOver}
                   onDragLeave={handleCoverDragLeave}
                   onDrop={handleCoverDrop}
@@ -247,9 +256,9 @@ const UploadMusic = () => {
                 <div className="image-preview">
                   <div className="preview-item">
                     <img src={coverPreview} alt="Cover preview" />
-                    <button 
-                      type="button" 
-                      className="remove-image-btn" 
+                    <button
+                      type="button"
+                      className="remove-image-btn"
                       onClick={removeCoverImage}
                     >
                       ×
@@ -258,15 +267,19 @@ const UploadMusic = () => {
                 </div>
               )}
             </div>
-            
-            <button type="submit" className="upload-button">Upload Track</button>
+
+            <button type="submit" className="upload-button">
+              Upload Track
+            </button>
           </form>
           <ToastContainer />
         </div>
       ) : (
         <div className="not-verified-message fade-in">
           <h3>You need to verify your email before uploading music.</h3>
-          <h4 className='goback' onClick={() => navigate('/')}>Go Back</h4>
+          <h4 className="goback" onClick={() => navigate("/")}>
+            Go Back
+          </h4>
         </div>
       )}
     </div>

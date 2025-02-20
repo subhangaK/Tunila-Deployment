@@ -1,15 +1,46 @@
-import React, { useEffect, useState, useContext } from "react";
-import "../css/TunilaHome.css";
-import { assets } from "../assets/assets";
-import Header from "../components/Header";
-import axios from "axios";
-import { AppContext } from "../context/AppContext";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import { Link } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
+import Header from "../components/Header";
+import MerchItem from "../components/MerchItem";
+import { assets } from "../assets/assets";
+import "../css/TunilaHome.css";
+import axios from "axios";
+import { motion } from "framer-motion";
 
 const TunilaHome = ({ setCurrentTrack }) => {
   const { backendUrl } = useContext(AppContext);
   const [popularSongs, setPopularSongs] = useState([]);
   const [featuredArtists, setFeaturedArtists] = useState([]);
+  const [trendingMerch, setTrendingMerch] = useState([]);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const featuredRef = useRef(null);
+  const artistsRef = useRef(null);
+  const shopRef = useRef(null);
+  const featuresRef = useRef(null);
+
+  // Handle scroll events
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 100);
+
+      // Check if elements are in viewport for animations
+      const elements = [featuredRef, artistsRef, shopRef, featuresRef];
+      elements.forEach((ref) => {
+        if (ref.current) {
+          const rect = ref.current.getBoundingClientRect();
+          const isVisible =
+            rect.top < window.innerHeight * 0.8 && rect.bottom >= 0;
+          if (isVisible) {
+            ref.current.classList.add("tunila-home-in-view");
+          }
+        }
+      });
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Fetch most popular songs
   useEffect(() => {
@@ -28,175 +59,479 @@ const TunilaHome = ({ setCurrentTrack }) => {
     fetchPopularSongs();
   }, [backendUrl]);
 
-// Updated Featured Artists useEffect
-useEffect(() => {
-  const fetchFeaturedArtists = async () => {
-    try {
-      const songsResponse = await axios.get(`${backendUrl}/api/songs`);
-      const allSongs = songsResponse.data.songs;
+  // Fetch featured artists
+  useEffect(() => {
+    const fetchFeaturedArtists = async () => {
+      try {
+        const songsResponse = await axios.get(`${backendUrl}/api/songs`);
+        const allSongs = songsResponse.data.songs;
 
-      // Get unique artist IDs from songs
-      const artistIds = [...new Set(allSongs.map(song => song.artistId))];
+        // Get unique artist IDs from songs
+        const artistIds = [...new Set(allSongs.map((song) => song.artistId))];
 
-      // Fetch user data for each artist
-      const artistsData = await Promise.all(
-        artistIds.map(async (artistId) => {
-          try {
-            const userResponse = await axios.get(`${backendUrl}/api/user/profile/${artistId}`);
-            return {
-              artistId,
-              name: userResponse.data.userProfile.name,
-              profilePicture: userResponse.data.userProfile.profilePicture || assets.default_profile
-            };
-          } catch (error) {
-            console.error("Error fetching artist data:", error);
-            return null;
-          }
-        })
-      );
+        // Fetch user data for each artist
+        const artistsData = await Promise.all(
+          artistIds.map(async (artistId) => {
+            try {
+              const userResponse = await axios.get(
+                `${backendUrl}/api/user/profile/${artistId}`
+              );
+              return {
+                artistId,
+                name: userResponse.data.userProfile.name,
+                profilePicture:
+                  userResponse.data.userProfile.profilePicture ||
+                  assets.default_profile,
+              };
+            } catch (error) {
+              console.error("Error fetching artist data:", error);
+              return null;
+            }
+          })
+        );
 
-      // Filter out null values and get random 5 artists
-      const validArtists = artistsData.filter(artist => artist !== null);
-      const shuffledArtists = validArtists.sort(() => 0.5 - Math.random()).slice(0, 5);
-      
-      setFeaturedArtists(shuffledArtists);
-    } catch (error) {
-      console.error("Error fetching featured artists:", error);
-    }
-  };
+        // Filter out null values and get random 5 artists
+        const validArtists = artistsData.filter((artist) => artist !== null);
+        const shuffledArtists = validArtists
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 5);
 
-  fetchFeaturedArtists();
-}, [backendUrl]);
+        setFeaturedArtists(shuffledArtists);
+      } catch (error) {
+        console.error("Error fetching featured artists:", error);
+      }
+    };
+
+    fetchFeaturedArtists();
+  }, [backendUrl]);
+
+  // Fetch trending merchandise
+  useEffect(() => {
+    const fetchTrendingMerch = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/merch`);
+        // Sort by wishlist count and get top 4
+        const sortedMerch = response.data
+          .sort(
+            (a, b) =>
+              (b.wishlistedBy?.length || 0) - (a.wishlistedBy?.length || 0)
+          )
+          .slice(0, 4);
+        setTrendingMerch(sortedMerch);
+      } catch (error) {
+        console.error("Error fetching trending merchandise:", error);
+      }
+    };
+
+    fetchTrendingMerch();
+  }, [backendUrl]);
 
   return (
     <div className="tunila-home-page">
-      <Header />
+      <Header className={isScrolled ? "tunila-home-header-scrolled" : ""} />
 
-      {/* Hero Section */}
+      {/* Hero Section with Video Background and Animated Content */}
       <section className="tunila-home-hero">
-        <video autoPlay muted loop className="tunila-home-hero-video">
-          <source src={assets.hero_video} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <div className="tunila-home-hero-content">
-          <h1>Tunila – Where Music Meets Creativity</h1>
-          <p>Discover, stream, and publish music effortlessly while supporting local artists.</p>
-          <div className="tunila-home-cta-container">
-            <a href="/home" className="tunila-home-cta-btn">Start Listening</a>
-            <a href="/upload-music" className="tunila-home-cta-btn secondary">Publish Your Music</a>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Tunila? */}
-      <section className="tunila-home-why">
-        <h2>Why Tunila?</h2>
-        <div className="tunila-home-features">
-          <div className="tunila-home-feature">
-            <img src={assets.upload_music_image} alt="Upload Music" />
-            <h3>Upload Music</h3>
-            <p>Artists can publish their music effortlessly and gain exposure.</p>
-          </div>
-          <div className="tunila-home-feature">
-            <img src={assets.streaming_image} alt="Stream Music" />
-            <h3>Stream Seamlessly</h3>
-            <p>Listen to high-quality music with no interruptions.</p>
-          </div>
-          <div className="tunila-home-feature">
-            <img src={assets.playlist_image} alt="Create Playlists" />
-            <h3>Personalized Playlists</h3>
-            <p>Curate your own playlists and explore new sounds.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Most Popular on Tunila */}
-      <section className="tunila-home-popular">
-        <h2>Most Popular on Tunila</h2>
-        <div className="tunila-home-songs-grid">
-          {popularSongs.length > 0 ? (
-            popularSongs.map((song) => (
-              <div key={song._id} className="tunila-home-song-card" onClick={() => setCurrentTrack(song)}>
-                <img src={`${backendUrl}${song.coverImage}`} alt={song.title} className="tunila-home-song-cover" />
-                <p className="tunila-home-song-title">{song.title}</p>
-                <Link to={`/profile/${song.artistId}`}><p className="tunila-home-song-artist">{song.artist}</p></Link>
-              </div>
-            ))
-          ) : (
-            <p className="tunila-home-no-songs">No popular songs yet.</p>
-          )}
-        </div>
-      </section>
-
-     {/* Featured Artists */}
-      <section className="tunila-home-featured">
-        <h2>Featured Artists</h2>
-        <div className="tunila-home-artists-grid">
-          {featuredArtists.length > 0 ? (
-            featuredArtists.map((artist) => (
-              <Link 
-                key={artist.artistId} 
-                to={`/profile/${artist.artistId}`} 
-                className="tunila-home-artist"
+        <div className="tunila-home-hero-content-wrapper">
+          <video autoPlay muted loop className="tunila-home-hero-video">
+            <source src={assets.hero_video} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div className="tunila-home-hero-overlay"></div>
+          <div className="tunila-home-hero-content">
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              Discover Your Sound
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              Stream, create, and connect with artists around the world
+            </motion.p>
+            <motion.div
+              className="tunila-home-hero-cta-buttons"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
+              <Link
+                to="/home"
+                className="tunila-home-cta-button tunila-home-primary"
               >
-                <div className="tunila-home-artist-image-container">
-                  <img 
-                    src={`${backendUrl}${artist.profilePicture}`} 
-                    alt={artist.name} 
-                    className="tunila-home-artist-image" 
-                  />
-                </div>
-                <p className="tunila-home-artist-name">{artist.name}</p>
+                <span>Start Listening</span>
+                <span className="tunila-home-button-icon"></span>
               </Link>
+              <Link
+                to="/upload-music"
+                className="tunila-home-cta-button tunila-home-secondary"
+              >
+                <span>Share Your Music</span>
+                <span className="tunila-home-button-icon"></span>
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+        <div className="tunila-home-hero-wave">
+          <svg viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
+          </svg>
+        </div>
+      </section>
+
+      {/* Featured Playlist Section with Hover Effects */}
+      <section
+        ref={featuredRef}
+        className="tunila-home-featured-section tunila-home-animate-fadein"
+      >
+        <div className="tunila-home-section-header">
+          <h2>What's Hot Today</h2>
+          <Link to="/browse" className="tunila-home-view-all-link">
+            View All <span className="tunila-home-arrow">→</span>
+          </Link>
+        </div>
+        <div className="tunila-home-songs-container">
+          {popularSongs.length > 0 ? (
+            popularSongs.map((song, index) => (
+              <motion.div
+                key={song._id}
+                className="tunila-home-song-card"
+                onClick={() => setCurrentTrack(song)}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{
+                  y: -10,
+                  boxShadow: "0 15px 30px rgba(0,0,0,0.2)",
+                  transition: { duration: 0.3 },
+                }}
+              >
+                <div className="tunila-home-song-image-container">
+                  <img
+                    src={`${backendUrl}${song.coverImage}`}
+                    alt={song.title}
+                    className="tunila-home-song-cover"
+                    loading="lazy"
+                  />
+                  <div className="tunila-home-play-overlay">
+                    <div className="tunila-home-play-icon-wrapper">
+                      <img
+                        src={assets.play_icon}
+                        alt="Play"
+                        className="tunila-home-play-icon"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="tunila-home-song-details">
+                  <h3 className="tunila-home-song-title">{song.title}</h3>
+                  <Link
+                    to={`/profile/${song.artistId}`}
+                    className="tunila-home-song-artist"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {song.artist}
+                  </Link>
+                </div>
+              </motion.div>
             ))
           ) : (
-            <p>No featured artists available.</p>
+            <motion.p
+              className="tunila-home-no-content-message"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              New music coming soon!
+            </motion.p>
           )}
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="tunila-home-how-it-works">
-        <h2>How It Works</h2>
-        <div className="tunila-home-steps">
-          <div className="tunila-home-step">
-            <span>1</span>
-            <h3>Sign Up</h3>
-            <p>Create an account and start exploring music.</p>
-          </div>
-          <div className="tunila-home-step">
-            <span>2</span>
-            <h3>Stream & Discover</h3>
-            <p>Listen to trending music and support local artists.</p>
-          </div>
-          <div className="tunila-home-step">
-            <span>3</span>
-            <h3>Publish & Promote</h3>
-            <p>Upload your tracks and get featured on Tunila.</p>
+      {/* Featured Artists Section with Animated Spotlights */}
+      <section
+        ref={artistsRef}
+        className="tunila-home-artists-section tunila-home-animate-fadein"
+      >
+        <div className="tunila-home-artists-background">
+          <div className="tunila-home-spotlight tunila-home-spotlight-1"></div>
+          <div className="tunila-home-spotlight tunila-home-spotlight-2"></div>
+        </div>
+        <div className="tunila-home-section-content">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            Featured Artists
+          </motion.h2>
+          <div className="tunila-home-artists-grid">
+            {featuredArtists.length > 0 ? (
+              featuredArtists.map((artist, index) => (
+                <motion.div
+                  key={artist.artistId}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  whileHover={{
+                    scale: 1.05,
+                    transition: { duration: 0.3 },
+                  }}
+                >
+                  <Link
+                    to={`/profile/${artist.artistId}`}
+                    className="tunila-home-artist-card"
+                  >
+                    <div className="tunila-home-artist-image-wrapper">
+                      <img
+                        src={`${backendUrl}${artist.profilePicture}`}
+                        alt={artist.name}
+                        className="tunila-home-artist-image"
+                        loading="lazy"
+                      />
+                      <div className="tunila-home-artist-overlay">
+                        <span className="tunila-home-artist-view">
+                          View Profile
+                        </span>
+                      </div>
+                    </div>
+                    <h3 className="tunila-home-artist-name">{artist.name}</h3>
+                  </Link>
+                </motion.div>
+              ))
+            ) : (
+              <p className="tunila-home-no-content-message">
+                Artists coming soon!
+              </p>
+            )}
           </div>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="tunila-home-testimonials">
-        <h2>What People Say</h2>
-        <div className="tunila-home-reviews">
-          <div className="tunila-home-review">
-            <p>"Tunila helped me find incredible new artists. Love the recommendations!"</p>
-            <span>- User A</span>
-          </div>
-          <div className="tunila-home-review">
-            <p>"As an indie artist, Tunila gave me a platform to showcase my work."</p>
-            <span>- User B</span>
+      {/* Shop on Tunila Section with Card Animations */}
+      <section
+        ref={shopRef}
+        className="tunila-home-shop-section tunila-home-animate-fadein"
+      >
+        <div className="tunila-home-section-header">
+          <h2>Shop on Tunila</h2>
+          <Link to="/merch" className="tunila-home-view-all-link">
+            View All Merch <span className="tunila-home-arrow">→</span>
+          </Link>
+        </div>
+        <p className="tunila-home-shop-subtitle">
+          Most wishlisted items from your favorite artists
+        </p>
+
+        <div className="tunila-home-merch-showcase">
+          {trendingMerch.length > 0 ? (
+            trendingMerch.map((item, index) => (
+              <motion.div
+                key={item._id}
+                className="tunila-home-merch-showcase-item"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{
+                  y: -10,
+                  boxShadow: "0 15px 30px rgba(0,0,0,0.15)",
+                  transition: { duration: 0.3 },
+                }}
+              >
+                <MerchItem item={item} />
+                <div className="tunila-home-merch-badge">Trending</div>
+              </motion.div>
+            ))
+          ) : (
+            <motion.div
+              className="tunila-home-shop-promo"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="tunila-home-shop-promo-content">
+                <h3>Exclusive Artist Merchandise</h3>
+                <p>Support your favorite artists with official merchandise</p>
+                <Link
+                  to="/merch"
+                  className="tunila-home-cta-button tunila-home-shop-now"
+                >
+                  Shop Now
+                </Link>
+              </div>
+              <div className="tunila-home-shop-promo-image">
+                <img
+                  src={assets.merch_promo || "/merch-promo.jpg"}
+                  alt="Tunila Merchandise"
+                  loading="lazy"
+                />
+              </div>
+            </motion.div>
+          )}
+        </div>
+      </section>
+
+      {/* Features Section with Animated Icons */}
+      <section
+        ref={featuresRef}
+        className="tunila-home-features-section tunila-home-animate-fadein"
+      >
+        <h2>Why Music Lovers Choose Tunila</h2>
+        <div className="tunila-home-features-grid">
+          {[
+            {
+              icon: assets.upload_music_image || "/icons/upload-icon.svg",
+              title: "Upload Your Sound",
+              description:
+                "Share your music with the world and connect with fans directly",
+            },
+            {
+              icon: assets.streaming_image || "/icons/stream-icon.svg",
+              title: "High-Quality Streaming",
+              description:
+                "Enjoy crystal clear sound with our premium audio technology",
+            },
+            {
+              icon: assets.playlist_image || "/icons/playlist-icon.svg",
+              title: "Personalized Playlists",
+              description: "Discover new music tailored to your unique taste",
+            },
+            {
+              icon: assets.merch_icon || "/icons/merch-icon.svg",
+              title: "Support Artists",
+              description:
+                "Buy exclusive merchandise directly from your favorite artists",
+            },
+          ].map((feature, index) => (
+            <motion.div
+              key={index}
+              className="tunila-home-feature-card"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              whileHover={{
+                y: -10,
+                boxShadow: "0 15px 30px rgba(0,0,0,0.1)",
+                transition: { duration: 0.3 },
+              }}
+            >
+              <div className="tunila-home-feature-icon">
+                <img src={feature.icon} alt={feature.title} loading="lazy" />
+              </div>
+              <h3>{feature.title}</h3>
+              <p>{feature.description}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Testimonials Section with Card Animation */}
+      <section className="tunila-home-testimonials-section">
+        <div className="tunila-home-testimonials-content">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            What Our Community Says
+          </motion.h2>
+          <div className="tunila-home-testimonials-grid">
+            {[
+              {
+                text: "Tunila helped me discover incredible new artists I would have never found elsewhere. The recommendations are spot on!",
+                name: "Sarah K.",
+                role: "Music Enthusiast",
+                avatar: assets.testimonial_avatar1 || "/avatars/user1.jpg",
+              },
+              {
+                text: "As an independent artist, Tunila has given me a platform to share my music with the world and connect with my fans on a deeper level.",
+                name: "Mike D.",
+                role: "Independent Artist",
+                avatar: assets.testimonial_avatar2 || "/avatars/user2.jpg",
+              },
+              {
+                text: "The merchandise platform made it easy to create and sell custom merch to my fans. It's been a game-changer for my music career.",
+                name: "Alex R.",
+                role: "Verified Artist",
+                avatar: assets.testimonial_avatar3 || "/avatars/user3.jpg",
+              },
+            ].map((testimonial, index) => (
+              <motion.div
+                key={index}
+                className="tunila-home-testimonial-card"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{
+                  y: -10,
+                  boxShadow: "0 15px 30px rgba(0,0,0,0.1)",
+                  transition: { duration: 0.3 },
+                }}
+              >
+                <div className="tunila-home-quote-mark">"</div>
+                <p className="tunila-home-testimonial-text">
+                  {testimonial.text}
+                </p>
+                <div className="tunila-home-testimonial-author">
+                  <img
+                    src={testimonial.avatar}
+                    alt={testimonial.name}
+                    className="tunila-home-testimonial-avatar"
+                    loading="lazy"
+                  />
+                  <div>
+                    <p className="tunila-home-author-name">
+                      {testimonial.name}
+                    </p>
+                    <p className="tunila-home-author-role">
+                      {testimonial.role}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Final Call to Action */}
-      <section className="tunila-home-final-cta">
-        <h2>Join Tunila Today</h2>
-        <p>Start streaming or share your own music with the world.</p>
-        <a href="/login" className="tunila-home-cta-btn">Get Started</a>
+      {/* Join Community CTA with Animated Background */}
+      <section className="tunila-home-join-community">
+        <div className="tunila-home-animated-bg">
+          <div className="tunila-home-animated-circle tunila-home-circle-1"></div>
+          <div className="tunila-home-animated-circle tunila-home-circle-2"></div>
+          <div className="tunila-home-animated-circle tunila-home-circle-3"></div>
+        </div>
+        <div className="tunila-home-join-content">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            Ready to Join the Tunila Community?
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            Start your musical journey today and experience music like never
+            before
+          </motion.p>
+          <motion.div
+            className="tunila-home-cta-buttons"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <Link to="/login" className="tunila-home-join-tunila-btn">
+              Join the Tunila Family
+            </Link>
+          </motion.div>
+        </div>
       </section>
     </div>
   );

@@ -305,7 +305,6 @@
   margin-bottom: 10px;
 }
 
-
 .search-loading {
   display: flex;
   justify-content: center;
@@ -326,11 +325,11 @@
   .search-songs-grid {
     grid-template-columns: 1fr 1fr;
   }
-  
+
   .search-song-cover {
     height: 180px;
   }
-  
+
   .search-artist-image-container {
     width: 150px;
     height: 150px;
@@ -339,7 +338,7 @@
   .search-top-section {
     grid-template-columns: 1fr;
   }
-  
+
   .search-related-container {
     overflow-x: auto;
   }

@@ -15,13 +15,13 @@ import LikedSongs from "./pages/LikedSongs.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import UserProfilePage from "./pages/UserProfilePage";
 import PublishedMusic from "./pages/PublishedMusic.jsx";
-import { AppContext } from "./context/AppContext";  // ✅ Import AppContext
+import { AppContext } from "./context/AppContext"; // ✅ Import AppContext
 import FeaturedArtists from "./pages/FeaturedArtists.jsx";
-import SearchResultsPage from './components/SearchResultsPage';
+import SearchResultsPage from "./components/SearchResultsPage";
 import MerchStore from "./pages/MerchStore.jsx";
 import PaymentVerify from "./pages/PaymentVerify.jsx";
 import ArtistMerchPage from "./pages/ArtistMerchPage.jsx";
-import MerchItemDetail from "./pages/MerchItemDetail.jsx"; 
+import MerchItemDetail from "./pages/MerchItemDetail.jsx";
 
 // Create these simple page components for payment success/failure
 const PaymentSuccess = () => {
@@ -29,7 +29,9 @@ const PaymentSuccess = () => {
     <div className="payment-result">
       <h1>Payment Successful!</h1>
       <p>Your purchase was completed successfully.</p>
-      <button onClick={() => window.location.href = '/merch'}>Back to Store</button>
+      <button onClick={() => (window.location.href = "/merch")}>
+        Back to Store
+      </button>
     </div>
   );
 };
@@ -39,19 +41,28 @@ const PaymentFailed = () => {
     <div className="payment-result">
       <h1>Payment Failed</h1>
       <p>We couldn't process your payment. Please try again.</p>
-      <button onClick={() => window.location.href = '/merch'}>Back to Store</button>
+      <button onClick={() => (window.location.href = "/merch")}>
+        Back to Store
+      </button>
     </div>
   );
 };
 
 const App = () => {
-  const { queue, isPlaying, setIsPlaying, currentTrackIndex, setCurrentTrackIndex, addToQueue } = useContext(AppContext);  // ✅ Get addToQueue from AppContext
+  const {
+    queue,
+    isPlaying,
+    setIsPlaying,
+    currentTrackIndex,
+    setCurrentTrackIndex,
+    addToQueue,
+  } = useContext(AppContext); // ✅ Get addToQueue from AppContext
   const [currentTrack, setCurrentTrack] = useState(null);
 
   // ✅ Function to handle playing a track and adding to queue
   const handleTrackChange = (track) => {
     setCurrentTrack(track);
-    
+
     // ✅ Add track to queue if not already present
     if (!queue.some((song) => song._id === track._id)) {
       addToQueue(track);
@@ -60,7 +71,7 @@ const App = () => {
     // ✅ Set index of currently playing song
     const trackIndex = queue.findIndex((song) => song._id === track._id);
     setCurrentTrackIndex(trackIndex >= 0 ? trackIndex : queue.length - 1);
-    
+
     setIsPlaying(true);
   };
 
@@ -68,26 +79,59 @@ const App = () => {
     <div>
       <ToastContainer />
       <Routes>
-        <Route path="/" element={<TunilaHome setCurrentTrack={handleTrackChange} />} />
-        <Route path="/home" element={<Home setCurrentTrack={handleTrackChange} />} />
-        <Route path="/login" element={<Login setCurrentTrack={handleTrackChange} />} />
+        <Route
+          path="/"
+          element={<TunilaHome setCurrentTrack={handleTrackChange} />}
+        />
+        <Route
+          path="/home"
+          element={<Home setCurrentTrack={handleTrackChange} />}
+        />
+        <Route
+          path="/login"
+          element={<Login setCurrentTrack={handleTrackChange} />}
+        />
         <Route path="/email-verify" element={<EmailVerify />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/admin" element={<AdminDashboard setCurrentTrack={handleTrackChange} />} />
+        <Route
+          path="/admin"
+          element={<AdminDashboard setCurrentTrack={handleTrackChange} />}
+        />
         <Route path="/upload-music" element={<UploadMusic />} />
-        <Route path="/playlists" element={<PlaylistsPage setCurrentTrack={handleTrackChange} />} />
-        <Route path="/liked-songs" element={<LikedSongs setCurrentTrack={handleTrackChange} />} />
-        <Route path="/published-music" element={<PublishedMusic setCurrentTrack={handleTrackChange} />} />
-        <Route path="/profile/:userId" element={<UserProfilePage setCurrentTrack={handleTrackChange} />} />
-        <Route path="/featured-artists" element={<FeaturedArtists setCurrentTrack={handleTrackChange} />} />
-        <Route path="/search" element={<SearchResultsPage setCurrentTrack={handleTrackChange}  />} />
+        <Route
+          path="/playlists"
+          element={<PlaylistsPage setCurrentTrack={handleTrackChange} />}
+        />
+        <Route
+          path="/liked-songs"
+          element={<LikedSongs setCurrentTrack={handleTrackChange} />}
+        />
+        <Route
+          path="/published-music"
+          element={<PublishedMusic setCurrentTrack={handleTrackChange} />}
+        />
+        <Route
+          path="/profile/:userId"
+          element={<UserProfilePage setCurrentTrack={handleTrackChange} />}
+        />
+        <Route
+          path="/featured-artists"
+          element={<FeaturedArtists setCurrentTrack={handleTrackChange} />}
+        />
+        <Route
+          path="/search"
+          element={<SearchResultsPage setCurrentTrack={handleTrackChange} />}
+        />
         <Route path="/merch" element={<MerchStore />} />
         <Route path="/payment-verify" element={<PaymentVerify />} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-failed" element={<PaymentFailed />} />
         <Route path="/merch/:itemId" element={<MerchItemDetail />} />
         <Route path="/artist/:userId/merch" element={<ArtistMerchPage />} />
-        <Route path="/playlists/:id" element={<PlaylistSongsPage setCurrentTrack={handleTrackChange} />} />
+        <Route
+          path="/playlists/:id"
+          element={<PlaylistSongsPage setCurrentTrack={handleTrackChange} />}
+        />
       </Routes>
 
       {/* ✅ Ensure MusicPlayer only renders when there are songs in queue */}

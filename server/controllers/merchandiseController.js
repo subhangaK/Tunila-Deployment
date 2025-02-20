@@ -77,7 +77,7 @@ export const initiatePayment = async (req, res) => {
       customer_info: {
         name: user.name,
         email: user.email,
-        phone: '9800000000' // Consider making this dynamic if you collect phone numbers
+        phone: '9800000000' // make this dynamic to collect phone numbers
       }
     };
 

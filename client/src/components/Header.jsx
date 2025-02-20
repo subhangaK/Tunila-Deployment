@@ -1,26 +1,27 @@
-import React, { useState, useContext } from 'react';
-import Logo from '../assets/Tunila.png';
-import '../css/Header.css';
-import Search from '../assets/search.png';
-import { useNavigate } from 'react-router-dom';
-import { AppContext } from '../context/AppContext';
-import axios from 'axios';
-import { toast } from 'react-toastify';
+import React, { useState, useContext } from "react";
+import Logo from "../assets/Tunila.png";
+import "../css/Header.css";
+import Search from "../assets/search.png";
+import { useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 function Header({ setFilteredSongs }) {
   const navigate = useNavigate(); // Initialize navigate hook
-  const { userData, setUserData, setIsLoggedin, backendUrl } = useContext(AppContext);
+  const { userData, setUserData, setIsLoggedin, backendUrl } =
+    useContext(AppContext);
   const [menuVisible, setMenuVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   const logout = async () => {
     try {
       axios.defaults.withCredentials = true;
-      const { data } = await axios.post(backendUrl + '/api/auth/logout');
+      const { data } = await axios.post(backendUrl + "/api/auth/logout");
       if (data.success) {
         setIsLoggedin(false);
         setUserData(null);
-        navigate('/');
+        navigate("/");
       }
     } catch (error) {
       toast.error(error.message);
@@ -30,9 +31,11 @@ function Header({ setFilteredSongs }) {
   const sendVerificationOtp = async () => {
     try {
       axios.defaults.withCredentials = true;
-      const { data } = await axios.post(backendUrl + '/api/auth/send-verify-otp');
+      const { data } = await axios.post(
+        backendUrl + "/api/auth/send-verify-otp"
+      );
       if (data.success) {
-        navigate('/email-verify');
+        navigate("/email-verify");
         toast.success(data.message);
       } else {
         toast.error(data.message);
@@ -52,7 +55,7 @@ function Header({ setFilteredSongs }) {
   };
 
   const handleSearchSubmit = (e) => {
-    if (e.key === 'Enter' && searchQuery.trim()) {
+    if (e.key === "Enter" && searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
       setSearchQuery("");
     }
@@ -60,14 +63,16 @@ function Header({ setFilteredSongs }) {
 
   // Navigate to home when logo is clicked
   const goToHome = () => {
-    navigate('/home');
+    navigate("/home");
   };
 
   return (
     <div className="header">
-      <div className="logo-container" onClick={goToHome}> 
+      <div className="logo-container" onClick={goToHome}>
         <img className="logo" src={Logo} alt="Tunila Logo" />
-        <span className="logo-text" onClick={goToHome}>Tunila</span>
+        <span className="logo-text" onClick={goToHome}>
+          Tunila
+        </span>
       </div>
 
       <div className="search-container">
@@ -82,33 +87,41 @@ function Header({ setFilteredSongs }) {
         />
       </div>
 
-      <h2>Hi {userData ? userData.name : 'User'}, Welcome to Tunila</h2>
+      <h2>Hi {userData ? userData.name : "User"}, Welcome to Tunila</h2>
 
       {userData ? (
         <div className="profile-container" onClick={toggleMenu}>
           {/* ✅ Show Profile Picture Instead of Initial */}
-          <img 
-            className="profile-picture" 
-            src={`${backendUrl}${userData.profilePicture || "/uploads/profile_pictures/default.png"}`} 
-            alt="Profile" 
+          <img
+            className="profile-picture"
+            src={`${backendUrl}${
+              userData.profilePicture || "/uploads/profile_pictures/default.png"
+            }`}
+            alt="Profile"
           />
           {menuVisible && (
             <ul className="dropdown-menu">
               {/* ✅ New Profile Option */}
-              <li onClick={() => navigate(`/profile/${userData.userId}`)}>Profile</li>
+              <li onClick={() => navigate(`/profile/${userData.userId}`)}>
+                Profile
+              </li>
 
               {/* Show Admin Dashboard link only if the user is an admin */}
               {userData.role === "admin" && (
-                <li onClick={() => navigate('/admin')}>Admin Page</li>
+                <li onClick={() => navigate("/admin")}>Admin Page</li>
               )}
 
-              {!userData.isAccountVerified && <li onClick={sendVerificationOtp}>Verify Email</li>}
-              <li className='logout' onClick={logout}>Log out</li>
+              {!userData.isAccountVerified && (
+                <li onClick={sendVerificationOtp}>Verify Email</li>
+              )}
+              <li className="logout" onClick={logout}>
+                Log out
+              </li>
             </ul>
           )}
         </div>
       ) : (
-        <button onClick={() => navigate('/login')} className="login-button">
+        <button onClick={() => navigate("/login")} className="login-button">
           Sign Up
         </button>
       )}

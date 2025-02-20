@@ -20,14 +20,17 @@ const PlaylistsPage = () => {
   useEffect(() => {
     const fetchPlaylists = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/playlists/my-playlists`, {
-          withCredentials: true,
-        });
+        const response = await axios.get(
+          `${backendUrl}/api/playlists/my-playlists`,
+          {
+            withCredentials: true,
+          }
+        );
         setPlaylists(response.data.playlists);
-      
       } catch (error) {
         console.error("Error fetching playlists:", error);
-        const errorMessage = error.response?.data?.message || "Failed to load playlists.";
+        const errorMessage =
+          error.response?.data?.message || "Failed to load playlists.";
         toast.error(errorMessage, {
           position: "top-right",
           autoClose: 3000,
@@ -45,12 +48,16 @@ const PlaylistsPage = () => {
     if (newCover) formData.append("coverImage", newCover);
 
     try {
-      const response = await axios.put(`${backendUrl}/api/playlists/${playlistId}`, formData, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.put(
+        `${backendUrl}/api/playlists/${playlistId}`,
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       setPlaylists(
         playlists.map((playlist) =>
@@ -67,7 +74,8 @@ const PlaylistsPage = () => {
       setNewCover(null);
     } catch (error) {
       console.error("Error updating playlist:", error);
-      const errorMessage = error.response?.data?.message || "Failed to update playlist.";
+      const errorMessage =
+        error.response?.data?.message || "Failed to update playlist.";
       toast.error(errorMessage, {
         position: "top-right",
         autoClose: 3000,
@@ -96,7 +104,8 @@ const PlaylistsPage = () => {
       });
     } catch (error) {
       console.error("Error toggling playlist privacy:", error);
-      const errorMessage = error.response?.data?.message || "Failed to toggle privacy.";
+      const errorMessage =
+        error.response?.data?.message || "Failed to toggle privacy.";
       toast.error(errorMessage, {
         position: "top-right",
         autoClose: 3000,
@@ -116,7 +125,8 @@ const PlaylistsPage = () => {
               key={playlist._id}
               className="playlist-card"
               onClick={() => {
-                if (editingPlaylist !== playlist._id) navigate(`/playlists/${playlist._id}`);
+                if (editingPlaylist !== playlist._id)
+                  navigate(`/playlists/${playlist._id}`);
               }}
             >
               {editingPlaylist === playlist._id ? (
@@ -126,7 +136,9 @@ const PlaylistsPage = () => {
                   className="add-cover-image"
                   onClick={(e) => {
                     e.stopPropagation(); // Prevent card navigation
-                    document.querySelector(`#cover-input-${playlist._id}`).click();
+                    document
+                      .querySelector(`#cover-input-${playlist._id}`)
+                      .click();
                   }}
                 />
               ) : (
@@ -160,12 +172,19 @@ const PlaylistsPage = () => {
                         {playlist.isPublic ? "Public" : "Private"}
                       </span>
                       <img
-                        src={playlist.isPublic ? assets.switch_on_icon : assets.switch_off_icon}
+                        src={
+                          playlist.isPublic
+                            ? assets.switch_on_icon
+                            : assets.switch_off_icon
+                        }
                         alt={playlist.isPublic ? "Public" : "Private"}
                         className="privacy-toggle"
                         onClick={(e) => {
                           e.stopPropagation(); // Prevent card navigation
-                          togglePlaylistPrivacy(playlist._id, playlist.isPublic);
+                          togglePlaylistPrivacy(
+                            playlist._id,
+                            playlist.isPublic
+                          );
                         }}
                       />
                     </div>

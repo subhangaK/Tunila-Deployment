@@ -6,10 +6,12 @@ import { toast } from "react-toastify";
 import Header from "../components/Header";
 import "../css/UserProfilePage.css";
 import { assets } from "../assets/assets";
+import "../css/PlaylistModel.css";
 
 const UserProfilePage = ({ setCurrentTrack }) => {
   const { userId } = useParams();
-  const { backendUrl, isLoggedin, userData, addToQueue } = useContext(AppContext);
+  const { backendUrl, isLoggedin, userData, addToQueue } =
+    useContext(AppContext);
   const [profile, setProfile] = useState(null);
   const [likedSongs, setLikedSongs] = useState(new Set());
   const [playlists, setPlaylists] = useState([]);
@@ -18,13 +20,16 @@ const UserProfilePage = ({ setCurrentTrack }) => {
   const [newPlaylistName, setNewPlaylistName] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState("popular");
   const navigate = useNavigate();
 
   // Fetch user profile data
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/user/profile/${userId}`);
+        const response = await axios.get(
+          `${backendUrl}/api/user/profile/${userId}`
+        );
         setProfile(response.data.userProfile);
       } catch (error) {
         setError("Failed to load profile. Please try again.");
@@ -44,13 +49,17 @@ const UserProfilePage = ({ setCurrentTrack }) => {
     formData.append("profilePicture", file);
 
     try {
-      const response = await axios.put(`${backendUrl}/api/user/profile`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true,
-      });
-      setProfile((prev) => ({ 
-        ...prev, 
-        profilePicture: response.data.userProfile.profilePicture 
+      const response = await axios.put(
+        `${backendUrl}/api/user/profile`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          withCredentials: true,
+        }
+      );
+      setProfile((prev) => ({
+        ...prev,
+        profilePicture: response.data.userProfile.profilePicture,
       }));
       toast.success("Profile picture updated successfully!");
     } catch (error) {
@@ -67,14 +76,21 @@ const UserProfilePage = ({ setCurrentTrack }) => {
     formData.append("coverImage", file);
 
     try {
-      const response = await axios.put(`${backendUrl}/api/user/profile`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-      });
+      const response = await axios.put(
+        `${backendUrl}/api/user/profile`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+        }
+      );
 
-      setProfile((prev) => ({ ...prev, coverImage: response.data.userProfile.coverImage }));
+      setProfile((prev) => ({
+        ...prev,
+        coverImage: response.data.userProfile.coverImage,
+      }));
       toast.success("Cover image updated successfully!");
     } catch (error) {
       toast.error("Failed to update cover image. Please try again.");
@@ -86,8 +102,12 @@ const UserProfilePage = ({ setCurrentTrack }) => {
     if (isLoggedin && userData?.userId) {
       const fetchLikedSongs = async () => {
         try {
-          const response = await axios.get(`${backendUrl}/api/songs/liked-songs/${userData.userId}`);
-          setLikedSongs(new Set(response.data.likedSongs.map((song) => song._id)));
+          const response = await axios.get(
+            `${backendUrl}/api/songs/liked-songs/${userData.userId}`
+          );
+          setLikedSongs(
+            new Set(response.data.likedSongs.map((song) => song._id))
+          );
         } catch (error) {
           console.error("Error fetching liked songs:", error);
         }
@@ -98,7 +118,9 @@ const UserProfilePage = ({ setCurrentTrack }) => {
   }, [backendUrl, isLoggedin, userData]);
 
   // Toggle like/unlike for a song
-  const handleLikeToggle = async (songId) => {
+  const handleLikeToggle = async (songId, e) => {
+    e?.stopPropagation();
+
     if (!isLoggedin) {
       toast.error("You must be logged in to like a song.");
       return;
@@ -108,14 +130,20 @@ const UserProfilePage = ({ setCurrentTrack }) => {
 
     try {
       if (isLiked) {
-        await axios.post(`${backendUrl}/api/songs/unlike`, { userId: userData.userId, songId });
+        await axios.post(`${backendUrl}/api/songs/unlike`, {
+          userId: userData.userId,
+          songId,
+        });
         setLikedSongs((prevLiked) => {
           const updated = new Set(prevLiked);
           updated.delete(songId);
           return updated;
         });
       } else {
-        await axios.post(`${backendUrl}/api/songs/like`, { userId: userData.userId, songId });
+        await axios.post(`${backendUrl}/api/songs/like`, {
+          userId: userData.userId,
+          songId,
+        });
         setLikedSongs((prevLiked) => new Set(prevLiked).add(songId));
       }
     } catch (error) {
@@ -129,9 +157,12 @@ const UserProfilePage = ({ setCurrentTrack }) => {
     if (isLoggedin) {
       const fetchPlaylists = async () => {
         try {
-          const response = await axios.get(`${backendUrl}/api/playlists/my-playlists`, {
-            withCredentials: true,
-          });
+          const response = await axios.get(
+            `${backendUrl}/api/playlists/my-playlists`,
+            {
+              withCredentials: true,
+            }
+          );
           setPlaylists(response.data.playlists);
         } catch (error) {
           console.error("Error fetching playlists:", error);
@@ -145,6 +176,11 @@ const UserProfilePage = ({ setCurrentTrack }) => {
 
   // Create a new playlist and add the selected song
   const createPlaylist = async () => {
+    if (!newPlaylistName.trim()) {
+      toast.error("Please enter a playlist name");
+      return;
+    }
+
     try {
       const response = await axios.post(
         `${backendUrl}/api/playlists`,
@@ -177,232 +213,505 @@ const UserProfilePage = ({ setCurrentTrack }) => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading)
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Loading profile...</p>
+      </div>
+    );
 
- return (
-  <div className="UserProfilePage">
-    <Header />
-    <div className="user-profile">
-      {/* Cover Image Section */}
-      <div className="user-profile-cover-container">
-        <img 
-          src={`${backendUrl}${profile.coverImage}`} 
-          alt="Cover" 
-          className="user-profile-cover-image" 
-        />
-        
-        {/* Profile Picture Section */}
-        <div className="user-profile-picture-container">
-          <div className="user-profile-image-wrapper">
+  if (error)
+    return (
+      <div className="error-container">
+        <div className="error-icon">⚠️</div>
+        <h3>Something went wrong</h3>
+        <p>{error}</p>
+        <button onClick={() => window.location.reload()}>Try Again</button>
+      </div>
+    );
+
+  return (
+    <div className="user-profile-page">
+      <Header />
+
+      {/* Hero Section with Glassmorphism */}
+      <div className="profile-hero">
+        <div className="profile-cover-wrapper">
+          <img
+            src={`${backendUrl}${profile.coverImage}`}
+            alt="Cover"
+            className="profile-cover-image"
+          />
+          <div className="profile-overlay"></div>
+
+          {isLoggedin && userData?.userId === userId && (
+            <label className="cover-upload-button">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleCoverUpload}
+                style={{ display: "none" }}
+              />
+              <span>Update Cover</span>
+              <img src={assets.edit_icon} alt="Edit" />
+            </label>
+          )}
+        </div>
+
+        <div className="profile-info-container">
+          <div className="profile-avatar-wrapper">
             <img
-              src={`${backendUrl}${profile.profilePicture || assets.default_avatar}`}
-              alt="Profile"
-              className="user-profile-picture"
+              src={`${backendUrl}${
+                profile.profilePicture || assets.default_avatar
+              }`}
+              alt={profile.name}
+              className="profile-avatar"
             />
             {isLoggedin && userData?.userId === userId && (
-              <label className="user-profile-picture-upload-label">
+              <label className="avatar-edit-button">
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleProfilePictureUpload}
                   style={{ display: "none" }}
                 />
-                <div className="user-profile-picture-overlay">
-                  <img src={assets.edit_icon} alt="Edit" className="edit-icon" />
+                <div className="edit-overlay">
+                  <img src={assets.edit_icon} alt="Edit" />
                 </div>
               </label>
             )}
           </div>
-          <div className="user-profile-info">
-            <h1 className="user-profile-name">
-              {profile.name}
+
+          <div className="profile-details">
+            <div className="profile-name-container">
+              <h1 className="profile-name">{profile.name}</h1>
               {profile.isAccountVerified && (
-                <img 
-                  src={assets.verified_icon} 
-                  alt="Verified" 
-                  className="user-profile-verified-badge" 
+                <img
+                  src={assets.verified_icon}
+                  alt="Verified"
+                  className="verified-badge"
                 />
               )}
-            </h1>
-            <p className="user-profile-bio">{profile.bio || "Music Artist"}</p>
+            </div>
+            <p className="profile-bio">{profile.bio || "Music Artist"}</p>
+            <div className="profile-stats">
+              <div className="stat-item">
+                <span className="stat-value">{profile.songs?.length || 0}</span>
+                <span className="stat-label">Songs</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-value">
+                  {profile.songs?.reduce(
+                    (total, song) => total + song.likedBy.length,
+                    0
+                  ) || 0}
+                </span>
+                <span className="stat-label">Likes</span>
+              </div>
+              {profile.followers && (
+                <div className="stat-item">
+                  <span className="stat-value">
+                    {profile.followers?.length || 0}
+                  </span>
+                  <span className="stat-label">Followers</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-
-        {/* Cover Image Upload */}
-        {isLoggedin && userData?.userId === userId && (
-          <label className="user-profile-cover-upload-label">
-            <p>Change Cover Image</p>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleCoverUpload}
-              style={{ display: "none" }}
-            />
-            <img src={assets.edit_icon} alt="Edit Cover" className="edit-cover-icon" />
-          </label>
-        )}
       </div>
 
-        {/* Popular Songs Section */}
-        {profile.songs.length > 0 && (
-          <>
-            <h2 className="user-profile-section-title">Popular Songs from Artist</h2>
-            <table className="user-profile-songs-table">
-              <thead>
-                <tr>
-                  <th>Cover</th>
-                  <th>Song Name</th>
-                  <th>Genre</th>
-                  <th>Likes</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[...profile.songs]
-                  .sort((a, b) => b.likedBy.length - a.likedBy.length)
-                  .slice(0, 5)
-                  .map((song) => (
-                    <tr key={song._id} onClick={() => setCurrentTrack(song)} className="user-profile-clickable-row">
-                      <td>
-                        <img src={`${backendUrl}${song.coverImage}`} alt={song.title} className="user-profile-table-song-cover" />
-                      </td>
-                      <td>{song.title}</td>
-                      <td>{song.genre}</td>
-                      <td>{song.likedBy.length}</td>
-                      <td>
-                      {isLoggedin && (
-                      <>
-                        <img
-                          src={likedSongs.has(song._id) ? assets.liked_icon : assets.notliked_icon}
-                          alt="Like"
-                          className="user-profile-like-icon"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleLikeToggle(song._id);
-                          }}
-                        />
-                        <img
-                          src={assets.add_icon}
-                          alt="Add to Playlist"
-                          className="user-profile-add-to-playlist-icon"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedSong(song);
-                            setShowModal(true);
-                          }}
-                        />
-                        </>
-                      )}
-                        <img
-                          src={assets.add_queue_icon}
-                          alt="Add to Queue"
-                          className="user-profile-add-queue-icon"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            addToQueue(song);
-                          }}
-                        />
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </>
-        )}
+      {/* Content Tabs */}
+      <div className="profile-content">
+        <div className="tabs-container">
+          <button
+            className={`tab-button ${activeTab === "popular" ? "active" : ""}`}
+            onClick={() => setActiveTab("popular")}
+          >
+            Popular Songs
+          </button>
+          <button
+            className={`tab-button ${activeTab === "all" ? "active" : ""}`}
+            onClick={() => setActiveTab("all")}
+          >
+            All Songs
+          </button>
+          {isLoggedin && userData?.userId === userId && (
+            <button
+              className={`tab-button ${activeTab === "stats" ? "active" : ""}`}
+              onClick={() => setActiveTab("stats")}
+            >
+              Stats & Analytics
+            </button>
+          )}
+        </div>
 
-        {/* Uploaded Songs Section */}
-        <h2 className="user-profile-section-title">Uploaded Songs</h2>
-        {profile.songs.length > 0 ? (
-          <div className="user-profile-uploaded-songs">
-            {profile.songs.map((song) => (
-              <div key={song._id} className="user-profile-song-card">
-                <img
-                  src={`${backendUrl}${song.coverImage}`}
-                  alt={song.title}
-                  className="user-profile-song-cover"
-                  onClick={() => setCurrentTrack(song)}
-                />
-                <div className="user-profile-song-info">
-                  <p className="user-profile-song-title">{song.title}</p>
-                  <div className="user-profile-song-options">
-                    {isLoggedin && (
-                      <>
+        {/* Tab Content */}
+        <div className="tab-content">
+          {activeTab === "popular" && (
+            <div className="popular-songs-container">
+              <h2 className="section-title">Popular Songs</h2>
+              {profile.songs && profile.songs.length > 0 ? (
+                <div className="songs-table-container">
+                  <table className="songs-table">
+                    <tbody>
+                      {[...profile.songs]
+                        .sort((a, b) => b.likedBy.length - a.likedBy.length)
+                        .slice(0, 5)
+                        .map((song, index) => (
+                          <tr
+                            key={song._id}
+                            className="song-row"
+                            onClick={() => setCurrentTrack(song)}
+                          >
+                            <td className="song-index">{index + 1}</td>
+                            <td className="song-title-cell">
+                              <div className="song-title-container">
+                                <img
+                                  src={`${backendUrl}${song.coverImage}`}
+                                  alt={song.title}
+                                  className="song-thumbnail"
+                                />
+                                <div className="song-title-details">
+                                  <span className="song-title">
+                                    {song.title}
+                                  </span>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="song-genre">
+                              <span className="genre-tag">{song.genre}</span>
+                            </td>
+                            <td className="song-likes">
+                              ♥ {formatNumber(song.likedBy.length)}
+                            </td>
+                            <td className="song-actions">
+                              {isLoggedin && (
+                                <>
+                                  <button
+                                    className={`action-button like-button ${
+                                      likedSongs.has(song._id) ? "liked" : ""
+                                    }`}
+                                    onClick={(e) =>
+                                      handleLikeToggle(song._id, e)
+                                    }
+                                    aria-label={
+                                      likedSongs.has(song._id)
+                                        ? "Unlike"
+                                        : "Like"
+                                    }
+                                  >
+                                    <img
+                                      src={
+                                        likedSongs.has(song._id)
+                                          ? assets.liked_icon
+                                          : assets.notliked_icon
+                                      }
+                                      alt="Like"
+                                    />
+                                  </button>
+                                  <button
+                                    className="action-button playlist-button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedSong(song);
+                                      setShowModal(true);
+                                    }}
+                                    aria-label="Add to playlist"
+                                  >
+                                    <img
+                                      src={assets.add_icon}
+                                      alt="Add to playlist"
+                                    />
+                                  </button>
+                                </>
+                              )}
+                              <button
+                                className="action-button queue-button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  addToQueue(song);
+                                  toast.success(
+                                    `Added "${song.title}" to queue`
+                                  );
+                                }}
+                                aria-label="Add to queue"
+                              >
+                                <img
+                                  src={assets.add_queue_icon}
+                                  alt="Add to queue"
+                                />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="empty-state">
+                  <img
+                    src={assets.music_note_icon || "/music-note-icon.svg"}
+                    alt="No songs"
+                  />
+                  <p>No songs uploaded yet</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === "all" && (
+            <div className="all-songs-container">
+              <h2 className="section-title">All Songs</h2>
+              {profile.songs && profile.songs.length > 0 ? (
+                <div className="songs-grid">
+                  {profile.songs.map((song) => (
+                    <div key={song._id} className="song-card">
+                      <div
+                        className="song-card-cover"
+                        onClick={() => setCurrentTrack(song)}
+                      >
                         <img
-                          src={likedSongs.has(song._id) ? assets.liked_icon : assets.notliked_icon}
-                          alt="Like"
-                          className="user-profile-like-icon"
-                          onClick={() => handleLikeToggle(song._id)}
+                          src={`${backendUrl}${song.coverImage}`}
+                          alt={song.title}
+                          className="song-card-image"
                         />
-                        <img
-                          src={assets.add_icon}
-                          alt="Add to Playlist"
-                          className="user-profile-add-to-playlist-icon"
-                          onClick={() => {
-                            setSelectedSong(song);
-                            setShowModal(true);
-                          }}
-                        />
-                      </>
-                    )}
-                    <img
-                      src={assets.add_queue_icon}
-                      alt="Add to Queue"
-                      className="user-profile-add-queue-icon"
-                      onClick={() => addToQueue(song)}
-                    />
+                        <div className="play-overlay">
+                          <div className="play-icon">▶</div>
+                        </div>
+                      </div>
+                      <div className="song-card-details">
+                        <h3 className="song-card-title">{song.title}</h3>
+                        <div className="song-card-meta">
+                          <span className="song-card-genre">{song.genre}</span>
+                          <span className="song-card-likes">
+                            ♥ {formatNumber(song.likedBy.length)}
+                          </span>
+                        </div>
+                        <div className="song-card-actions">
+                          {isLoggedin && (
+                            <>
+                              <button
+                                className={`card-action-btn ${
+                                  likedSongs.has(song._id) ? "liked" : ""
+                                }`}
+                                onClick={() => handleLikeToggle(song._id)}
+                                aria-label={
+                                  likedSongs.has(song._id) ? "Unlike" : "Like"
+                                }
+                              >
+                                <img
+                                  src={
+                                    likedSongs.has(song._id)
+                                      ? assets.liked_icon
+                                      : assets.notliked_icon
+                                  }
+                                  alt="Like"
+                                />
+                              </button>
+                              <button
+                                className="card-action-btn"
+                                onClick={() => {
+                                  setSelectedSong(song);
+                                  setShowModal(true);
+                                }}
+                                aria-label="Add to playlist"
+                              >
+                                <img src={assets.add_icon} alt="Playlist" />
+                              </button>
+                            </>
+                          )}
+                          <button
+                            className="card-action-btn"
+                            onClick={() => {
+                              addToQueue(song);
+                              toast.success(`Added "${song.title}" to queue`);
+                            }}
+                            aria-label="Add to queue"
+                          >
+                            <img src={assets.add_queue_icon} alt="Queue" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="empty-state">
+                  <img
+                    src={assets.music_note_icon || "/music-note-icon.svg"}
+                    alt="No songs"
+                  />
+                  <p>No songs uploaded yet</p>
+                  {isLoggedin && userData?.userId === userId && (
+                    <button
+                      className="upload-cta-button"
+                      onClick={() => navigate("/upload")}
+                    >
+                      Upload Your First Track
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === "stats" &&
+            isLoggedin &&
+            userData?.userId === userId && (
+              <div className="stats-container">
+                <h2 className="section-title">Your Statistics</h2>
+                <div className="stats-cards">
+                  <div className="stat-card total-likes">
+                    <div className="stat-card-icon">❤️</div>
+                    <div className="stat-card-content">
+                      <h3>Total Likes</h3>
+                      <p className="stat-card-value">
+                        {formatNumber(
+                          profile.songs?.reduce(
+                            (total, song) => total + song.likedBy.length,
+                            0
+                          ) || 0
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="stat-card top-song">
+                    <div className="stat-card-icon">🏆</div>
+                    <div className="stat-card-content">
+                      <h3>Top Song</h3>
+                      {profile.songs && profile.songs.length > 0 ? (
+                        <>
+                          <p className="stat-card-value">
+                            {
+                              [...profile.songs].sort(
+                                (a, b) => b.likedBy.length - a.likedBy.length
+                              )[0]?.title
+                            }
+                          </p>
+                          <p className="stat-card-trend">
+                            {formatNumber(
+                              [...profile.songs].sort(
+                                (a, b) => b.likedBy.length - a.likedBy.length
+                              )[0]?.likedBy.length || 0
+                            )}{" "}
+                            likes
+                          </p>
+                        </>
+                      ) : (
+                        <p className="stat-card-empty">No songs yet</p>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-        ) : (
-          <p className="user-profile-no-content">No songs uploaded yet.</p>
-        )}
-
-        {profile.canSellMerch && (
-          <button 
-            onClick={() => navigate(`/artist/${userId}/merch`)}
-            className="view-merch-button"
-          >
-            View Artist Merchandise
-          </button>
-        )}
-
-        {/* Playlist Modal */}
-        {showModal && (
-          <div className="user-profile-modal">
-            <h3>Select a Playlist</h3>
-            <div className="user-profile-playlist-grid">
-              {playlists.map((playlist) => (
-                <div
-                  key={playlist._id}
-                  className="user-profile-playlist-item"
-                  onClick={() => addToPlaylist(playlist._id)}
-                >
-                  <img
-                    src={`${backendUrl}${playlist.coverImage}`}
-                    alt={playlist.name}
-                    className="user-profile-playlist-cover"
-                  />
-                  <p className="user-profile-playlist-name">{playlist.name}</p>
-                </div>
-              ))}
-            </div>
-            <h4>Create New Playlist</h4>
-            <input
-              type="text"
-              value={newPlaylistName}
-              onChange={(e) => setNewPlaylistName(e.target.value)}
-              placeholder="Enter playlist name"
-            />
-            <button onClick={createPlaylist}>Create Playlist</button>
-            <button onClick={() => setShowModal(false)}>Close</button>
-          </div>
-        )}
+            )}
+        </div>
       </div>
+
+      {/* Playlist Modal with Backdrop */}
+      {showModal && (
+        <>
+          <div
+            className="modal-backdrop"
+            onClick={() => setShowModal(false)}
+          ></div>
+          <div className="playlist-modal">
+            <div className="modal-header">
+              <h3>Add to Playlist</h3>
+              <button
+                className="modal-close"
+                onClick={() => setShowModal(false)}
+              >
+                ×
+              </button>
+            </div>
+
+            {selectedSong && (
+              <div className="selected-song-info">
+                <img
+                  src={`${backendUrl}${selectedSong.coverImage}`}
+                  alt={selectedSong.title}
+                  className="selected-song-image"
+                />
+                <div>
+                  <p className="selected-song-title">{selectedSong.title}</p>
+                  <p className="selected-song-genre">{selectedSong.genre}</p>
+                </div>
+              </div>
+            )}
+
+            <div className="playlist-section">
+              <h4>Your Playlists</h4>
+              {playlists.length > 0 ? (
+                <div className="playlists-grid">
+                  {playlists.map((playlist) => (
+                    <div
+                      key={playlist._id}
+                      className="playlist-item"
+                      onClick={() => addToPlaylist(playlist._id)}
+                    >
+                      <div className="playlist-thumbnail">
+                        <img
+                          src={`${backendUrl}${playlist.coverImage}`}
+                          alt={playlist.name}
+                          onError={(e) => {
+                            e.target.src =
+                              assets.default_playlist ||
+                              "/default-playlist.jpg";
+                          }}
+                        />
+                        <div className="playlist-add-icon">+</div>
+                      </div>
+                      <p className="playlist-name">{playlist.name}</p>
+                      <p className="playlist-songs-count">
+                        {playlist.songs?.length || 0} songs
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="no-playlists-message">
+                  You don't have any playlists yet
+                </p>
+              )}
+            </div>
+
+            <div className="create-playlist-section">
+              <h4>Create New Playlist</h4>
+              <div className="create-playlist-form">
+                <input
+                  type="text"
+                  value={newPlaylistName}
+                  onChange={(e) => setNewPlaylistName(e.target.value)}
+                  placeholder="Playlist name"
+                  className="playlist-name-input"
+                />
+                <button
+                  className="create-playlist-button"
+                  onClick={createPlaylist}
+                  disabled={!newPlaylistName.trim()}
+                >
+                  Create
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
+};
+
+// Helper functions
+const formatNumber = (num) => {
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1) + "M";
+  } else if (num >= 1000) {
+    return (num / 1000).toFixed(1) + "K";
+  }
+  return num;
 };
 
 export default UserProfilePage;

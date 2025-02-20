@@ -1,109 +1,157 @@
-/* Published Music Page */
 .published-music {
-    padding: 20px;
-    margin-bottom: 100px;
+  padding: 10px 40px;
+  padding-bottom: 100px;
+}
+
+.published-tunila-songs-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr) !important;
+  gap: 20px;
+  padding: 8px 0 20px;
+  width: 100%;
+}
+
+.published-tunila-song-card {
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  cursor: pointer;
+}
+
+.published-tunila-song-artwork {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+}
+
+.published-tunila-cover-art {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+/* Hover effects and play overlay */
+.published-tunila-song-card:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.published-tunila-song-card:hover .tunila-cover-art {
+  transform: scale(1.05);
+}
+
+.published-tunila-play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.published-tunila-play-overlay i {
+  font-size: 48px;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.published-tunila-song-card:hover .tunila-play-overlay {
+  opacity: 1;
+}
+
+/* Song details */
+.published-tunila-song-details {
+  padding: 16px;
+}
+
+.published-tunila-song-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.published-tunila-song-artist {
+  font-size: 14px;
+  color: #6b7280;
+  text-decoration: none;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.published-tunila-song-artist:hover {
+  color: #4f46e5;
+  text-decoration: underline;
+}
+
+/* Song actions */
+.published-tunila-song-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px 16px;
+}
+
+.published-tunila-song-actions button {
+  background: transparent;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.published-tunila-song-actions button:hover {
+  background-color: #f3f4f6;
+}
+
+.published-tunila-song-actions img,
+.tunila-song-actions i {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.published-tunila-icon-sm {
+  width: 18px;
+  height: 18px;
+}
+
+@media (max-width: 1400px) {
+  .published-tunila-songs-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
-  
-  .section-title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
+}
+
+@media (max-width: 992px) {
+  .published-tunila-songs-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
-  
-  /* Song Grid */
-  .songs-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .published-tunila-songs-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  
-  /* Song Card */
-  .song-card {
-    background-color: #ffffff;
-    border-radius: 8px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 480px) {
+  .published-tunila-songs-grid {
+    grid-template-columns: 1fr;
   }
-  
-  .song-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  }
-  
-  .song-cover {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-  
-  .song-info {
-    padding: 10px;
-  }
-  
-  .song-title {
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .song-artist {
-    font-size: 14px;
-    color: #555;
-    margin-top: 5px;
-  }
-  
-  .song-options {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  
-  .like-icon,
-  .options-icon,
-  .add_queue_icon {
-    width: 22px;
-    height: 22px;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-  }
-  
-  .like-icon:hover,
-  .options-icon:hover,
-  .add_queue_icon:hover {
-    transform: scale(1.1);
-  }
-  
-  /* Modal */
-  .modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 30;
-    width: 400px;
-    max-width: 100%;
-  }
-  
-  /* Responsive */
-  @media (max-width: 768px) {
-    .songs-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-  
-    .song-cover {
-      height: 180px;
-    }
-  
-    .modal {
-      width: 90%;
-    }
-  }
-  
+}

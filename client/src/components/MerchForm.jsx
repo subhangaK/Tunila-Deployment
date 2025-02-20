@@ -10,7 +10,7 @@ const MerchForm = ({ setShowForm }) => {
     description: "",
     price: "",
     type: "physical",
-    images: [] // Ensure this is an array
+    images: [], // Ensure this is an array
   });
   const [isDragging, setIsDragging] = useState(false);
 
@@ -50,12 +50,12 @@ const MerchForm = ({ setShowForm }) => {
     try {
       const response = await fetch(`${backendUrl}/api/merch`, {
         method: "POST",
-        credentials: 'include', // This ensures cookies are sent with the request
+        credentials: "include", // This ensures cookies are sent with the request
         body: formDataToSend,
       });
 
       const data = await response.json();
-      
+
       if (response.ok) {
         toast.success("Item listed successfully!");
         setShowForm(false);
@@ -73,7 +73,7 @@ const MerchForm = ({ setShowForm }) => {
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files); // Convert FileList to array
     if (files.length === 0) return;
-    
+
     handleImageFiles(files);
   };
 
@@ -81,7 +81,7 @@ const MerchForm = ({ setShowForm }) => {
     setFormData({ ...formData, images: files });
 
     const newPreviews = [];
-    files.forEach(file => {
+    files.forEach((file) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         newPreviews.push(reader.result);
@@ -106,11 +106,11 @@ const MerchForm = ({ setShowForm }) => {
   const handleDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
-    
-    const files = Array.from(e.dataTransfer.files).filter(file => 
-      file.type.startsWith('image/')
+
+    const files = Array.from(e.dataTransfer.files).filter((file) =>
+      file.type.startsWith("image/")
     );
-    
+
     if (files.length > 0) {
       handleImageFiles(files);
     }
@@ -119,10 +119,10 @@ const MerchForm = ({ setShowForm }) => {
   const removeImage = (index) => {
     const newImages = [...formData.images];
     newImages.splice(index, 1);
-    
+
     const newPreviews = [...preview];
     newPreviews.splice(index, 1);
-    
+
     setFormData({ ...formData, images: newImages });
     setPreview(newPreviews);
   };
@@ -150,7 +150,7 @@ const MerchForm = ({ setShowForm }) => {
   return (
     <form onSubmit={handleSubmit} className="merch-form fade-in">
       <h2>List New Merchandise</h2>
-      
+
       <label htmlFor="item-name">Item Name</label>
       <input
         id="item-name"
@@ -160,16 +160,18 @@ const MerchForm = ({ setShowForm }) => {
         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
         required
       />
-      
+
       <label htmlFor="item-description">Description</label>
       <textarea
         id="item-description"
         placeholder="Describe your item in detail"
         value={formData.description}
-        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+        onChange={(e) =>
+          setFormData({ ...formData, description: e.target.value })
+        }
         required
       />
-      
+
       <label htmlFor="item-price">Price (Rs)</label>
       <input
         id="item-price"
@@ -179,7 +181,7 @@ const MerchForm = ({ setShowForm }) => {
         onChange={(e) => setFormData({ ...formData, price: e.target.value })}
         required
       />
-      
+
       <label htmlFor="item-type">Item Type</label>
       <select
         id="item-type"
@@ -190,10 +192,10 @@ const MerchForm = ({ setShowForm }) => {
         <option value="physical">Physical Item</option>
         <option value="digital">Digital Item</option>
       </select>
-      
+
       <label htmlFor="item-images">Upload Images</label>
-      <div 
-        className={`file-upload-area ${isDragging ? 'dragging' : ''}`}
+      <div
+        className={`file-upload-area ${isDragging ? "dragging" : ""}`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
@@ -208,15 +210,15 @@ const MerchForm = ({ setShowForm }) => {
         />
         <p>Drag & drop images here or click to browse</p>
       </div>
-      
+
       {preview.length > 0 && (
         <div className="image-preview">
           {preview.map((src, index) => (
             <div key={index} className="preview-item">
               <img src={src} alt={`Preview ${index + 1}`} />
-              <button 
-                type="button" 
-                className="remove-image-btn" 
+              <button
+                type="button"
+                className="remove-image-btn"
                 onClick={() => removeImage(index)}
               >
                 ×
@@ -225,12 +227,12 @@ const MerchForm = ({ setShowForm }) => {
           ))}
         </div>
       )}
-      
+
       <div className="form-actions">
         <button type="submit">List Item</button>
-        <button 
-          type="button" 
-          onClick={() => setShowForm(false)} 
+        <button
+          type="button"
+          onClick={() => setShowForm(false)}
           className="cancel-button"
         >
           Cancel
