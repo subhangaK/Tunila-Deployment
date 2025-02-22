@@ -1,151 +1,149 @@
 .header {
-    background: linear-gradient(to bottom right,#ffffff, #f7f6f6);
-    color: black;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Spread items horizontally */
+  background: linear-gradient(to bottom right, #ffffff, #f7f6f6);
+  color: black;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Spread items horizontally */
 }
 
 .logo-container {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Space between logo and text */
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between logo and text */
+  cursor: pointer;
 }
 
 .logo {
-    height: 50px;
+  height: 50px;
 }
 
 .logo-text {
-    font-family: "Noto Music", sans-serif;
-    font-size: 24px;
-    font-weight: 600;
-    color: #181818; /* Matches the theme */
-    cursor: pointer;
+  font-family: "Noto Music", sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: #181818; /* Matches the theme */
+  cursor: pointer;
 }
 
 .search-container {
-    position: relative; /* To position the icon inside the input box */
-    display: flex;
-    align-items: center;
-    flex-grow: 1; /* Allows search container to take up remaining space */
-    margin-left: 20px; /* Add spacing between logo and search container */
-    margin-right: 20px; /* Add spacing between search container and button */
+  position: relative; /* To position the icon inside the input box */
+  display: flex;
+  align-items: center;
+  flex-grow: 1; /* Allows search container to take up remaining space */
+  margin-left: 20px; /* Add spacing between logo and search container */
+  margin-right: 20px; /* Add spacing between search container and button */
 }
 
 .search-icon {
-    position: absolute;
-    left: 10px; /* Position the icon inside the input box */
-    height: 16px;
-    width: 16px;
-    pointer-events: none; /* Ensures the icon doesn’t interfere with clicks */
+  position: absolute;
+  left: 10px; /* Position the icon inside the input box */
+  height: 16px;
+  width: 16px;
+  pointer-events: none; /* Ensures the icon doesn’t interfere with clicks */
 }
 
 .search-box {
-    width: 400px; /* Smaller width */
-    height: 35px;
-    padding: 5px 10px 5px 35px; /* Space for the icon */
-    border: none; /* No border */
-    border-radius: 20px; /* Rounded edges */
-    font-size: 14px;
-    transition: background-color 0.3s ease;
+  width: 400px; /* Smaller width */
+  height: 35px;
+  padding: 5px 10px 5px 35px; /* Space for the icon */
+  border: none; /* No border */
+  border-radius: 20px; /* Rounded edges */
+  font-size: 14px;
+  transition: background-color 0.3s ease;
 }
 
 .search-box:focus {
-    background-color: #e0e0e0; /* Slightly darker background on focus */
-    outline: none; /* Removes the default outline */
+  background-color: #e0e0e0; /* Slightly darker background on focus */
+  outline: none; /* Removes the default outline */
 }
 
 h2 {
-    margin-right: 70px; /* Add space between the text and the login button */
-    font-size: 18px; /* Adjust font size for better alignment */
-    color: #333; /* A slightly darker shade for contrast */
+  margin-right: 70px; /* Add space between the text and the login button */
+  font-size: 18px; /* Adjust font size for better alignment */
+  color: #333; /* A slightly darker shade for contrast */
 }
 
 .login-button {
-    background-color: #8cb1d9; /* Pink button color */
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 8px 20px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  background-color: #8cb1d9; /* Pink button color */
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .login-button:hover {
-    background-color: #66a2bd; /* Darker pink on hover */
+  background-color: #66a2bd; /* Darker pink on hover */
 }
 
 /* Profile Picture */
 .profile-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 
 .profile-picture {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid white;
-    transition: transform 0.2s ease-in-out;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+  transition: transform 0.2s ease-in-out;
 }
 
 .profile-picture:hover {
-    transform: scale(1.04);
+  transform: scale(1.04);
 }
 
 /* Dropdown Menu */
 .dropdown-menu {
-    position: absolute;
-    top: 50px;
-    right: 0;
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    list-style: none;
-    padding: 10px 0;
-    z-index: 100;
-    min-width: 150px;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  list-style: none;
+  padding: 10px 0;
+  z-index: 100;
+  min-width: 150px;
 }
 
 .dropdown-menu li {
-    padding: 10px;
-    cursor: pointer;
-    transition: background 0.3s ease-in-out;
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
 }
 
 .dropdown-menu li:hover {
-    background-color: #f0f0f0;
+  background-color: #f0f0f0;
 }
 
-.logout{
-    color: red;
+.logout {
+  color: red;
 }
-
-  
 
 @media (max-width: 768px) {
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-    .search-box {
-        width: 100%; /* Full width on smaller screens */
-    }
+  .search-box {
+    width: 100%; /* Full width on smaller screens */
+  }
 
-    h2 {
-        margin-right: 0;
-        margin-bottom: 10px; /* Space between the text and button on smaller screens */
-    }
+  h2 {
+    margin-right: 0;
+    margin-bottom: 10px; /* Space between the text and button on smaller screens */
+  }
 
-    .login-button {
-        margin-top: 10px; /* Add spacing on smaller screens */
-    }
+  .login-button {
+    margin-top: 10px; /* Add spacing on smaller screens */
+  }
 }

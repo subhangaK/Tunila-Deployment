@@ -1,5 +1,5 @@
 // models/merchModel.js
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const merchandiseSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -7,20 +7,25 @@ const merchandiseSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   type: { type: String, required: true },
   images: [String],
-  artist: { 
+  artist: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // Ensure this matches the model name
-    required: true
+    ref: "User", // Ensure this matches the model name
+    required: true,
   },
   stock: { type: Number, default: 1 },
-  wishlistedBy: [{ 
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User' // Ensure this matches the model name
-  }],
-  createdAt: { type: Date, default: Date.now }
+  pidx: { type: String, default: null }, // ✅ Ensure pidx is present
+  wishlistedBy: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // Ensure this matches the model name
+    },
+  ],
+  createdAt: { type: Date, default: Date.now },
 });
 
 // Ensure the model is registered correctly
-const Merchandise = mongoose.models.Merchandise || mongoose.model('Merchandise', merchandiseSchema);
+const Merchandise =
+  mongoose.models.Merchandise ||
+  mongoose.model("Merchandise", merchandiseSchema);
 
 export default Merchandise;

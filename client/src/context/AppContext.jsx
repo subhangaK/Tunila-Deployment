@@ -70,7 +70,9 @@ export const AppContextProvider = (props) => {
   // ✅ Fetch User's Liked Songs
   const getLikedSongs = async (userId) => {
     try {
-      const { data } = await axios.get(`${backendUrl}/api/songs/liked-songs/${userId}`);
+      const { data } = await axios.get(
+        `${backendUrl}/api/songs/liked-songs/${userId}`
+      );
       if (data.likedSongs) {
         setLikedSongs(data.likedSongs.map((song) => song._id));
       }
@@ -105,10 +107,16 @@ export const AppContextProvider = (props) => {
 
     try {
       if (likedSongs.includes(songId)) {
-        await axios.post(`${backendUrl}/api/songs/unlike`, { userId: userData._id, songId });
+        await axios.post(`${backendUrl}/api/songs/unlike`, {
+          userId: userData._id,
+          songId,
+        });
         setLikedSongs(likedSongs.filter((id) => id !== songId));
       } else {
-        await axios.post(`${backendUrl}/api/songs/like`, { userId: userData._id, songId });
+        await axios.post(`${backendUrl}/api/songs/like`, {
+          userId: userData._id,
+          songId,
+        });
         setLikedSongs([...likedSongs, songId]);
       }
       fetchRecommendedSongs(userData._id);
@@ -229,5 +237,7 @@ export const AppContextProvider = (props) => {
     clearQueue,
   };
 
-  return <AppContext.Provider value={value}>{props.children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={value}>{props.children}</AppContext.Provider>
+  );
 };

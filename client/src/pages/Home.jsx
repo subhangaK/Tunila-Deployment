@@ -3,16 +3,10 @@ import Header from "../components/Header";
 import Body from "../components/Body";
 
 function Home({ setCurrentTrack }) {
-  const [filteredSongs, setFilteredSongs] = useState([]);
-
   return (
     <div className="home-container">
-      <Header setFilteredSongs={setFilteredSongs} />{" "}
-      {/* Pass setFilteredSongs to Header */}
-      <Body
-        setCurrentTrack={setCurrentTrack}
-        filteredSongs={filteredSongs}
-      />{" "}
+      <Header />
+      <Body setCurrentTrack={setCurrentTrack} />
       {/* Pass filteredSongs to Body */}
     </div>
   );

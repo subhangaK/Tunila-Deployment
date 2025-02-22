@@ -1,133 +1,128 @@
+/* SearchResults.css */
 .search-results-page {
-  padding: 20px;
-  padding-bottom: 150px;
+  position: relative;
+  padding: 24px 32px;
+  padding-bottom: 100px;
+  overflow: visible;
+  background: linear-gradient(180deg, #f0f2f5 0%, #ffffff 100%);
+  min-height: calc(100vh - 80px);
+  font-family: "Inter", "Segoe UI", sans-serif;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Loading Animation */
+.search-loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  background: linear-gradient(180deg, #f0f2f5 0%, #ffffff 100%);
+}
+
+.search-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.search-loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(79, 70, 229, 0.2);
+  border-radius: 50%;
+  border-top-color: #4f46e5;
+  animation: search-spinner 1s ease-in-out infinite;
+}
+
+@keyframes search-spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.search-loading p {
+  font-size: 18px;
+  color: #4b5563;
+}
+
+/* Search Header */
+.search-header {
+  margin-bottom: 40px;
 }
 
 .search-title {
   font-size: 28px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 30px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 8px;
 }
 
+.search-title span {
+  color: #4f46e5;
+}
+
+/* Section Titles */
 .search-section-title {
-  margin-top: 30px;
-  font-size: 25px;
-  font-weight: bold;
-  color: #333;
-  padding-top: 20px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 24px;
+  position: relative;
 }
 
-/* New styles for top section layout */
+.search-section-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -8px;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(135deg, #4f46e5, #8b5cf6);
+  border-radius: 2px;
+}
+
+/* Top Result Section */
 .search-top-section {
   display: grid;
-  grid-template-columns: minmax(300px, 1fr) 2fr;
-  gap: 30px;
-  margin: 30px 0;
-}
-
-.search-top-container {
-  background-color: #fdfcfc;
+  grid-template-columns: 1fr 2fr;
+  gap: 32px;
+  margin-bottom: 48px;
+  background: white;
   border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.search-related-container {
-  background-color: #fdfcfc;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
-
-/* Related Songs Table Styles */
-.search-related-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 8px;
-}
-
-.search-related-row {
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.search-related-row:hover {
-  background-color: #f5f5f5;
-}
-
-.search-related-index {
-  width: 40px;
-  color: #666;
-  text-align: center;
-  font-size: 14px;
-}
-
-.search-related-cover {
-  width: 60px;
-  padding: 8px;
-}
-
-.search-related-image {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 4px;
-}
-
-.search-related-info {
-  padding: 8px;
-}
-
-.search-related-title {
-  font-size: 16px;
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 4px;
-}
-
-.search-related-artist {
-  font-size: 12px;
-  color: #666;
-  cursor: pointer;
-}
-
-.search-related-artist:hover {
-  text-decoration: underline;
-}
-
-/* Top Result Styles */
-.search-top-result {
-  margin: 30px 0;
-}
-
+/* Top Artist Result */
 .search-top-artist {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #fdfcfc;
-  border-radius: 16px;
-  padding: 20px;
+  justify-content: center;
+  padding: 24px;
+  border-radius: 12px;
+  background: linear-gradient(to bottom, #f9fafb, #f3f4f6);
   cursor: pointer;
-  transition: transform 0.3s ease;
-  max-width: 300px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 400px;
+  text-align: center;
 }
 
 .search-top-artist:hover {
-  transform: translateY(-5px);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 .search-artist-image-container {
-  width: 200px;
-  height: 200px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
   overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 2px solid white;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
+  border: 4px solid white;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
 .search-artist-image {
@@ -136,70 +131,331 @@
   object-fit: cover;
 }
 
-.search-top-song {
-  background-color: #fdfcfc;
-  border-radius: 8px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
-
-.search-top-song:hover {
-  transform: translateY(-5px);
+.search-artist-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 8px;
 }
 
 .search-result-type {
-  color: #666;
-  font-size: 14px;
-  margin-top: 5px;
+  display: inline-block;
+  padding: 4px 12px;
+  background: linear-gradient(135deg, #4f46e5, #8b5cf6);
+  color: white;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 16px;
 }
 
-.search-section-title {
-  border-bottom: 2px solid #ebeded;
-  margin-top: 30px;
-  font-size: 25px;
-  font-weight: bold;
-  color: #333;
-  padding-top: 20px;
+.search-view-profile-btn {
+  padding: 10px 20px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  color: #4b5563;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.search-view-profile-btn:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+/* Top Song Result */
+.search-top-song {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 16px;
+  border-radius: 12px;
+  background: linear-gradient(to right, #f9fafb, #f3f4f6);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.search-top-song:hover {
+  background: linear-gradient(to right, #f3f4f6, #e5e7eb);
+}
+
+.search-song-artwork {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.search-top-song-artwork {
+  position: relative;
+  width: 140px !important;
+  height: 140px !important;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.search-song-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.search-play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.search-play-overlay i {
+  font-size: 36px;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.search-song-artwork:hover .search-play-overlay {
+  opacity: 1;
+}
+
+.search-song-artwork:hover .search-song-cover {
+  transform: scale(1.05);
+}
+
+.search-song-info {
+  flex: 1;
+}
+
+.search-song-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.search-song-artist {
+  font-size: 16px;
+  color: #6b7280;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.search-song-artist:hover {
+  color: #4f46e5;
+  text-decoration: underline;
+}
+
+.search-song-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.search-action-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+}
+
+.search-action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.search-play-btn {
+  background: linear-gradient(135deg, #4f46e5, #8b5cf6);
+  color: white;
+}
+
+.search-play-icon-top-song {
+  width: 18px;
+  height: 18px;
+  margin-top: 3px;
+  margin-left: 2px;
+}
+
+/* Related Songs Table */
+.search-related-container {
+  padding: 16px;
+}
+
+.search-related-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.search-related-row {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-related-row:hover {
+  background-color: #f9fafb;
+}
+
+.search-related-row td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.search-related-index {
+  width: 40px;
+  text-align: center;
+  color: #9ca3af;
+  font-weight: 600;
+}
+
+.search-related-cover {
+  width: 60px;
+}
+
+.search-related-image-container {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.search-related-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.search-related-play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.search-related-play-overlay i {
+  font-size: 20px;
+  color: white;
+}
+
+.search-related-image-container:hover .search-related-play-overlay {
+  opacity: 1;
+}
+
+.search-related-info {
+  padding-left: 8px;
+}
+
+.search-related-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 2px;
+}
+
+.search-related-artist {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.search-related-artist:hover {
+  color: #4f46e5;
+  text-decoration: underline;
+}
+
+.search-related-duration {
+  width: 60px;
+  text-align: right;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.search-related-actions {
+  width: 40px;
+  text-align: center;
+}
+
+.search-related-action-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #9ca3af;
+  transition: all 0.2s;
+}
+
+.search-related-action-btn:hover {
+  background-color: #f3f4f6;
+  color: #4b5563;
 }
 
 /* Songs Grid */
+.search-songs-section {
+  margin-bottom: 48px;
+}
+
 .search-songs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
 }
 
 .search-song-card {
-  background-color: #fdfcfc;
-  border-radius: 8px;
+  background: white;
+  border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
-  transition: transform 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .search-song-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
-.search-song-cover {
-  width: 200px;
-  height: 200px;
-  object-fit: cover;
+.search-song-artwork {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
 }
 
-.search-song-info {
-  padding: 15px;
+.search-song-details {
+  padding: 16px;
 }
 
 .search-song-title {
   font-size: 16px;
-  font-weight: bold;
-  color: #333;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -207,139 +463,377 @@
 
 .search-song-artist {
   font-size: 14px;
-  color: #555;
-  margin-top: 5px;
-  cursor: pointer;
+  color: #6b7280;
+  margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.search-song-artist:hover {
-  text-decoration: underline;
+.search-song-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px 16px;
 }
 
 /* Artists Grid */
-.search-artists-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 50px;
-  margin-top: 20px;
+.search-artists-section {
+  margin-bottom: 48px;
 }
 
-.search-artist {
+.search-artists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+.search-artist-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
   cursor: pointer;
-  transition: transform 0.2s ease-in-out;
 }
 
-.search-artist:hover {
-  transform: scale(1.02);
+.search-artist-card:hover {
+  transform: translateY(-4px);
+  transition: transform 0.2s ease;
+}
+
+.search-artist-info {
+  margin-top: 12px;
 }
 
 .search-artist-name {
-  margin-top: 10px;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px;
 }
 
-/* Playlist Section */
-.search-playlist-section {
-  margin-top: 40px;
+.search-artist-type {
+  font-size: 12px;
+  color: #6b7280;
 }
 
-.search-playlist-section h2 {
-  font-size: 24px;
-  font-weight: bold;
-  color: #333;
-  border-bottom: 2px solid #ebeded;
-  padding-bottom: 10px;
-  margin-bottom: 20px;
+/* Users Grid */
+.search-users-section {
+  margin-bottom: 48px;
 }
 
-/* Grid Layout for Playlists */
+.search-users-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 24px;
+}
+
+.search-user-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.search-user-card:hover {
+  transform: translateY(-4px);
+}
+
+.search-user-image-container {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 12px;
+}
+
+.search-user-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.search-user-info {
+  text-align: center;
+}
+
+.search-user-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px;
+}
+
+.search-user-type {
+  font-size: 12px;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+/* Playlists Grid */
+.search-playlists-section {
+  margin-bottom: 48px;
+}
+
 .search-playlists-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
+  gap: 24px;
 }
 
-/* Playlist Card */
-.search-playlist {
-  background-color: #ffffff;
+.search-playlist-card {
+  background: white;
   border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.search-playlist:hover {
+.search-playlist-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
-/* Playlist Cover Image */
-.search-playlist img {
+.search-playlist-artwork {
+  position: relative;
   width: 100%;
   height: 180px;
-  object-fit: cover;
-  border-radius: 12px 12px 0 0;
+  overflow: hidden;
 }
 
-/* Playlist Info */
-.search-playlist h3 {
+.search-playlist-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.search-playlist-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.search-playlist-overlay i {
+  font-size: 36px;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.search-playlist-artwork:hover .search-playlist-overlay {
+  opacity: 1;
+}
+
+.search-playlist-artwork:hover .search-playlist-cover {
+  transform: scale(1.05);
+}
+
+.search-playlist-info {
+  padding: 16px;
+}
+
+.search-playlist-name {
   font-size: 16px;
-  font-weight: bold;
-  color: #2d3436;
-  margin: 10px 0;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.search-playlist p {
+.search-playlist-count {
   font-size: 14px;
-  color: #666;
-  margin-bottom: 10px;
+  color: #6b7280;
+  margin: 0;
 }
 
-.search-loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 200px;
-  font-size: 18px;
-  color: #666;
-}
-
+/* No Results */
 .search-no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 0;
   text-align: center;
-  font-size: 18px;
-  color: #666;
-  margin-top: 50px;
 }
 
+.search-no-results i {
+  font-size: 48px;
+  color: #9ca3af;
+  margin-bottom: 20px;
+}
+
+.search-no-results p {
+  font-size: 18px;
+  color: #4b5563;
+  margin: 4px 0;
+}
+
+.search-no-results p:first-of-type {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Responsive Design */
 @media (max-width: 1024px) {
-  .search-songs-grid {
-    grid-template-columns: 1fr 1fr;
+  .search-top-section {
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
 
-  .search-song-cover {
-    height: 180px;
+  .search-songs-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+
+  .search-artists-grid,
+  .search-playlists-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .search-results-page {
+    padding: 16px 20px;
+  }
+
+  .search-title {
+    font-size: 24px;
+  }
+
+  .search-section-title {
+    font-size: 20px;
+  }
+
+  .search-songs-grid,
+  .search-artists-grid,
+  .search-users-grid,
+  .search-playlists-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+  }
+
+  .search-top-artist {
+    padding: 16px;
   }
 
   .search-artist-image-container {
-    width: 150px;
-    height: 150px;
+    width: 140px;
+    height: 140px;
   }
 
-  .search-top-section {
-    grid-template-columns: 1fr;
+  .search-artist-name {
+    font-size: 20px;
   }
 
-  .search-related-container {
-    overflow-x: auto;
+  .search-song-artwork {
+    height: 180px;
   }
+}
+
+@media (max-width: 480px) {
+  .search-results-page {
+    padding: 12px 16px;
+  }
+
+  .search-top-song {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .search-song-artwork {
+    width: 100%;
+    height: 200px;
+  }
+
+  .search-songs-grid,
+  .search-artists-grid,
+  .search-users-grid,
+  .search-playlists-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .search-related-duration {
+    display: none;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.search-top-section,
+.search-songs-section,
+.search-artists-section,
+.search-users-section,
+.search-playlists-section {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.search-songs-section {
+  animation-delay: 0.1s;
+}
+
+.search-artists-section {
+  animation-delay: 0.2s;
+}
+
+.search-users-section {
+  animation-delay: 0.3s;
+}
+
+.search-playlists-section {
+  animation-delay: 0.4s;
+}
+
+/* Focus States for Accessibility */
+.search-action-btn:focus,
+.search-related-action-btn:focus,
+.search-view-profile-btn:focus,
+.search-artist-view-btn:focus {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
+
+/* Custom Scrollbar */
+.search-results-page::-webkit-scrollbar {
+  width: 8px;
+}
+
+.search-results-page::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.search-results-page::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+.search-results-page::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
 }

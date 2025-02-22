@@ -144,7 +144,7 @@ const TunilaHome = ({ setCurrentTrack }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              Discover Your Sound
+              Discover Your Tune
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -194,6 +194,9 @@ const TunilaHome = ({ setCurrentTrack }) => {
             View All <span className="tunila-home-arrow">→</span>
           </Link>
         </div>
+        <p className="tunila-home-shop-subtitle">
+          Most liked songs from your favorite artists
+        </p>
         <div className="tunila-home-songs-container">
           {popularSongs.length > 0 ? (
             popularSongs.map((song, index) => (
@@ -443,20 +446,20 @@ const TunilaHome = ({ setCurrentTrack }) => {
             {[
               {
                 text: "Tunila helped me discover incredible new artists I would have never found elsewhere. The recommendations are spot on!",
-                name: "Sarah K.",
-                role: "Music Enthusiast",
+                name: "Balen Shah",
+                role: "Music Enthusiast, Mayor of Kathmandu",
                 avatar: assets.testimonial_avatar1 || "/avatars/user1.jpg",
               },
               {
                 text: "As an independent artist, Tunila has given me a platform to share my music with the world and connect with my fans on a deeper level.",
-                name: "Mike D.",
-                role: "Independent Artist",
+                name: "Sacar.",
+                role: "Independent Artist and Professional Hater",
                 avatar: assets.testimonial_avatar2 || "/avatars/user2.jpg",
               },
               {
                 text: "The merchandise platform made it easy to create and sell custom merch to my fans. It's been a game-changer for my music career.",
-                name: "Alex R.",
-                role: "Verified Artist",
+                name: "Uniq Poet",
+                role: "Verified Artist on Tunila",
                 avatar: assets.testimonial_avatar3 || "/avatars/user3.jpg",
               },
             ].map((testimonial, index) => (

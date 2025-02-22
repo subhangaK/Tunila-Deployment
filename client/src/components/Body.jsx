@@ -192,9 +192,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
   }, [backendUrl, userData]);
 
   // Add a song to an existing playlist
-  const addToPlaylist = async (playlistId, e) => {
-    e.stopPropagation();
-
+  const addToPlaylist = async (playlistId) => {
     try {
       await axios.put(
         `${backendUrl}/api/playlists/${playlistId}`,
@@ -208,7 +206,10 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
       setShowModal(false);
     } catch (error) {
       console.error("Error adding to playlist:", error);
-      toast.error("Failed to add song to playlist. Please try again.");
+      toast.error("Failed to add song to playlist. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   };
 
@@ -223,7 +224,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
         { withCredentials: true }
       );
       setPlaylists([...playlists, response.data.playlist]);
-      toast.success("New playlist created and song added!");
+      toast.success("New Playlist Created");
       setShowModal(false);
       setNewPlaylistName("");
     } catch (error) {

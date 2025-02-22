@@ -136,6 +136,10 @@ const MerchItemDetail = () => {
   const handleBuy = async () => {
     if (!isLoggedin) {
       toast.info("Please login to purchase items");
+      if (!item.stock || item.stock <= 0) {
+        toast.error("This item is out of stock");
+        return;
+      }
       return;
     }
 

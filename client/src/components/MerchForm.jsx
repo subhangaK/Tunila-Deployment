@@ -10,7 +10,8 @@ const MerchForm = ({ setShowForm }) => {
     description: "",
     price: "",
     type: "physical",
-    images: [], // Ensure this is an array
+    images: [],
+    stock: 1,
   });
   const [isDragging, setIsDragging] = useState(false);
 
@@ -39,6 +40,7 @@ const MerchForm = ({ setShowForm }) => {
     formDataToSend.append("description", formData.description);
     formDataToSend.append("price", formData.price);
     formDataToSend.append("type", formData.type);
+    formDataToSend.append("stock", formData.stock);
 
     // Append files (images)
     if (formData.images && formData.images.length > 0) {
@@ -140,6 +142,10 @@ const MerchForm = ({ setShowForm }) => {
       toast.error("Please enter a valid price");
       return false;
     }
+    if (!formData.stock || formData.stock < 0) {
+      toast.error("Please enter a valid stock quantity");
+      return false;
+    }
     if (!formData.images.length) {
       toast.error("Please upload at least one image");
       return false;
@@ -192,6 +198,17 @@ const MerchForm = ({ setShowForm }) => {
         <option value="physical">Physical Item</option>
         <option value="digital">Digital Item</option>
       </select>
+
+      <label htmlFor="item-stock">Stock Quantity</label>
+      <input
+        id="item-stock"
+        type="number"
+        min="0"
+        placeholder="Enter stock quantity"
+        value={formData.stock}
+        onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+        required
+      />
 
       <label htmlFor="item-images">Upload Images</label>
       <div

@@ -46,6 +46,10 @@ import playlist_image from "./playlist_image.png";
 import edit_icon from "./edit.png";
 import verified_icon_black from "./verified_black.png";
 import volume_mute_icon from "./mute.png";
+import testimonial_avatar1 from "./Testimonial1.png";
+import testimonial_avatar2 from "./Testimonial2.jpg";
+import testimonial_avatar3 from "./Testimonial3.jpg";
+import music_note_icon from "./music-note.png";
 
 export const assets = {
   logo,
@@ -96,4 +100,8 @@ export const assets = {
   edit_icon,
   verified_icon_black,
   volume_mute_icon,
+  testimonial_avatar1,
+  testimonial_avatar2,
+  testimonial_avatar3,
+  music_note_icon,
 };

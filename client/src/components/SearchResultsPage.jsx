@@ -4,11 +4,17 @@ import axios from "axios";
 import { AppContext } from "../context/AppContext";
 import "../css/SearchResults.css";
 import Header from "./Header";
+import { assets } from "../assets/assets";
 
 const SearchResultsPage = ({ setCurrentTrack }) => {
   const { backendUrl, userData, isLoggedin, addToQueue } =
     useContext(AppContext);
-  const [results, setResults] = useState({ songs: [], artists: [] });
+  const [results, setResults] = useState({
+    songs: [],
+    artists: [],
+    users: [],
+    playlists: [],
+  });
   const [loading, setLoading] = useState(true);
   const [topResult, setTopResult] = useState(null);
   const [relatedSongs, setRelatedSongs] = useState([]);
@@ -91,13 +97,25 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
     if (searchQuery) fetchResults();
   }, [searchQuery, backendUrl]);
 
-  if (loading) return <div className="search-loading">Searching...</div>;
+  if (loading)
+    return (
+      <div className="search-loading-container">
+        <div className="search-loading">
+          <div className="search-loading-spinner"></div>
+          <p>Searching for "{searchQuery}"...</p>
+        </div>
+      </div>
+    );
 
   return (
     <>
-      <Header></Header>
+      <Header />
       <div className="search-results-page">
-        <h1 className="search-title">Results for "{searchQuery}"</h1>
+        <div className="search-header">
+          <h1 className="search-title">
+            Results for "<span>{searchQuery}</span>"
+          </h1>
+        </div>
 
         {/* Top Result and Related Songs Section */}
         {topResult && (
@@ -117,18 +135,26 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
                     />
                   </div>
                   <p className="search-artist-name">{topResult.data.name}</p>
-                  <p className="search-result-type">Artist</p>
+                  <span className="search-result-type">Artist</span>
+                  <button className="search-view-profile-btn">
+                    View Profile
+                  </button>
                 </div>
               ) : (
                 <div
                   className="search-top-song"
                   onClick={() => setCurrentTrack(topResult.data)}
                 >
-                  <img
-                    src={`${backendUrl}${topResult.data.coverImage}`}
-                    alt={topResult.data.title}
-                    className="search-song-cover"
-                  />
+                  <div className="search-top-song-artwork">
+                    <img
+                      src={`${backendUrl}${topResult.data.coverImage}`}
+                      alt={topResult.data.title}
+                      className="search-song-cover"
+                    />
+                    <div className="search-play-overlay">
+                      <i className="fas fa-play"></i>
+                    </div>
+                  </div>
                   <div className="search-song-info">
                     <p className="search-song-title">{topResult.data.title}</p>
                     <p
@@ -140,7 +166,18 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
                     >
                       {topResult.data.artist?.name}
                     </p>
-                    <p className="search-result-type">Song</p>
+                    <span className="search-result-type">Song</span>
+                  </div>
+                  <div className="search-song-actions">
+                    <button className="search-action-btn search-play-btn">
+                      <i className="fas fa-play">
+                        <img
+                          className="search-play-icon-top-song"
+                          src={assets.play_icon}
+                          alt=""
+                        />
+                      </i>
+                    </button>
                   </div>
                 </div>
               )}
@@ -160,11 +197,16 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
                       >
                         <td className="search-related-index">{index + 1}</td>
                         <td className="search-related-cover">
-                          <img
-                            src={`${backendUrl}${song.coverImage}`}
-                            alt={song.title}
-                            className="search-related-image"
-                          />
+                          <div className="search-related-image-container">
+                            <img
+                              src={`${backendUrl}${song.coverImage}`}
+                              alt={song.title}
+                              className="search-related-image"
+                            />
+                            <div className="search-related-play-overlay">
+                              <i className="fas fa-play"></i>
+                            </div>
+                          </div>
                         </td>
                         <td className="search-related-info">
                           <p className="search-related-title">{song.title}</p>
@@ -178,6 +220,11 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
                             {song.artist?.name}
                           </p>
                         </td>
+                        <td className="search-related-actions">
+                          <button className="search-related-action-btn">
+                            <i className="fas fa-ellipsis-h"></i>
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -189,7 +236,7 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
 
         {/* Main Songs Section */}
         {results?.songs?.length > 0 && (
-          <>
+          <div className="search-songs-section">
             <h2 className="search-section-title">Songs</h2>
             <div className="search-songs-grid">
               {results.songs.map((song) => (
@@ -198,12 +245,17 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
                   className="search-song-card"
                   onClick={() => setCurrentTrack(song)}
                 >
-                  <img
-                    src={`${backendUrl}${song.coverImage}`}
-                    alt={song.title}
-                    className="search-song-cover"
-                  />
-                  <div className="search-song-info">
+                  <div className="search-song-artwork">
+                    <img
+                      src={`${backendUrl}${song.coverImage}`}
+                      alt={song.title}
+                      className="search-song-cover"
+                    />
+                    <div className="search-play-overlay">
+                      <i className="fas fa-play"></i>
+                    </div>
+                  </div>
+                  <div className="search-song-details">
                     <p className="search-song-title">{song.title}</p>
                     <p
                       className="search-song-artist"
@@ -218,82 +270,109 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
                 </div>
               ))}
             </div>
-          </>
+          </div>
         )}
 
         {/* Artists Section */}
         {results?.artists?.length > 0 && (
-          <>
+          <div className="search-artists-section">
             <h2 className="search-section-title">Artists</h2>
             <div className="search-artists-grid">
               {results.artists.map((artist) => (
-                <div key={artist._id} className="search-artist">
-                  <div className="search-artist-image-container">
+                <div key={artist._id} className="search-artist-card">
+                  <div
+                    className="search-artist-image-container"
+                    onClick={() => navigate(`/profile/${artist._id}`)}
+                  >
                     <img
                       src={`${backendUrl}${artist.profilePicture}`}
                       alt={artist.name}
                       className="search-artist-image"
-                      onClick={() => navigate(`/profile/${artist._id}`)}
                     />
                   </div>
                   <div className="search-artist-info">
                     <p className="search-artist-name">{artist.name}</p>
+                    <span className="search-artist-type">Artist</span>
                   </div>
                 </div>
               ))}
             </div>
-          </>
+          </div>
         )}
 
         {/* Users Section */}
-        {results.users.length > 0 && (
-          <>
+        {results?.users?.length > 0 && (
+          <div className="search-users-section">
             <h2 className="search-section-title">Users</h2>
-            <div className="search-artists-grid">
+            <div className="search-users-grid">
               {results.users.map((user) => (
                 <div
                   key={user._id}
-                  className="search-artist"
+                  className="search-user-card"
                   onClick={() => navigate(`/profile/${user._id}`)}
                 >
-                  <div className="search-artist-image-container">
+                  <div className="search-user-image-container">
                     <img
                       src={`${backendUrl}${user.profilePicture}`}
                       alt={user.name}
-                      className="search-artist-image"
+                      className="search-user-image"
                     />
                   </div>
-                  <p className="search-artist-name">{user.name}</p>
+                  <div className="search-user-info">
+                    <p className="search-user-name">{user.name}</p>
+                    <span className="search-user-type">User</span>
+                  </div>
                 </div>
               ))}
             </div>
-          </>
+          </div>
         )}
 
         {/* Playlists Section */}
-        {results.playlists.length > 0 && (
-          <section className="search-playlist-section">
-            <h2>Playlists</h2>
+        {results?.playlists?.length > 0 && (
+          <div className="search-playlists-section">
+            <h2 className="search-section-title">Playlists</h2>
             <div className="search-playlists-grid">
               {results.playlists.map((playlist) => (
                 <div
                   key={playlist._id}
-                  className="search-playlist"
+                  className="search-playlist-card"
                   onClick={() => navigate(`/playlists/${playlist._id}`)}
                 >
-                  <img
-                    src={`${backendUrl}${playlist.coverImage}`}
-                    alt={playlist.name}
-                  />
-                  <h3>{playlist.name}</h3>
-                  <p>{playlist.songs.length} songs</p>
+                  <div className="search-playlist-artwork">
+                    <img
+                      src={`${backendUrl}${playlist.coverImage}`}
+                      alt={playlist.name}
+                      className="search-playlist-cover"
+                    />
+                    <div className="search-playlist-overlay">
+                      <i className="fas fa-play"></i>
+                    </div>
+                  </div>
+                  <div className="search-playlist-info">
+                    <h3 className="search-playlist-name">{playlist.name}</h3>
+                    <p className="search-playlist-count">
+                      {playlist.songs.length} songs
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
-          </section>
+          </div>
         )}
 
-        {!results && <p className="search-no-results">No results found.</p>}
+        {/* No Results Message */}
+        {!topResult &&
+          !results.songs?.length &&
+          !results.artists?.length &&
+          !results.users?.length &&
+          !results.playlists?.length && (
+            <div className="search-no-results">
+              <i className="fas fa-search"></i>
+              <p>No results found for "{searchQuery}".</p>
+              <p>Try searching with different keywords.</p>
+            </div>
+          )}
       </div>
     </>
   );

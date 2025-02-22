@@ -188,7 +188,7 @@ const UserProfilePage = ({ setCurrentTrack }) => {
         { withCredentials: true }
       );
       setPlaylists([...playlists, response.data.playlist]);
-      toast.success("New playlist created and song added!");
+      toast.success("New Playlist Created");
       setShowModal(false);
       setNewPlaylistName("");
     } catch (error) {

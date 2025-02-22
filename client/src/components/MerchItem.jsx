@@ -18,6 +18,10 @@ const MerchItem = ({ item }) => {
     if (!isLoggedin) {
       toast.error("Please login to purchase items");
       return;
+      if (!item.stock || item.stock <= 0) {
+        toast.error("This item is out of stock");
+        return;
+      }
     }
 
     try {
@@ -111,7 +115,9 @@ const MerchItem = ({ item }) => {
             className="buy-button"
             disabled={!item.stock || item.stock <= 0}
           >
-            {item.stock && item.stock > 0 ? "Buy Now" : "Out of Stock"}
+            {item.stock && item.stock > 0
+              ? `Buy Now (${item.stock} left)`
+              : "Out of Stock"}
           </button>
           <img
             className="wishlist-image"
