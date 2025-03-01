@@ -68,7 +68,7 @@ const MerchItemDetail = () => {
             const otherArtistItems = artistItemsData.filter(
               (item) => item._id !== itemId
             );
-            setArtistItems(otherArtistItems.slice(0, 4));
+            setArtistItems(otherArtistItems.slice(0, 5));
           }
         }
 
@@ -86,7 +86,7 @@ const MerchItemDetail = () => {
               relItem._id !== itemId &&
               relItem.artist?._id !== itemData.artist?._id
           );
-          setRelatedItems(relatedByType.slice(0, 4));
+          setRelatedItems(relatedByType.slice(0, 5));
         }
       } catch (error) {
         console.error("Error fetching item details:", error);
@@ -270,7 +270,10 @@ const MerchItemDetail = () => {
 
             <div className="item-artist">
               <span>By:</span>
-              <a href={`/profile/${item.artist?._id}`} className="artist-link">
+              <a
+                href={`/artist/${item.artist?._id}/merch`}
+                className="artist-link"
+              >
                 {item.artist?.name || "Unknown Artist"}
               </a>
             </div>

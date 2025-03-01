@@ -9,15 +9,15 @@ const merchandiseSchema = new mongoose.Schema({
   images: [String],
   artist: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Ensure this matches the model name
+    ref: "User",
     required: true,
   },
   stock: { type: Number, default: 1 },
-  pidx: { type: String, default: null }, // ✅ Ensure pidx is present
+  pidx: { type: String, default: null },
   wishlistedBy: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Ensure this matches the model name
+      ref: "User",
     },
   ],
   createdAt: { type: Date, default: Date.now },

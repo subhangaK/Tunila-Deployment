@@ -189,7 +189,7 @@ const UploadMusic = () => {
             <div className="input-group">
               <label>Artist Name</label>
               <input
-                className="artistname"
+                className="upload-artistname"
                 type="text"
                 placeholder="Enter artist name"
                 value={artist}

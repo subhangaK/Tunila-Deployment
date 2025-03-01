@@ -188,7 +188,7 @@ const UserProfilePage = ({ setCurrentTrack }) => {
         { withCredentials: true }
       );
       setPlaylists([...playlists, response.data.playlist]);
-      toast.success("New Playlist Created");
+      toast.success("New playlist created and song added!");
       setShowModal(false);
       setNewPlaylistName("");
     } catch (error) {
@@ -331,12 +331,14 @@ const UserProfilePage = ({ setCurrentTrack }) => {
           >
             Popular Songs
           </button>
+
           <button
             className={`tab-button ${activeTab === "all" ? "active" : ""}`}
             onClick={() => setActiveTab("all")}
           >
             All Songs
           </button>
+
           {isLoggedin && userData?.userId === userId && (
             <button
               className={`tab-button ${activeTab === "stats" ? "active" : ""}`}
@@ -345,6 +347,14 @@ const UserProfilePage = ({ setCurrentTrack }) => {
               Stats & Analytics
             </button>
           )}
+
+          <a href={`/artist/${userId}/merch`}>
+            <button
+              className={`tab-button ${activeTab === "Store" ? "active" : ""}`}
+            >
+              Store
+            </button>
+          </a>
         </div>
 
         {/* Tab Content */}
@@ -609,7 +619,6 @@ const UserProfilePage = ({ setCurrentTrack }) => {
             )}
         </div>
       </div>
-
       {/* Playlist Modal with Backdrop */}
       {showModal && (
         <>

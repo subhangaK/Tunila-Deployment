@@ -1,0 +1,21 @@
+.payment-result {
+  text-align: center;
+  padding: 2rem;
+  color: #fff;
+}
+
+.payment-result button {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 2rem;
+  border: none;
+  background: #1db954;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.payment-result button:hover {
+  transform: scale(1.05);
+}

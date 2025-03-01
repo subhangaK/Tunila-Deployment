@@ -174,7 +174,7 @@ const PlaylistSongsPage = ({ setCurrentTrack }) => {
         { withCredentials: true }
       );
       setPlaylists([...playlists, response.data.playlist]);
-      toast.success("New Playlist Created");
+      toast.success("New playlist created and song added!");
       setShowModal(false);
       setNewPlaylistName("");
     } catch (error) {
@@ -204,7 +204,7 @@ const PlaylistSongsPage = ({ setCurrentTrack }) => {
                 key={song._id}
                 className="playlist-song-card playlist-song-recent-card"
                 whileHover={{ scale: 1.05 }}
-                onClick={() => handlePlaySong(song)}
+                onClick={() => setCurrentTrack(song)}
               >
                 <div className="playlist-song-artwork">
                   <img

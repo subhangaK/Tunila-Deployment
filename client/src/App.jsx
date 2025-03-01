@@ -23,6 +23,8 @@ import PaymentVerify from "./pages/PaymentVerify.jsx";
 import ArtistMerchPage from "./pages/ArtistMerchPage.jsx";
 import MerchItemDetail from "./pages/MerchItemDetail.jsx";
 
+import "./App.css";
+
 // Create these simple page components for payment success/failure
 const PaymentSuccess = () => {
   return (

@@ -18,10 +18,6 @@ const MerchItem = ({ item }) => {
     if (!isLoggedin) {
       toast.error("Please login to purchase items");
       return;
-      if (!item.stock || item.stock <= 0) {
-        toast.error("This item is out of stock");
-        return;
-      }
     }
 
     try {
@@ -101,8 +97,11 @@ const MerchItem = ({ item }) => {
       <div className="merch-details">
         <h3>{item.name}</h3>
         {item.artist && (
-          <div className="artist-name">
-            By: <span>{item.artist.name}</span>
+          <div className="merch-artist-name">
+            By:{" "}
+            <Link to={`/artist/${item.artist?._id}/merch`}>
+              <span>{item.artist.name}</span>
+            </Link>
           </div>
         )}
         <div className="price-tag">Rs {item.price}</div>
@@ -115,9 +114,7 @@ const MerchItem = ({ item }) => {
             className="buy-button"
             disabled={!item.stock || item.stock <= 0}
           >
-            {item.stock && item.stock > 0
-              ? `Buy Now (${item.stock} left)`
-              : "Out of Stock"}
+            {item.stock && item.stock > 0 ? `Buy Now` : "Out of Stock"}
           </button>
           <img
             className="wishlist-image"

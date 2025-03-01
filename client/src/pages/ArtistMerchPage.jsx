@@ -125,28 +125,16 @@ const ArtistMerchPage = () => {
         )}
 
         {/* Category Filter */}
-        {categories.length > 0 && (
-          <div className="category-filter">
-            <h3>Filter by Category:</h3>
-            <div className="category-buttons">
-              <button
-                className={selectedCategory === "all" ? "active" : ""}
-                onClick={() => setSelectedCategory("all")}
-              >
-                All Items
-              </button>
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  className={selectedCategory === category ? "active" : ""}
-                  onClick={() => setSelectedCategory(category)}
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
+        <div className="category-filter">
+          <div className="category-buttons">
+            <button
+              className={selectedCategory === "all" ? "active" : ""}
+              onClick={() => setSelectedCategory("all")}
+            >
+              All Items
+            </button>
           </div>
-        )}
+        </div>
 
         {/* Merchandise Grid */}
         {filteredMerch.length === 0 ? (

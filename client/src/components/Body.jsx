@@ -224,7 +224,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
         { withCredentials: true }
       );
       setPlaylists([...playlists, response.data.playlist]);
-      toast.success("New Playlist Created");
+      toast.success("New playlist created and song added!");
       setShowModal(false);
       setNewPlaylistName("");
     } catch (error) {
@@ -355,7 +355,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
       {/* Featured Tracks */}
       <section className="tunila-section">
         <div className="tunila-section-header">
-          <h2>Featured Tracks</h2>
+          <h2>Featured Tunes</h2>
           <Link to="/published-music" className="tunila-see-all">
             Browse All
           </Link>
@@ -434,7 +434,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
 
         <div className="tunila-more-link">
           <Link to="/published-music">
-            Explore More Tracks <i className="fas fa-arrow-right"></i>
+            Explore More Tunes <i className="fas fa-arrow-right"></i>
           </Link>
         </div>
       </section>

@@ -64,7 +64,7 @@ const Login = () => {
           alt="Tunila Logo"
           className="login-logo"
         />
-        <div className="welcome-section">
+        <div className="login-welcome-section">
           <h2 className="login-heading">
             {state === "Sign Up" ? "Create Account" : "Welcome Back"}
           </h2>
@@ -77,7 +77,7 @@ const Login = () => {
 
         <form onSubmit={onSubmitHandler} className="login-form">
           {state === "Sign Up" && (
-            <div className="input-group">
+            <div className="login-input-group">
               <input
                 onChange={(e) => setName(e.target.value)}
                 value={name}
@@ -88,7 +88,7 @@ const Login = () => {
             </div>
           )}
 
-          <div className="input-group">
+          <div className="login-input-group">
             <input
               onChange={(e) => setEmail(e.target.value)}
               value={email}
@@ -98,7 +98,7 @@ const Login = () => {
             />
           </div>
 
-          <div className="input-group">
+          <div className="login-input-group">
             <input
               onChange={(e) => setPassword(e.target.value)}
               value={password}
@@ -109,7 +109,7 @@ const Login = () => {
           </div>
 
           {state === "Login" && (
-            <div className="forgot-password">
+            <div className="login-forgot-password">
               <p onClick={() => navigate("/reset-password")}>
                 Forgot Password?
               </p>
@@ -121,7 +121,7 @@ const Login = () => {
           </button>
         </form>
 
-        <div className="switch-state">
+        <div className="login-switch-state">
           {state === "Sign Up" ? (
             <p>
               Already have an account?{" "}

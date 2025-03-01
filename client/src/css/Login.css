@@ -1,118 +1,113 @@
 .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: linear-gradient(to bottom right,#ffffff, #f7f6f6);
-    font-family: Arial, sans-serif;
-    padding-bottom: 150px;
-  }
-  
-  .login-box {
-    background: white;
-    padding: 40px;
-    width: 400px;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
-  .login-logo {
-    width: 120px;
-    margin: 0 auto 20px auto;
-    display: block;
-    cursor: pointer;
-  }
-  
-  .welcome-section {
-    margin-bottom: 20px;
-  }
-  
-  .welcome-icon {
-    width: 50px;
-  }
-  
-  .login-heading {
-    font-size: 24px;
-    margin: 10px 0;
-  }
-  
-  .login-subtext {
-    font-size: 14px;
-    color: gray;
-  }
-  
-  .login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .input-group {
-    display: flex;
-    align-items: center;
-    background: #f9f9f9;
-    padding: 8px;
-    border-radius: 10px;
-    border: 1px solid #ffffff;
-  }
-  
-  
-  .input-group input {
-    flex: 1;
-    border: none;
-    background: none;
-    outline: none;
-    font-size: 14px;
-  }
-  
-  .login-btn {
-    background: #8cb1d9;
-    color: white;
-    padding: 10px;
-    font-size: 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(to bottom right, #ffffff, #f7f6f6);
+  font-family: Arial, sans-serif;
+  padding-bottom: 150px;
+}
 
-  .forgot-password {
-    text-align: center;
-    margin-top: 5px;
-    font-size: 14px;
-  }
-  
-  .forgot-password p {
-    color: #8cb1d9;; /* Matches aesthetic color */
-    cursor: pointer;
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-  
-  .forgot-password p:hover {
-    color: #66a2bd; /* Slightly darker shade for hover effect */
-  }
-  
-  
-  .login-btn:hover {
-    background: #66a2bd;
-  }
-  
-  .switch-state {
-    margin-top: 20px;
-    font-size: 14px;
-  }
-  
-  .switch-state span {
-    color: #8cb1d9;
-    cursor: pointer;
-    text-decoration: underline;
-  }
-  
-  .switch-state span:hover {
-    color: #66a2bd;
-  }
+.login-box {
+  background: white;
+  padding: 40px;
+  width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
 
+.login-logo {
+  width: 120px;
+  margin: 0 auto 20px auto;
+  display: block;
+  cursor: pointer;
+}
 
-  
+.login-welcome-section {
+  margin-bottom: 20px;
+}
+
+.login-welcome-icon {
+  width: 50px;
+}
+
+.login-heading {
+  font-size: 24px;
+  margin: 10px 0;
+}
+
+.login-subtext {
+  font-size: 14px;
+  color: gray;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.login-input-group {
+  display: flex;
+  align-items: center;
+  background: #f9f9f9;
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid #ffffff;
+}
+
+.login-input-group input {
+  flex: 1;
+  border: none;
+  background: none;
+  outline: none;
+  font-size: 14px;
+}
+
+.login-btn {
+  background: #8cb1d9;
+  color: white;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.login-forgot-password {
+  text-align: center;
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.login-forgot-password p {
+  color: #8cb1d9; /* Matches aesthetic color */
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.login-forgot-password p:hover {
+  color: #66a2bd; /* Slightly darker shade for hover effect */
+}
+
+.login-btn:hover {
+  background: #66a2bd;
+}
+
+.login-switch-state {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.login-switch-state span {
+  color: #8cb1d9;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.login-switch-state span:hover {
+  color: #66a2bd;
+}

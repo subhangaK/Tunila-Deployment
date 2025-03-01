@@ -97,7 +97,7 @@
   font-weight: 800;
   margin-bottom: 20px;
   background: linear-gradient(to right, #fff, #e2e2fd);
-  -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: -0.5px;
   line-height: 1.1;
@@ -213,7 +213,7 @@
   font-size: 2.5rem;
   font-weight: 700;
   background: linear-gradient(90deg, #1a1a2e, #4f46e5);
-  -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: -0.5px;
 }
@@ -438,7 +438,7 @@
   text-align: center;
   margin-bottom: 50px;
   background: linear-gradient(90deg, #1a1a2e, #4f46e5);
-  -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -535,12 +535,14 @@
   overflow: hidden;
   background: white;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  aspect-ratio: unset;
+  display: flex;
 }
 
 .tunila-home-merch-badge {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 30px;
+  right: 30px;
   background: linear-gradient(135deg, #ff6b6b, #ff9e7d);
   color: white;
   padding: 6px 12px;
@@ -610,7 +612,7 @@
   font-weight: 700;
   margin-bottom: 60px;
   background: linear-gradient(90deg, #1a1a2e, #4f46e5);
-  -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
 }
@@ -678,7 +680,7 @@
   text-align: center;
   margin-bottom: 60px;
   background: linear-gradient(90deg, #1a1a2e, #4f46e5);
-  -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 

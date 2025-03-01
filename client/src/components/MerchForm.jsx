@@ -9,7 +9,7 @@ const MerchForm = ({ setShowForm }) => {
     name: "",
     description: "",
     price: "",
-    type: "physical",
+    type: "",
     images: [],
     stock: 1,
   });
@@ -195,8 +195,12 @@ const MerchForm = ({ setShowForm }) => {
         onChange={(e) => setFormData({ ...formData, type: e.target.value })}
         required
       >
-        <option value="physical">Physical Item</option>
-        <option value="digital">Digital Item</option>
+        <option value="Physical">Physical Item</option>
+        <option value="Digital">Digital Item</option>
+        <option value="Clothing">Clothing & Apparel</option>
+        <option value="Accessories">Accessories</option>
+        <option value="Lifestyle">Lifestyle</option>
+        <option value="Limited">Limited Edition & Special Items</option>
       </select>
 
       <label htmlFor="item-stock">Stock Quantity</label>
