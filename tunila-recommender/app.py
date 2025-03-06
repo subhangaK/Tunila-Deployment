@@ -5,6 +5,7 @@ from flask_cors import CORS
 from sklearn.metrics.pairwise import cosine_similarity
 import json
 from bson import ObjectId
+import os
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -63,4 +64,5 @@ def get_recommendations(user_id):
         return jsonify({"success": False, "error": str(e)})
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get("PORT", 5000))  # Get the port from environment variable
+    app.run(host="0.0.0.0", port=port, debug=False)  # Bind to 0.0.0.0
