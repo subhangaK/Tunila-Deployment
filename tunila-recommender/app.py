@@ -24,7 +24,7 @@ class JSONEncoder(json.JSONEncoder):
         if isinstance(obj, ObjectId):
             return str(obj)  # Convert ObjectId to string
         return super().default(obj)
-s
+
 # API to get recommended songs
 @app.route("/api/recommend/<user_id>", methods=["GET"])
 def get_recommendations(user_id):
