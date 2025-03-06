@@ -8,7 +8,9 @@ export const AppContextProvider = (props) => {
   axios.defaults.withCredentials = true;
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const recommendationApiUrl = "http://127.0.0.1:5000/api/recommend"; // Python API for recommendations
+  const hostedRecommendationApiUrl =
+    "https://tunila-music-recommendation-system.onrender.com/api/recommend";
+  const localRecommendationApiUrl = "http://127.0.0.1:5000/api/recommend";
 
   // ✅ Authentication State
   const [isLoggedin, setIsLoggedin] = useState(false);
@@ -81,7 +83,7 @@ export const AppContextProvider = (props) => {
     }
   };
 
-  // ✅ Fetch Recommended Songs
+  // Function to fetch recommendations with fallback
   const fetchRecommendedSongs = async (userId) => {
     if (!userId) {
       console.warn("User ID is undefined, skipping recommendation request.");
@@ -89,12 +91,22 @@ export const AppContextProvider = (props) => {
     }
 
     try {
-      const { data } = await axios.get(`${recommendationApiUrl}/${userId}`);
+      // Try the hosted API first
+      const { data } = await axios.get(
+        `${hostedRecommendationApiUrl}/${userId}`
+      );
       if (data.success) {
         setRecommendedSongs(data.recommended_songs);
       }
     } catch (error) {
-      console.error("Error fetching recommendations:", error);
+      console.error("Hosted API failed, falling back to local API:", error);
+      // If hosted API fails, try the local API
+      const { data } = await axios.get(
+        `${localRecommendationApiUrl}/${userId}`
+      );
+      if (data.success) {
+        setRecommendedSongs(data.recommended_songs);
+      }
     }
   };
 
