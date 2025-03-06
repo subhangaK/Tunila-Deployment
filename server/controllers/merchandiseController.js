@@ -1,7 +1,13 @@
 import mongoose from "mongoose";
 import Merchandise from "../models/merchandiseModel.js";
 import User from "../models/userModel.js";
+import Transaction from "../models/transactionModel.js";
 import axios from "axios";
+import transporter from "../config/nodemailer.js";
+import {
+  PURCHASE_CONFIRMATION_TEMPLATE,
+  ARTIST_SALE_TEMPLATE,
+} from "../config/emailTemplates.js";
 
 const KHALTI_SECRET_KEY = process.env.KHALTI_SECRET_KEY;
 const KHALTI_BASE_URL = "https://a.khalti.com/api/v2";
@@ -93,9 +99,15 @@ export const initiatePayment = async (req, res) => {
       }
     );
 
-    // Deduct stock after successful payment initiation
-    merch.stock -= quantity;
-    await merch.save();
+    // Create a transaction record instead of deducting stock
+    await Transaction.create({
+      merch: merchId,
+      quantity,
+      buyer: req.userId,
+      artist: merch.artist,
+      pidx: response.data.pidx,
+      status: "initiated",
+    });
 
     res.json(response.data);
   } catch (error) {
@@ -127,6 +139,63 @@ export const verifyPayment = async (req, res) => {
     );
 
     if (verification.data.status === "Completed") {
+      const transaction = await Transaction.findOne({ pidx })
+        .populate("merch")
+        .populate("buyer")
+        .populate("artist");
+
+      if (!transaction) throw new Error("Transaction not found");
+
+      if (transaction.status === "completed") {
+        return res.redirect(`${process.env.FRONTEND_URL}/payment-success`);
+      }
+
+      // Deduct stock only after successful payment verification
+      if (transaction.merch.stock < transaction.quantity) {
+        transaction.status = "failed";
+        await transaction.save();
+        throw new Error("Insufficient stock");
+      }
+
+      transaction.merch.stock -= transaction.quantity;
+      await transaction.merch.save();
+
+      // Update transaction status
+      transaction.status = "completed";
+      await transaction.save();
+
+      // Send emails to buyer and artist
+      const buyerMailOptions = {
+        from: process.env.SENDER_EMAIL,
+        to: transaction.buyer.email,
+        subject: "Purchase Confirmation",
+        html: PURCHASE_CONFIRMATION_TEMPLATE.replace(
+          "{{itemName}}",
+          transaction.merch.name
+        )
+          .replace("{{quantity}}", transaction.quantity)
+          .replace(
+            "{{totalPrice}}",
+            transaction.merch.price * transaction.quantity
+          ),
+      };
+
+      const artistMailOptions = {
+        from: process.env.SENDER_EMAIL,
+        to: transaction.artist.email,
+        subject: "New Sale Notification",
+        html: ARTIST_SALE_TEMPLATE.replace(
+          "{{itemName}}",
+          transaction.merch.name
+        )
+          .replace("{{quantity}}", transaction.quantity)
+          .replace("{{buyerName}}", transaction.buyer.name)
+          .replace("{{remainingStock}}", transaction.merch.stock),
+      };
+
+      await transporter.sendMail(buyerMailOptions);
+      await transporter.sendMail(artistMailOptions);
+
       return res.redirect(`${process.env.FRONTEND_URL}/payment-success`);
     } else {
       return res.redirect(`${process.env.FRONTEND_URL}/payment-failed`);

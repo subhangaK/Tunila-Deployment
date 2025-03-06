@@ -4,7 +4,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import "../css/UploadMusic.css";
-import Header from "../components/Header";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
 
@@ -20,6 +19,8 @@ const UploadMusic = () => {
   const [isDraggingSong, setIsDraggingSong] = useState(false);
   const [isDraggingCover, setIsDraggingCover] = useState(false);
   const [fileName, setFileName] = useState("");
+
+  const { backendUrl } = useContext(AppContext);
 
   useEffect(() => {
     if (userData) {
@@ -47,7 +48,7 @@ const UploadMusic = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/songs/upload",
+        `${backendUrl}/api/songs/upload`,
         formData,
         {
           headers: {
@@ -55,6 +56,7 @@ const UploadMusic = () => {
           },
         }
       );
+
       toast.success("Music uploaded successfully!", {
         position: "top-right",
         autoClose: 3000,
@@ -163,7 +165,6 @@ const UploadMusic = () => {
 
   return (
     <div>
-      <Header />
       {isVerified ? (
         <div className="upload-music-container fade-in">
           <div className="upload-header">

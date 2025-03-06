@@ -109,7 +109,6 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
 
   return (
     <>
-      <Header />
       <div className="search-results-page">
         <div className="search-header">
           <h1 className="search-title">

@@ -115,7 +115,6 @@ const PlaylistsPage = () => {
 
   return (
     <div>
-      <Header />
       <div className="playlists-page">
         <h2>My Playlists</h2>
 

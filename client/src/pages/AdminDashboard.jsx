@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useMemo } from "react";
 import { AppContext } from "../context/AppContext";
 import "../css/AdminDashboard.css";
 import { toast } from "react-toastify";
@@ -32,6 +32,18 @@ const AdminDashboard = ({ setCurrentTrack }) => {
       fetchData();
     }
   }, [userData, fetchUsers, fetchSongs]);
+
+  // Calculate song counts per user using artistId
+  const userSongCounts = useMemo(() => {
+    const counts = {};
+    allSongs.forEach((song) => {
+      const artistId = song.artistId?.toString(); // Ensure consistent type comparison
+      if (artistId) {
+        counts[artistId] = (counts[artistId] || 0) + 1;
+      }
+    });
+    return counts;
+  }, [allSongs]);
 
   // Ensure only admin users can access this page
   if (!userData || userData.role !== "admin") {
@@ -183,24 +195,20 @@ const AdminDashboard = ({ setCurrentTrack }) => {
                       <div className="admin-user-details">
                         <div className="admin-user-role">
                           <span
-                            className={`admin-role-badge admin-role-${user.role}`}
+                            className={`admin-role-badge ${
+                              userSongCounts[user._id]
+                                ? "admin-role-artist"
+                                : `admin-role-${user.role}`
+                            }`}
                           >
-                            {user.role}
+                            {userSongCounts[user._id] ? "Artist" : user.role}
                           </span>
                         </div>
                         <div className="admin-user-stats">
                           <div className="admin-user-stat">
                             <span className="admin-user-stat-label">Songs</span>
                             <span className="admin-user-stat-value">
-                              {user.songs?.length || 0}
-                            </span>
-                          </div>
-                          <div className="admin-user-stat">
-                            <span className="admin-user-stat-label">
-                              Followers
-                            </span>
-                            <span className="admin-user-stat-value">
-                              {user.followers?.length || 0}
+                              {userSongCounts[user._id] || 0}
                             </span>
                           </div>
                         </div>

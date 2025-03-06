@@ -59,7 +59,6 @@ const FeaturedArtists = () => {
 
   return (
     <>
-      <Header />
       <div className="tunila-featured-artists-page">
         {/* Featured Artists Section */}
         <h2 className="tunila-featured-artists-title">Featured Artists</h2>

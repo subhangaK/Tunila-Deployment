@@ -189,7 +189,6 @@ const PlaylistSongsPage = ({ setCurrentTrack }) => {
 
   return (
     <div>
-      <Header />
       <div className="playlist-song-page">
         <h2 className="playlist-song-title">{playlist.name}</h2>
         <section className="playlist-song-section playlist-song-releases">

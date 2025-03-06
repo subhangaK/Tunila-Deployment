@@ -5,7 +5,6 @@ import Body from "../components/Body";
 function Home({ setCurrentTrack }) {
   return (
     <div className="home-container">
-      <Header />
       <Body setCurrentTrack={setCurrentTrack} />
       {/* Pass filteredSongs to Body */}
     </div>

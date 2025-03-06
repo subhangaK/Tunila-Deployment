@@ -106,7 +106,7 @@ export const EMAIL_VERIFY_TEMPLATE = `
 </body>
 </html>
 
-`
+`;
 
 export const PASSWORD_RESET_TEMPLATE = `
 
@@ -216,5 +216,29 @@ export const PASSWORD_RESET_TEMPLATE = `
   </table>
 </body>
 </html>
-`
+`;
 
+export const PURCHASE_CONFIRMATION_TEMPLATE = `
+<!DOCTYPE html>
+<html>
+<body>
+  <h1>Thank you for your purchase!</h1>
+  <p>Item: {{itemName}}</p>
+  <p>Quantity: {{quantity}}</p>
+  <p>Total: Rs. {{totalPrice}}</p>
+</body>
+</html>
+`;
+
+export const ARTIST_SALE_TEMPLATE = `
+<!DOCTYPE html>
+<html>
+<body>
+  <h1>New Sale Notification!</h1>
+  <p>Item Sold: {{itemName}}</p>
+  <p>Quantity: {{quantity}}</p>
+  <p>Buyer: {{buyerName}}</p>
+  <p>Remaining Stock: {{remainingStock}}</p>
+</body>
+</html>
+`;

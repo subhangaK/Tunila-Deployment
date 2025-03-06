@@ -233,8 +233,6 @@ const UserProfilePage = ({ setCurrentTrack }) => {
 
   return (
     <div className="user-profile-page">
-      <Header />
-
       {/* Hero Section with Glassmorphism */}
       <div className="profile-hero">
         <div className="profile-cover-wrapper">
@@ -466,6 +464,14 @@ const UserProfilePage = ({ setCurrentTrack }) => {
                     alt="No songs"
                   />
                   <p>No songs uploaded yet</p>
+                  {isLoggedin && userData?.userId === userId && (
+                    <button
+                      className="upload-cta-button"
+                      onClick={() => navigate("/upload-music")}
+                    >
+                      Upload Your First Track
+                    </button>
+                  )}
                 </div>
               )}
             </div>
@@ -557,7 +563,7 @@ const UserProfilePage = ({ setCurrentTrack }) => {
                   {isLoggedin && userData?.userId === userId && (
                     <button
                       className="upload-cta-button"
-                      onClick={() => navigate("/upload")}
+                      onClick={() => navigate("/upload-music")}
                     >
                       Upload Your First Track
                     </button>

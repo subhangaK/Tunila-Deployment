@@ -1,20 +1,22 @@
+// Header.jsx (simplified)
 import React, { useState, useContext } from "react";
-import Logo from "../assets/Tunila.png";
-import "../css/Header.css";
-import Search from "../assets/search.png";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Logo from "../assets/Tunila.png";
+import Search from "../assets/search.png";
+import { FaBars } from "react-icons/fa";
 
-function Header({ setFilteredSongs }) {
-  const navigate = useNavigate(); // Initialize navigate hook
+function Header({ toggleSidebar }) {
+  const navigate = useNavigate();
   const { userData, setUserData, setIsLoggedin, backendUrl } =
     useContext(AppContext);
-  const [menuVisible, setMenuVisible] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [header_menuVisible, setHeader_MenuVisible] = useState(false);
+  const [header_searchQuery, setHeader_SearchQuery] = useState("");
 
-  const logout = async () => {
+  // Header Functions
+  const header_logout = async () => {
     try {
       axios.defaults.withCredentials = true;
       const { data } = await axios.post(backendUrl + "/api/auth/logout");
@@ -28,7 +30,7 @@ function Header({ setFilteredSongs }) {
     }
   };
 
-  const sendVerificationOtp = async () => {
+  const header_sendVerificationOtp = async () => {
     try {
       axios.defaults.withCredentials = true;
       const { data } = await axios.post(
@@ -45,83 +47,100 @@ function Header({ setFilteredSongs }) {
     }
   };
 
-  const toggleMenu = () => {
-    setMenuVisible(!menuVisible);
+  const header_handleSearchChange = (e) => {
+    setHeader_SearchQuery(e.target.value);
   };
 
-  // Define handleSearchChange function
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const handleSearchSubmit = (e) => {
-    if (e.key === "Enter" && searchQuery.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchQuery("");
+  const header_handleSearchSubmit = (e) => {
+    if (e.key === "Enter" && header_searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(header_searchQuery.trim())}`);
+      setHeader_SearchQuery("");
     }
   };
 
-  // Navigate to home when logo is clicked
-  const goToHome = () => {
+  const header_goToHome = () => {
     navigate("/home");
   };
 
   return (
-    <div className="header">
-      <div className="logo-container" onClick={goToHome}>
-        <img className="logo" src={Logo} alt="Tunila Logo" />
-        <span className="logo-text" onClick={goToHome}>
-          Tunila
-        </span>
+    <div className="header-container">
+      <div className="header-menu-toggle" onClick={toggleSidebar}>
+        <FaBars className="header-menu-icon" />
       </div>
 
-      <div className="search-container">
-        <img className="search-icon" src={Search} alt="Search Icon" />
+      <div className="header-logo-container" onClick={header_goToHome}>
+        <img className="header-logo" src={Logo} alt="Tunila Logo" />
+        <span className="header-logo-text">Tunila</span>
+      </div>
+
+      <div className="header-search-container">
+        <img className="header-search-icon" src={Search} alt="Search Icon" />
         <input
-          className="search-box"
+          className="header-search-box"
           type="text"
-          placeholder="Search for music, artists, and playlists."
-          value={searchQuery}
-          onChange={handleSearchChange} // Now this function is defined
-          onKeyDown={handleSearchSubmit}
+          placeholder="Search for music, artists, and playlists..."
+          value={header_searchQuery}
+          onChange={header_handleSearchChange}
+          onKeyDown={header_handleSearchSubmit}
         />
       </div>
 
-      <h2>Hi {userData ? userData.name : "User"}, Welcome to Tunila</h2>
+      <div className="header-welcome">
+        <h2>Welcome to Tunila, {userData ? userData.name : "User"}</h2>
+      </div>
 
       {userData ? (
-        <div className="profile-container" onClick={toggleMenu}>
-          {/* ✅ Show Profile Picture Instead of Initial */}
+        <div
+          className="header-profile-container"
+          onClick={() => setHeader_MenuVisible(!header_menuVisible)}
+        >
           <img
-            className="profile-picture"
+            className="header-profile-picture"
             src={`${backendUrl}${
               userData.profilePicture || "/uploads/profile_pictures/default.png"
             }`}
             alt="Profile"
           />
-          {menuVisible && (
-            <ul className="dropdown-menu">
-              {/* ✅ New Profile Option */}
-              <li onClick={() => navigate(`/profile/${userData.userId}`)}>
+          {header_menuVisible && (
+            <ul className="header-dropdown-menu">
+              <li
+                className="header-dropdown-item"
+                onClick={() => navigate(`/profile/${userData.userId}`)}
+              >
                 Profile
               </li>
 
-              {/* Show Admin Dashboard link only if the user is an admin */}
               {userData.role === "admin" && (
-                <li onClick={() => navigate("/admin")}>Admin Page</li>
+                <li
+                  className="header-dropdown-item"
+                  onClick={() => navigate("/admin")}
+                >
+                  Admin Dashboard
+                </li>
               )}
 
               {!userData.isAccountVerified && (
-                <li onClick={sendVerificationOtp}>Verify Email</li>
+                <li
+                  className="header-dropdown-item"
+                  onClick={header_sendVerificationOtp}
+                >
+                  Verify Email
+                </li>
               )}
-              <li className="logout" onClick={logout}>
+              <li
+                className="header-dropdown-item header-logout"
+                onClick={header_logout}
+              >
                 Log out
               </li>
             </ul>
           )}
         </div>
       ) : (
-        <button onClick={() => navigate("/login")} className="login-button">
+        <button
+          onClick={() => navigate("/login")}
+          className="header-login-button"
+        >
           Sign Up
         </button>
       )}

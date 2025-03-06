@@ -115,7 +115,7 @@ const LikedSongs = ({ setCurrentTrack }) => {
         { withCredentials: true }
       );
       setPlaylists([...playlists, response.data.playlist]);
-      toast.success("New Playlist Created", {
+      toast.success("New playlist created and song added!", {
         position: "top-right",
         autoClose: 3000,
       });
@@ -132,7 +132,6 @@ const LikedSongs = ({ setCurrentTrack }) => {
 
   return (
     <div>
-      <Header />
       <div className="liked-songs-container">
         <h2 className="liked-songs-section-title">Your Liked Songs</h2>
         <section className="liked-songs-section liked-songs-recent-releases">

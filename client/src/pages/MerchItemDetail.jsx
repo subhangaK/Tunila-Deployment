@@ -188,7 +188,6 @@ const MerchItemDetail = () => {
   if (isLoading) {
     return (
       <>
-        <Header />
         <div className="loading-container">
           <div className="loader"></div>
           <p>Loading item details...</p>
@@ -200,7 +199,6 @@ const MerchItemDetail = () => {
   if (error || !item) {
     return (
       <>
-        <Header />
         <div className="error-container">
           <h2>{error || "Item Not Found"}</h2>
           <button onClick={() => navigate("/merch")}>Back to Store</button>
@@ -211,7 +209,6 @@ const MerchItemDetail = () => {
 
   return (
     <>
-      <Header />
       <div className="item-detail-container">
         <button className="back-button" onClick={() => navigate(-1)}>
           <FaArrowLeft /> Back

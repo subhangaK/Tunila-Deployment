@@ -165,7 +165,7 @@ const PublishedMusic = ({ setCurrentTrack }) => {
         { withCredentials: true }
       );
       setPlaylists([...playlists, response.data.playlist]);
-      toast.success("New Playlist Created", {
+      toast.success("New playlist created and song added!", {
         position: "top-right",
         autoClose: 3000,
       });
@@ -182,7 +182,6 @@ const PublishedMusic = ({ setCurrentTrack }) => {
 
   return (
     <div>
-      <Header />
       <div className="published-music">
         <h2 className="section-title">Discover Music on Tunila</h2>
         <section className="tunila-section tunila-recent-releases">

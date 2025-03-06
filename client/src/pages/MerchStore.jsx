@@ -69,7 +69,6 @@ const MerchStore = () => {
 
   return (
     <>
-      <Header />
       <div className="merch-store">
         <div className="store-header">
           <h1>Tunila Merch Store</h1>

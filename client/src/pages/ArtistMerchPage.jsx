@@ -77,7 +77,6 @@ const ArtistMerchPage = () => {
 
   return (
     <div className="ArtistMerchPage">
-      <Header />
       <div className="artist-merch-container">
         {/* Artist Profile Section */}
         <div className="artist-profile-section">

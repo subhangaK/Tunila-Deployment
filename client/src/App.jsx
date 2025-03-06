@@ -15,17 +15,18 @@ import LikedSongs from "./pages/LikedSongs.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import UserProfilePage from "./pages/UserProfilePage";
 import PublishedMusic from "./pages/PublishedMusic.jsx";
-import { AppContext } from "./context/AppContext"; // ✅ Import AppContext
+import { AppContext } from "./context/AppContext";
 import FeaturedArtists from "./pages/FeaturedArtists.jsx";
 import SearchResultsPage from "./components/SearchResultsPage";
 import MerchStore from "./pages/MerchStore.jsx";
 import PaymentVerify from "./pages/PaymentVerify.jsx";
 import ArtistMerchPage from "./pages/ArtistMerchPage.jsx";
 import MerchItemDetail from "./pages/MerchItemDetail.jsx";
+import Layout from "./components/Layout.jsx"; // Import the new Layout component
 
 import "./App.css";
 
-// Create these simple page components for payment success/failure
+// Payment result components remain the same
 const PaymentSuccess = () => {
   return (
     <div className="payment-result">
@@ -58,19 +59,16 @@ const App = () => {
     currentTrackIndex,
     setCurrentTrackIndex,
     addToQueue,
-  } = useContext(AppContext); // ✅ Get addToQueue from AppContext
+  } = useContext(AppContext);
   const [currentTrack, setCurrentTrack] = useState(null);
 
-  // ✅ Function to handle playing a track and adding to queue
   const handleTrackChange = (track) => {
     setCurrentTrack(track);
 
-    // ✅ Add track to queue if not already present
     if (!queue.some((song) => song._id === track._id)) {
       addToQueue(track);
     }
 
-    // ✅ Set index of currently playing song
     const trackIndex = queue.findIndex((song) => song._id === track._id);
     setCurrentTrackIndex(trackIndex >= 0 ? trackIndex : queue.length - 1);
 
@@ -81,13 +79,10 @@ const App = () => {
     <div>
       <ToastContainer />
       <Routes>
+        {/* Routes that don't need the layout/header */}
         <Route
           path="/"
           element={<TunilaHome setCurrentTrack={handleTrackChange} />}
-        />
-        <Route
-          path="/home"
-          element={<Home setCurrentTrack={handleTrackChange} />}
         />
         <Route
           path="/login"
@@ -95,48 +90,56 @@ const App = () => {
         />
         <Route path="/email-verify" element={<EmailVerify />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route
-          path="/admin"
-          element={<AdminDashboard setCurrentTrack={handleTrackChange} />}
-        />
-        <Route path="/upload-music" element={<UploadMusic />} />
-        <Route
-          path="/playlists"
-          element={<PlaylistsPage setCurrentTrack={handleTrackChange} />}
-        />
-        <Route
-          path="/liked-songs"
-          element={<LikedSongs setCurrentTrack={handleTrackChange} />}
-        />
-        <Route
-          path="/published-music"
-          element={<PublishedMusic setCurrentTrack={handleTrackChange} />}
-        />
-        <Route
-          path="/profile/:userId"
-          element={<UserProfilePage setCurrentTrack={handleTrackChange} />}
-        />
-        <Route
-          path="/featured-artists"
-          element={<FeaturedArtists setCurrentTrack={handleTrackChange} />}
-        />
-        <Route
-          path="/search"
-          element={<SearchResultsPage setCurrentTrack={handleTrackChange} />}
-        />
-        <Route path="/merch" element={<MerchStore />} />
-        <Route path="/payment-verify" element={<PaymentVerify />} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-failed" element={<PaymentFailed />} />
-        <Route path="/merch/:itemId" element={<MerchItemDetail />} />
-        <Route path="/artist/:userId/merch" element={<ArtistMerchPage />} />
-        <Route
-          path="/playlists/:id"
-          element={<PlaylistSongsPage setCurrentTrack={handleTrackChange} />}
-        />
+
+        {/* Routes that use the layout component */}
+        <Route element={<Layout />}>
+          <Route
+            path="/home"
+            element={<Home setCurrentTrack={handleTrackChange} />}
+          />
+          <Route
+            path="/admin"
+            element={<AdminDashboard setCurrentTrack={handleTrackChange} />}
+          />
+          <Route path="/upload-music" element={<UploadMusic />} />
+          <Route
+            path="/playlists"
+            element={<PlaylistsPage setCurrentTrack={handleTrackChange} />}
+          />
+          <Route
+            path="/liked-songs"
+            element={<LikedSongs setCurrentTrack={handleTrackChange} />}
+          />
+          <Route
+            path="/published-music"
+            element={<PublishedMusic setCurrentTrack={handleTrackChange} />}
+          />
+          <Route
+            path="/profile/:userId"
+            element={<UserProfilePage setCurrentTrack={handleTrackChange} />}
+          />
+          <Route
+            path="/featured-artists"
+            element={<FeaturedArtists setCurrentTrack={handleTrackChange} />}
+          />
+          <Route
+            path="/search"
+            element={<SearchResultsPage setCurrentTrack={handleTrackChange} />}
+          />
+          <Route path="/merch" element={<MerchStore />} />
+          <Route path="/payment-verify" element={<PaymentVerify />} />
+          <Route path="/merch/:itemId" element={<MerchItemDetail />} />
+          <Route path="/artist/:userId/merch" element={<ArtistMerchPage />} />
+          <Route
+            path="/playlists/:id"
+            element={<PlaylistSongsPage setCurrentTrack={handleTrackChange} />}
+          />
+        </Route>
       </Routes>
 
-      {/* ✅ Ensure MusicPlayer only renders when there are songs in queue */}
+      {/* Music Player remains the same */}
       {queue.length > 0 && <MusicPlayer />}
     </div>
   );
