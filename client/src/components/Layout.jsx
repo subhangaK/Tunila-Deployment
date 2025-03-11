@@ -15,6 +15,8 @@ import {
   FaCog,
   FaChevronLeft,
 } from "react-icons/fa";
+import { BsBagHeart } from "react-icons/bs";
+import { FcLike } from "react-icons/fc";
 import "../css/Header.css"; // We'll still use this CSS file
 
 function Layout() {
@@ -55,11 +57,34 @@ function Layout() {
 
   // Navigation Items (moved from Header component)
   const navItems = [
-    { path: "/home", name: "Home", icon: <FaHome className="sidebar-icon" /> },
+    { path: "/", name: "Home", icon: <FaHome className="sidebar-icon" /> },
     {
       path: "/search",
       name: "Search",
       icon: <FaSearch className="sidebar-icon" />,
+    },
+    {
+      path: "/featured-artists",
+      name: "Featured Artists",
+      icon: <FaUserFriends className="sidebar-icon" />,
+    },
+    {
+      path: "/published-music",
+      name: "Tunes",
+      icon: <FaMusic className="sidebar-icon" />,
+    },
+    {
+      path: "/merch",
+      name: "Merch Store",
+      icon: <FaStore className="sidebar-icon" />,
+    },
+  ];
+
+  const userItems = [
+    {
+      path: "/liked-songs",
+      name: "Liked Tunes",
+      icon: <FcLike className="sidebar-icon" />,
     },
     {
       path: "/playlists",
@@ -67,36 +92,19 @@ function Layout() {
       icon: <FaList className="sidebar-icon" />,
     },
     {
-      path: "/liked-songs",
-      name: "Liked Songs",
-      icon: <FaHeart className="sidebar-icon" />,
-    },
-    {
-      path: "/featured-artists",
-      name: "Featured Artists",
-      icon: <FaUserFriends className="sidebar-icon" />,
-    },
-  ];
-
-  const userItems = [
-    {
-      path: "/published-music",
-      name: "Your Music",
-      icon: <FaMusic className="sidebar-icon" />,
-    },
-    {
-      path: "/upload-music",
-      name: "Upload Music",
-      icon: <FaUpload className="sidebar-icon" />,
+      path: "/wishlist",
+      name: "Wishlisted Merch",
+      icon: <BsBagHeart className="sidebar-icon" />,
     },
   ];
 
   const additionalItems = [
     {
-      path: "/merch",
-      name: "Merch Store",
-      icon: <FaStore className="sidebar-icon" />,
+      path: "/upload-music",
+      name: "Upload Music",
+      icon: <FaUpload className="sidebar-icon" />,
     },
+
     {
       path: "/profile", // This will be updated dynamically in Header component
       name: "Your Profile",

@@ -86,7 +86,7 @@ function Header({ toggleSidebar }) {
       </div>
 
       <div className="header-welcome">
-        <h2>Welcome to Tunila, {userData ? userData.name : "User"}</h2>
+        <h2>{userData ? userData.name : ""}</h2>
       </div>
 
       {userData ? (

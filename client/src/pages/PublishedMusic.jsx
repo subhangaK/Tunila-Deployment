@@ -183,12 +183,8 @@ const PublishedMusic = ({ setCurrentTrack }) => {
   return (
     <div>
       <div className="published-music">
-        <h2 className="section-title">Discover Music on Tunila</h2>
+        <h2 className="section-title">Discover Tunes </h2>
         <section className="tunila-section tunila-recent-releases">
-          <div className="published-tunila-section-header">
-            <h2>Published Music</h2>
-          </div>
-
           {/* Songs Grid */}
           <div className="published-tunila-songs-grid">
             {songs.map((song) => (

@@ -189,13 +189,13 @@ const TunilaHome = ({ setCurrentTrack }) => {
         className="tunila-home-featured-section tunila-home-animate-fadein"
       >
         <div className="tunila-home-section-header">
-          <h2>What's Hot Today</h2>
+          <h2>Hot Tunes Today</h2>
           <Link to="/browse" className="tunila-home-view-all-link">
             View All <span className="tunila-home-arrow">→</span>
           </Link>
         </div>
         <p className="tunila-home-shop-subtitle">
-          Most liked songs from your favorite artists
+          Most liked Tunes from your favorite artists
         </p>
         <div className="tunila-home-songs-container">
           {popularSongs.length > 0 ? (

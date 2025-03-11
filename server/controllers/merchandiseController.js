@@ -331,3 +331,29 @@ export const getMerchandiseByArtist = async (req, res) => {
     });
   }
 };
+
+export const getWishlistedMerchandise = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).populate({
+      path: "wishlist",
+      model: "Merchandise",
+      populate: {
+        path: "artist",
+        model: "User",
+        select: "name profilePicture",
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Filter out items with stock > 0
+    const wishlistedItems = user.wishlist.filter((item) => item.stock > 0);
+
+    res.status(200).json(wishlistedItems);
+  } catch (error) {
+    console.error("Error fetching wishlisted items:", error);
+    res.status(500).json({ message: "Failed to fetch wishlisted items" });
+  }
+};

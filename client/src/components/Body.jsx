@@ -18,6 +18,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
   const [newPlaylistName, setNewPlaylistName] = useState("");
   const [randomSongs, setRandomSongs] = useState([]);
   const [featuredArtists, setFeaturedArtists] = useState([]);
+  const [popularSongs, setPopularSongs] = useState([]);
 
   const {
     backendUrl,
@@ -82,6 +83,23 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
     }
   }, [backendUrl, isLoggedin, userId]);
 
+  // Fetch most popular songs
+  useEffect(() => {
+    const fetchPopularSongs = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/songs`);
+        const sortedSongs = response.data.songs
+          .sort((a, b) => b.likedBy.length - a.likedBy.length)
+          .slice(0, 6);
+        setPopularSongs(sortedSongs);
+      } catch (error) {
+        console.error("Error fetching popular songs:", error);
+      }
+    };
+
+    fetchPopularSongs();
+  }, [backendUrl]);
+
   // Toggle like/unlike for a song
   const handleLikeToggle = async (songId, e) => {
     e.stopPropagation();
@@ -142,7 +160,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
         const validArtists = artistsData.filter((artist) => artist !== null);
         const shuffledArtists = validArtists
           .sort(() => 0.5 - Math.random())
-          .slice(0, 10);
+          .slice(0, 15);
 
         setFeaturedArtists(shuffledArtists);
       } catch (error) {
@@ -253,20 +271,6 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
           </h2>
           <p>What would you like to listen to today?</p>
         </div>
-
-        {isLoggedin && (
-          <div className="tunila-action-buttons">
-            <Link to="/upload-music" className="tunila-upload-btn">
-              <i className="fas fa-cloud-upload-alt"></i> Upload Music
-            </Link>
-            <Link to="/playlists" className="tunila-playlist-btn">
-              <i className="fas fa-list"></i> My Playlists
-            </Link>
-            <Link to="/liked-songs" className="tunila-liked-btn">
-              <img src={assets.liked_icon} alt="Liked Songs" />
-            </Link>
-          </div>
-        )}
       </div>
 
       {/* Recommended Songs Section */}
@@ -352,6 +356,77 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
         </section>
       )}
 
+      {/* Popular Tunes */}
+      <section className="tunila-section tunila-recent-releases">
+        <div className="tunila-section-header">
+          <h2>Most Popular Tunes</h2>
+        </div>
+
+        <div className="tunila-songs-carousel">
+          {popularSongs.map((song) => (
+            <motion.div
+              key={song._id}
+              className="tunila-song-card tunila-recent-card"
+              whileHover={{ scale: 1.05 }}
+              onClick={() => setCurrentTrack(song)}
+            >
+              <div className="tunila-song-artwork">
+                <img
+                  src={`${backendUrl}${song.coverImage}`}
+                  alt={song.title}
+                  className="tunila-cover-art"
+                />
+                <div className="tunila-play-overlay">
+                  <p className="fas fa-play">▶</p>
+                </div>
+              </div>
+              <div className="tunila-song-details">
+                <h3 className="tunila-song-title">{song.title}</h3>
+                <Link
+                  to={`/profile/${song.artistId}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="tunila-song-artist"
+                >
+                  {song.artist}
+                </Link>
+              </div>
+              <div className="tunila-song-actions">
+                {isLoggedin && (
+                  <>
+                    <button onClick={(e) => handleLikeToggle(song._id, e)}>
+                      <img
+                        src={
+                          likedSongs.has(song._id)
+                            ? assets.liked_icon
+                            : assets.notliked_icon
+                        }
+                        alt="Like"
+                      />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedSong(song);
+                        setShowModal(true);
+                      }}
+                    >
+                      <img
+                        src={assets.add_icon}
+                        alt="Add to queue"
+                        className="fas fa-plus"
+                      />
+                    </button>
+                  </>
+                )}
+                <button onClick={(e) => handleAddToQueue(song, e)}>
+                  <img src={assets.add_queue_icon} alt="Add to queue" />
+                </button>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
       {/* Featured Tracks */}
       <section className="tunila-section">
         <div className="tunila-section-header">
@@ -365,9 +440,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
           {randomSongs.slice(0, 6).map((song, index) => (
             <motion.div
               key={song._id}
-              className={`tunila-featured-card ${
-                index === 0 ? "tunila-featured-main" : ""
-              }`}
+              className={`tunila-featured-card`}
               whileHover={{ scale: 1.02 }}
               onClick={() => setCurrentTrack(song)}
             >
@@ -439,6 +512,43 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
         </div>
       </section>
 
+      {/* Featured Artists Section */}
+      <section className="tunila-artists-section">
+        <div className="tunila-section-header">
+          <h2>Featured Artists</h2>
+          <Link to="/featured-artists" className="tunila-see-all">
+            See All
+          </Link>
+        </div>
+
+        <div className="tunila-artists-container">
+          {featuredArtists.length > 0 ? (
+            featuredArtists.map((artist) => (
+              <Link
+                key={artist.artistId}
+                to={`/profile/${artist.artistId}`}
+                className="tunila-artist-card"
+              >
+                <motion.div
+                  className="tunila-artist-avatar"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <img
+                    src={`${backendUrl}${artist.profilePicture}`}
+                    alt={artist.name}
+                  />
+                </motion.div>
+                <h3 className="tunila-artist-name">{artist.name}</h3>
+              </Link>
+            ))
+          ) : (
+            <p className="tunila-empty-message">
+              No featured artists available.
+            </p>
+          )}
+        </div>
+      </section>
+
       {/* Recent Releases */}
       <section className="tunila-section tunila-recent-releases">
         <div className="tunila-section-header">
@@ -507,43 +617,6 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
               </div>
             </motion.div>
           ))}
-        </div>
-      </section>
-
-      {/* Featured Artists Section */}
-      <section className="tunila-artists-section">
-        <div className="tunila-section-header">
-          <h2>Featured Artists</h2>
-          <Link to="/featured-artists" className="tunila-see-all">
-            See All
-          </Link>
-        </div>
-
-        <div className="tunila-artists-container">
-          {featuredArtists.length > 0 ? (
-            featuredArtists.map((artist) => (
-              <Link
-                key={artist.artistId}
-                to={`/profile/${artist.artistId}`}
-                className="tunila-artist-card"
-              >
-                <motion.div
-                  className="tunila-artist-avatar"
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <img
-                    src={`${backendUrl}${artist.profilePicture}`}
-                    alt={artist.name}
-                  />
-                </motion.div>
-                <h3 className="tunila-artist-name">{artist.name}</h3>
-              </Link>
-            ))
-          ) : (
-            <p className="tunila-empty-message">
-              No featured artists available.
-            </p>
-          )}
         </div>
       </section>
 
@@ -685,8 +758,9 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
 const getTimeOfDay = () => {
   const hour = new Date().getHours();
   if (hour < 12) return "morning";
-  if (hour < 18) return "afternoon";
-  return "evening";
+  if (hour < 16) return "afternoon";
+  if (hour < 20) return "evening";
+  return "night";
 };
 
 export default Body;

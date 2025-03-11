@@ -33,10 +33,12 @@ export const register = async (req, res) => {
     );
 
     res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
+      secure: true, // Always true in production (cookies only sent over HTTPS)
+      sameSite: "none", // Always 'none' for cross-site cookies
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      domain:
+        process.env.NODE_ENV === "production" ? ".onrender.com" : undefined, // Set domain for production
     });
 
     // Sending welcome email
@@ -84,10 +86,12 @@ export const login = async (req, res) => {
     });
 
     res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
+      secure: true, // Always true in production (cookies only sent over HTTPS)
+      sameSite: "none", // Always 'none' for cross-site cookies
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      domain:
+        process.env.NODE_ENV === "production" ? ".onrender.com" : undefined, // Set domain for production
     });
 
     return res.json({ success: true });

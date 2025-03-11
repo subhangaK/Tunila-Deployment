@@ -23,6 +23,7 @@ import PaymentVerify from "./pages/PaymentVerify.jsx";
 import ArtistMerchPage from "./pages/ArtistMerchPage.jsx";
 import MerchItemDetail from "./pages/MerchItemDetail.jsx";
 import Layout from "./components/Layout.jsx"; // Import the new Layout component
+import WishlistPage from "./pages/WishlistPage.jsx";
 
 import "./App.css";
 
@@ -132,6 +133,7 @@ const App = () => {
           <Route path="/payment-verify" element={<PaymentVerify />} />
           <Route path="/merch/:itemId" element={<MerchItemDetail />} />
           <Route path="/artist/:userId/merch" element={<ArtistMerchPage />} />
+          <Route path="/wishlist" element={<WishlistPage />} />
           <Route
             path="/playlists/:id"
             element={<PlaylistSongsPage setCurrentTrack={handleTrackChange} />}

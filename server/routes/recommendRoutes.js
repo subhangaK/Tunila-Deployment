@@ -6,7 +6,7 @@ const router = express.Router();
 
 // Function to fetch recommendations with fallback
 const fetchRecommendations = async (userId) => {
-  const hostedApiUrl = `https://tunila-music-recommendation-system.onrender.com/api/recommend/${userId}`;
+  //const hostedApiUrl = `https://tunila-music-recommendation-system.onrender.com/api/recommend/${userId}`;
   const localApiUrl = `http://127.0.0.1:5000/api/recommend/${userId}`;
 
   try {
