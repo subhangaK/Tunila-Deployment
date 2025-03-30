@@ -242,3 +242,23 @@ export const ARTIST_SALE_TEMPLATE = `
 </body>
 </html>
 `;
+
+export const ADMIN_REPLY_TEMPLATE = `
+<!DOCTYPE html>
+<html>
+<body>
+  <h1>Reply from Tunila Support</h1>
+  <p>Dear {{userName}},</p>
+  <p>Thank you for contacting us. Here's our response to your inquiry:</p>
+  <div style="background: #f5f5f5; padding: 20px; border-radius: 8px;">
+    <p><strong>Your Original Message:</strong></p>
+    <p>{{originalMessage}}</p>
+    <hr>
+    <p><strong>Our Response:</strong></p>
+    <p>{{adminReply}}</p>
+  </div>
+  <p>If you need further assistance, please don't hesitate to reply to this email.</p>
+  <p>Best regards,<br>Tunila Support Team</p>
+</body>
+</html>
+`;

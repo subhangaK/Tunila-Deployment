@@ -8,7 +8,7 @@ function Footer() {
   const navigate = useNavigate();
 
   const footer_goToHome = () => {
-    navigate("/home");
+    navigate("/");
   };
 
   const currentYear = new Date().getFullYear();
@@ -28,7 +28,7 @@ function Footer() {
           <div className="footer-links-column">
             <h3 className="footer-column-title">Company</h3>
             <ul className="footer-link-list">
-              <li onClick={() => navigate("/about")}>About Us</li>
+              <li onClick={() => navigate("/contact")}>Contact Us</li>
               <li onClick={() => navigate("/careers")}>Careers</li>
               <li onClick={() => navigate("/press")}>Press</li>
             </ul>

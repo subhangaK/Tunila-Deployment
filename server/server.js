@@ -11,6 +11,7 @@ import playlistRouter from "./routes/playlistRoutes.js";
 import adminRouter from "./routes/adminRoutes.js";
 import searchRoutes from "./routes/searchRoutes.js";
 import merchandiseRoutes from "./routes/merchandiseRoutes.js";
+import contactRoutes from "./routes/contactRoutes.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -37,6 +38,7 @@ app.use("/api/playlists", playlistRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/search", searchRoutes);
 app.use("/api/merch", merchandiseRoutes);
+app.use("/api/contact", contactRoutes);
 
 // Start the server
 app.listen(port, () => console.log(`Server started on PORT: ${port}`));
