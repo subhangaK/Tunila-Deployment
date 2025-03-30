@@ -11,6 +11,7 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
     useContext(AppContext);
   const [results, setResults] = useState({
     songs: [],
+    merchandise: [],
     artists: [],
     users: [],
     playlists: [],
@@ -115,7 +116,6 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
             Results for "<span>{searchQuery}</span>"
           </h1>
         </div>
-
         {/* Top Result and Related Songs Section */}
         {topResult && (
           <div className="search-top-section">
@@ -232,7 +232,6 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
             )}
           </div>
         )}
-
         {/* Main Songs Section */}
         {results?.songs?.length > 0 && (
           <div className="search-songs-section">
@@ -271,7 +270,6 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
             </div>
           </div>
         )}
-
         {/* Artists Section */}
         {results?.artists?.length > 0 && (
           <div className="search-artists-section">
@@ -298,7 +296,6 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
             </div>
           </div>
         )}
-
         {/* Users Section */}
         {results?.users?.length > 0 && (
           <div className="search-users-section">
@@ -326,7 +323,6 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
             </div>
           </div>
         )}
-
         {/* Playlists Section */}
         {results?.playlists?.length > 0 && (
           <div className="search-playlists-section">
@@ -360,6 +356,41 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
           </div>
         )}
 
+        {results?.merchandise?.length > 0 && (
+          <div className="search-merchandise-section">
+            <h2 className="search-section-title">Merchandise</h2>
+            <div className="search-merchandise-grid">
+              {results.merchandise.map((item) => (
+                <div
+                  key={item._id}
+                  className="search-merchandise-card"
+                  onClick={() => navigate(`/merch/${item._id}`)}
+                >
+                  <div className="search-merchandise-image">
+                    <img
+                      src={`${backendUrl}${item.images[0]}`}
+                      alt={item.name}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = assets.placeholder_image;
+                      }}
+                    />
+                  </div>
+                  <div className="search-merchandise-info">
+                    <h3>{item.name}</h3>
+                    {item.artist && (
+                      <p className="search-merchandise-artist">
+                        By: {item.artist.name}
+                      </p>
+                    )}
+                    <p className="search-merchandise-price">Rs {item.price}</p>
+                    <span className="search-merchandise-type">{item.type}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         {/* No Results Message */}
         {!topResult &&
           !results.songs?.length &&

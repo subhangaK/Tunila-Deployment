@@ -50,6 +50,7 @@ import testimonial_avatar1 from "./Testimonial1.png";
 import testimonial_avatar2 from "./Testimonial2.jpg";
 import testimonial_avatar3 from "./Testimonial3.jpg";
 import music_note_icon from "./music-note.png";
+import about_mission from "./OurMission.png";
 
 export const assets = {
   logo,
@@ -104,4 +105,5 @@ export const assets = {
   testimonial_avatar2,
   testimonial_avatar3,
   music_note_icon,
+  about_mission,
 };

@@ -601,6 +601,86 @@
   object-fit: cover;
 }
 
+/* Mission Section */
+.about-mission-section {
+  padding: 6rem 5%;
+  background: #f8f9fa;
+}
+
+.about-mission-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.about-mission-text {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.about-section-title {
+  font-size: 2.5rem;
+  color: #1a1a2e;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(90deg, #4f46e5, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.about-section-description {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #4a5568;
+}
+
+.about-mission-image-full {
+  width: 100%;
+}
+
+.about-mission-image-full img {
+  width: 80%;
+  height: 80%;
+  display: block;
+  margin-left: 130px;
+}
+
+/* Artist Section */
+.about-artist-section {
+  padding: 6rem 5%;
+  background: white;
+}
+
+.about-artist-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: center;
+}
+
+.about-artist-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.about-artist-image {
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+}
+
+.about-artist-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 /* Features Section */
 .tunila-home-features-section {
   background: linear-gradient(135deg, #f8f9fa 0%, #eef1ff 100%);
@@ -744,100 +824,61 @@
   margin: 0;
 }
 
-/* Join Community Section */
-.tunila-home-join-community {
+/* CTA Section */
+.about-cta-section {
+  padding: 6rem 5%;
   background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
   color: white;
-  padding: 100px 5%;
   text-align: center;
-  position: relative;
-  overflow: hidden;
 }
 
-.tunila-home-animated-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-.tunila-home-animated-circle {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.2;
-}
-
-.tunila-home-circle-1 {
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(white 0%, transparent 70%);
-  top: -100px;
-  left: 15%;
-  animation: float-circle 20s infinite ease-in-out;
-}
-
-.tunila-home-circle-2 {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(white 0%, transparent 70%);
-  bottom: -200px;
-  right: 10%;
-  animation: float-circle 25s infinite ease-in-out reverse;
-}
-
-.tunila-home-circle-3 {
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(white 0%, transparent 70%);
-  top: 20%;
-  right: 20%;
-  animation: float-circle 15s infinite ease-in-out 5s;
-}
-
-@keyframes float-circle {
-  0% {
-    transform: translate(0, 0);
-  }
-  50% {
-    transform: translate(30px, 20px);
-  }
-  100% {
-    transform: translate(0, 0);
-  }
-}
-
-.tunila-home-join-content {
-  position: relative;
-  z-index: 2;
+.about-cta-content {
   max-width: 800px;
   margin: 0 auto;
 }
 
-.tunila-home-join-content h2 {
-  font-size: 3rem;
-  font-weight: 700;
-  margin-bottom: 20px;
+.about-cta-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
 }
 
-.tunila-home-join-content p {
-  font-size: 1.3rem;
-  margin-bottom: 40px;
+.about-cta-content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
   opacity: 0.9;
 }
 
-.tunila-home-join-tunila-btn {
+.about-cta-buttons {
   display: flex;
-  align-items: center;
-  padding: 16px 32px;
-  border-radius: 12px;
-  font-size: 20px;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.about-cta-btn {
+  padding: 1rem 2rem;
+  border-radius: 50px;
   font-weight: 600;
-  cursor: pointer;
   transition: all 0.3s ease;
   text-decoration: none;
-  margin-left: 250px;
+}
+
+.about-cta-primary {
+  background: white;
+  color: #4f46e5;
+}
+
+.about-cta-secondary {
+  border: 2px solid white;
+  color: white;
+}
+
+.about-cta-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.about-cta-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 @keyframes equalize {

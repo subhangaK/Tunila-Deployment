@@ -8,7 +8,9 @@ export const getUserData = async (req, res) => {
     const user = await User.findById(req.userId);
 
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     res.status(200).json({
@@ -20,9 +22,10 @@ export const getUserData = async (req, res) => {
         role: user.role,
         isAccountVerified: user.isAccountVerified,
         coverImage: user.coverImage || "/uploads/covers/default.png",
-        profilePicture: user.profilePicture || "/uploads/profile_pictures/default.png", // ✅ Default profile picture
+        profilePicture:
+          user.profilePicture || "/uploads/profile_pictures/default.png", // ✅ Default profile picture
         canSellMerch: user.canSellMerch,
-        wishlist : user.wishlist
+        wishlist: user.wishlist,
       },
     });
   } catch (error) {
@@ -42,9 +45,9 @@ export const getUserProfile = async (req, res) => {
     const songs = await Song.find({ artistId: userId });
 
     // Get user's public playlists
-    const playlists = await Playlist.find({ 
-      owner: userId, 
-      isPublic: true 
+    const playlists = await Playlist.find({
+      owner: userId,
+      isPublic: true,
     }).populate("songs");
 
     res.status(200).json({
@@ -54,10 +57,11 @@ export const getUserProfile = async (req, res) => {
         name: user.name,
         isAccountVerified: user.isAccountVerified,
         coverImage: user.coverImage || "/uploads/covers/default.png",
-        profilePicture: user.profilePicture || "/uploads/profile_pictures/default.png", // ✅ Default profile picture
+        profilePicture:
+          user.profilePicture || "/uploads/profile_pictures/default.png", // ✅ Default profile picture
         songs,
-        playlists
-      }
+        playlists,
+      },
     });
   } catch (error) {
     res.status(500).json({ success: false, message: "Error fetching profile" });
@@ -72,7 +76,9 @@ export const updateUserProfile = async (req, res) => {
     // Fetch the user
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     // Update cover image if a new file is uploaded
@@ -94,7 +100,8 @@ export const updateUserProfile = async (req, res) => {
         userId: user._id,
         name: user.name,
         coverImage: user.coverImage || "/uploads/covers/default.png",
-        profilePicture: user.profilePicture || "/uploads/profile_pictures/default.png", // ✅ Default profile picture
+        profilePicture:
+          user.profilePicture || "/uploads/profile_pictures/default.png", // ✅ Default profile picture
       },
     });
   } catch (error) {
@@ -119,10 +126,14 @@ export const deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(id);
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
-    res.status(200).json({ success: true, message: "User deleted successfully." });
+    res
+      .status(200)
+      .json({ success: true, message: "User deleted successfully." });
   } catch (error) {
     res.status(500).json({ success: false, message: "Error deleting user" });
   }
@@ -131,20 +142,20 @@ export const deleteUser = async (req, res) => {
 export const verifySeller = async (req, res) => {
   try {
     const user = await User.findById(req.user._id)
-      .populate('songs')
-      .populate('merchItems');
+      .populate("songs")
+      .populate("merchItems");
 
     // Verification criteria
     const isVerified = user.isAccountVerified && user.songs.length > 0;
-    
+
     if (isVerified && !user.canSellMerch) {
       user.canSellMerch = true;
       await user.save();
     }
 
-    res.json({ 
+    res.json({
       canSellMerch: user.canSellMerch,
-      requirementsMet: isVerified
+      requirementsMet: isVerified,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

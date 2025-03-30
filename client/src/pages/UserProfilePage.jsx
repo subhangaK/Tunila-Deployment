@@ -21,6 +21,7 @@ const UserProfilePage = ({ setCurrentTrack }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("popular");
+  const [publicPlaylists, setPublicPlaylists] = useState([]);
   const navigate = useNavigate();
 
   // Fetch user profile data
@@ -197,6 +198,23 @@ const UserProfilePage = ({ setCurrentTrack }) => {
     }
   };
 
+  useEffect(() => {
+    const fetchPublicPlaylists = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/playlists/public`);
+        const filtered = response.data.playlists.filter(
+          (playlist) => playlist.owner === userId
+        );
+        setPublicPlaylists(filtered);
+      } catch (error) {
+        console.error("Error fetching public playlists:", error);
+        toast.error("Failed to load public playlists.");
+      }
+    };
+
+    fetchPublicPlaylists();
+  }, [backendUrl, userId]);
+
   // Add a song to an existing playlist
   const addToPlaylist = async (playlistId) => {
     try {
@@ -292,7 +310,13 @@ const UserProfilePage = ({ setCurrentTrack }) => {
                 />
               )}
             </div>
-            <p className="profile-bio">{profile.bio || "Music Artist"}</p>
+            <p className="profile-bio">
+              {profile.songs && profile.songs.length > 0
+                ? "Music Artist"
+                : profile.isAccountVerified
+                ? "Verified User"
+                : "Tunila User"}
+            </p>
             <div className="profile-stats">
               <div className="stat-item">
                 <span className="stat-value">{profile.songs?.length || 0}</span>
@@ -335,6 +359,15 @@ const UserProfilePage = ({ setCurrentTrack }) => {
             onClick={() => setActiveTab("all")}
           >
             All Songs
+          </button>
+
+          <button
+            className={`tab-button ${
+              activeTab === "public-playlists" ? "active" : ""
+            }`}
+            onClick={() => setActiveTab("public-playlists")}
+          >
+            Public Playlists
           </button>
 
           {isLoggedin && userData?.userId === userId && (
@@ -568,6 +601,46 @@ const UserProfilePage = ({ setCurrentTrack }) => {
                       Upload Your First Track
                     </button>
                   )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === "public-playlists" && (
+            <div className="public-playlists-container">
+              {publicPlaylists.length > 0 ? (
+                <div className="playlists-grid">
+                  {publicPlaylists.map((playlist) => (
+                    <div
+                      key={playlist._id}
+                      className="playlist-card"
+                      onClick={() => navigate(`/playlists/${playlist._id}`)}
+                    >
+                      <div className="playlist-cover">
+                        <img
+                          src={`${backendUrl}${playlist.coverImage}`}
+                          alt={playlist.name}
+                          onError={(e) => {
+                            e.target.src = assets.default_playlist;
+                          }}
+                        />
+                        <div className="play-overlay">
+                          <div className="play-icon">▶</div>
+                        </div>
+                      </div>
+                      <div className="playlist-details">
+                        <h3 className="playlist-name">{playlist.name}</h3>
+                        <p className="playlist-stats">
+                          {playlist.songs?.length || 0} songs •{" "}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="empty-state">
+                  <img src={assets.music_note_icon} alt="No playlists" />
+                  <p>No public playlists created yet</p>
                 </div>
               )}
             </div>

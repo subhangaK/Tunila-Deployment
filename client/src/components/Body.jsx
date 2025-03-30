@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
+import Footer from "./Footer";
 import { assets } from "../assets/assets";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
@@ -160,7 +161,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
         const validArtists = artistsData.filter((artist) => artist !== null);
         const shuffledArtists = validArtists
           .sort(() => 0.5 - Math.random())
-          .slice(0, 15);
+          .slice(0, 6);
 
         setFeaturedArtists(shuffledArtists);
       } catch (error) {

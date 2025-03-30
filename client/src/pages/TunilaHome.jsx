@@ -7,6 +7,7 @@ import { assets } from "../assets/assets";
 import "../css/TunilaHome.css";
 import axios from "axios";
 import { motion } from "framer-motion";
+import Footer from "../components/Footer";
 
 const TunilaHome = ({ setCurrentTrack }) => {
   const { backendUrl } = useContext(AppContext);
@@ -378,6 +379,72 @@ const TunilaHome = ({ setCurrentTrack }) => {
         </div>
       </section>
 
+      {/* Mission Section */}
+      <section className="about-mission-section">
+        <motion.div
+          className="about-mission-content"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="about-mission-text">
+            <h2 className="about-section-title">Our Mission</h2>
+            <p className="about-section-description">
+              Tunila was born from a passion to revolutionize Nepal's music
+              industry. We're creating a vibrant ecosystem where aspiring
+              artists can flourish and music lovers can discover authentic
+              Nepali sounds.
+            </p>
+          </div>
+          <div className="about-mission-image-full">
+            <img
+              src={assets.about_mission}
+              alt="Music Collaboration"
+              loading="lazy"
+            />
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Artist Showcase */}
+      <section className="about-artist-section">
+        <div className="about-artist-content">
+          <motion.div
+            className="about-artist-text"
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="about-section-title">Spotlight on Talent</h2>
+            <p className="about-section-description">
+              We're breaking down barriers in the music industry. Whether you're
+              a folk singer from Pokhara or a rapper from Kathmandu, Tunila
+              provides equal opportunities to shine. Our algorithm actively
+              promotes new voices while respecting Nepal's rich musical
+              heritage.
+            </p>
+            <Link to="/login" className="about-cta-btn">
+              Start Your Journey
+            </Link>
+          </motion.div>
+          <motion.div
+            className="about-artist-image"
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.8 }}
+          >
+            <img
+              src={assets.about_artist_showcase}
+              alt="Nepali Artists"
+              loading="lazy"
+            />
+          </motion.div>
+        </div>
+      </section>
+
       {/* Features Section with Animated Icons */}
       <section
         ref={featuresRef}
@@ -501,41 +568,31 @@ const TunilaHome = ({ setCurrentTrack }) => {
         </div>
       </section>
 
-      {/* Join Community CTA with Animated Background */}
-      <section className="tunila-home-join-community">
-        <div className="tunila-home-animated-bg">
-          <div className="tunila-home-animated-circle tunila-home-circle-1"></div>
-          <div className="tunila-home-animated-circle tunila-home-circle-2"></div>
-          <div className="tunila-home-animated-circle tunila-home-circle-3"></div>
-        </div>
-        <div className="tunila-home-join-content">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            Ready to Join the Tunila Community?
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            Start your musical journey today and experience music like never
-            before
-          </motion.p>
-          <motion.div
-            className="tunila-home-cta-buttons"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <Link to="/login" className="tunila-home-join-tunila-btn">
-              Join the Tunila Family
+      {/* CTA Section */}
+      <section className="about-cta-section">
+        <motion.div
+          className="about-cta-content"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h2>Ready to Make Waves?</h2>
+          <p>Join Nepal's fastest growing music community today</p>
+          <div className="about-cta-buttons">
+            <Link to="/login" className="about-cta-btn about-cta-primary">
+              Start Listening
             </Link>
-          </motion.div>
-        </div>
+            <Link
+              to="/upload-music"
+              className="about-cta-btn about-cta-secondary"
+            >
+              Upload Your Music
+            </Link>
+          </div>
+        </motion.div>
       </section>
+      <Footer />
     </div>
   );
 };

@@ -9,7 +9,7 @@ const MerchForm = ({ setShowForm }) => {
     name: "",
     description: "",
     price: "",
-    type: "",
+    type: "Physical",
     images: [],
     stock: 1,
   });

@@ -697,3 +697,78 @@
   font-style: italic;
   color: #888;
 }
+
+/* Public Playlists Section */
+.public-playlists-container {
+  padding: 20px;
+}
+
+.playlists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.playlist-card {
+  background: var(--card-bg);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.playlist-card:hover {
+  transform: translateY(-5px);
+}
+
+.playlist-cover {
+  position: relative;
+  aspect-ratio: 1;
+}
+
+.playlist-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.playlist-card:hover .play-overlay {
+  display: flex;
+}
+
+.play-icon {
+  font-size: 40px;
+  color: white;
+}
+
+.playlist-details {
+  padding: 15px;
+}
+
+.playlist-name {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.playlist-stats {
+  margin: 5px 0 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}

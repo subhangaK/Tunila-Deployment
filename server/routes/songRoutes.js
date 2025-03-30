@@ -1,8 +1,8 @@
-import express from 'express';
-import upload from '../config/multerConfig.js';
-import Song from '../models/songModel.js';
-import User from '../models/userModel.js';
-import userAuth from '../middleware/userAuth.js'; // Import userAuth middleware
+import express from "express";
+import upload from "../config/multerConfig.js";
+import Song from "../models/songModel.js";
+import User from "../models/userModel.js";
+import userAuth from "../middleware/userAuth.js"; // Import userAuth middleware
 
 const router = express.Router();
 
@@ -11,9 +11,9 @@ router.post(
   "/upload",
   upload.fields([
     { name: "song", maxCount: 1 },
-    { name: "cover", maxCount: 1 }
+    { name: "cover", maxCount: 1 },
   ]),
-  userAuth, // Add authentication middleware
+  userAuth,
   async (req, res) => {
     try {
       const { title, genre } = req.body;
@@ -21,28 +21,49 @@ router.post(
       const coverFile = req.files["cover"]?.[0];
 
       if (!songFile || !coverFile) {
-        return res.status(400).json({ success: false, message: "Files are required" });
+        return res
+          .status(400)
+          .json({ success: false, message: "Files are required" });
       }
 
-      // Fetch the logged-in user
       const user = await User.findById(req.userId);
       if (!user) {
-        return res.status(404).json({ success: false, message: "User not found" });
+        return res
+          .status(404)
+          .json({ success: false, message: "User not found" });
       }
 
-      // Create the song with artistId
       const song = new Song({
         title,
-        artist: user.name, // Use the logged-in user's name
-        artistId: user._id, // Use the logged-in user's ID
+        artist: user.name,
+        artistId: user._id,
         genre,
         filePath: `/uploads/songs/${songFile.filename}`,
         coverImage: `/uploads/covers/${coverFile.filename}`,
-        likedBy: [] // Initialize an empty array for likes
+        likedBy: [],
       });
 
       await song.save();
-      res.status(201).json({ success: true, song });
+
+      // Automatically enable merch selling if conditions are met
+      if (user.isAccountVerified) {
+        const songCount = await Song.countDocuments({ artistId: user._id });
+
+        if (songCount >= 1 && !user.canSellMerch) {
+          user.canSellMerch = true;
+          await user.save();
+
+          console.log(`Enabled merch selling for user ${user._id}`);
+        }
+      }
+
+      res.status(201).json({
+        success: true,
+        song,
+        userData: {
+          canSellMerch: user.canSellMerch,
+        },
+      });
     } catch (error) {
       console.error("Error in /upload route:", error);
       res.status(500).json({ success: false, message: error.message });
@@ -51,29 +72,33 @@ router.post(
 );
 
 // GET route for fetching all songs
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const songs = await Song.find();
     res.status(200).json({ success: true, songs });
   } catch (error) {
-    console.error('Error fetching songs:', error);
+    console.error("Error fetching songs:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 });
 
 // Like a Song Route
-router.post('/like', userAuth, async (req, res) => {
+router.post("/like", userAuth, async (req, res) => {
   try {
     const { songId } = req.body;
     const userId = req.userId; // Get userId from the authenticated user
 
     if (!userId || !songId) {
-      return res.status(400).json({ success: false, message: "User ID and Song ID are required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "User ID and Song ID are required" });
     }
 
     const song = await Song.findById(songId);
     if (!song) {
-      return res.status(404).json({ success: false, message: "Song not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Song not found" });
     }
 
     if (!song.likedBy.includes(userId)) {
@@ -81,7 +106,9 @@ router.post('/like', userAuth, async (req, res) => {
       await song.save();
     }
 
-    res.status(200).json({ success: true, message: "Song liked", likedBy: song.likedBy });
+    res
+      .status(200)
+      .json({ success: true, message: "Song liked", likedBy: song.likedBy });
   } catch (error) {
     console.error("Error liking song:", error);
     res.status(500).json({ success: false, message: error.message });
@@ -89,26 +116,34 @@ router.post('/like', userAuth, async (req, res) => {
 });
 
 // Unlike a Song Route
-router.post('/unlike', userAuth, async (req, res) => {
+router.post("/unlike", userAuth, async (req, res) => {
   try {
     const { songId } = req.body;
     const userId = req.userId; // Get userId from the authenticated user
 
     if (!userId || !songId) {
-      return res.status(400).json({ success: false, message: "User ID and Song ID are required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "User ID and Song ID are required" });
     }
 
     const song = await Song.findById(songId);
     if (!song) {
-      return res.status(404).json({ success: false, message: "Song not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Song not found" });
     }
 
     // ✅ Ensure userId is a string when filtering
-    song.likedBy = song.likedBy.filter(id => id.toString() !== userId.toString());
+    song.likedBy = song.likedBy.filter(
+      (id) => id.toString() !== userId.toString()
+    );
 
     await song.save();
 
-    res.status(200).json({ success: true, message: "Song unliked", likedBy: song.likedBy });
+    res
+      .status(200)
+      .json({ success: true, message: "Song unliked", likedBy: song.likedBy });
   } catch (error) {
     console.error("Error unliking song:", error);
     res.status(500).json({ success: false, message: error.message });
@@ -116,12 +151,14 @@ router.post('/unlike', userAuth, async (req, res) => {
 });
 
 // Get Liked Songs Route
-router.get('/liked-songs/:userId', async (req, res) => {
+router.get("/liked-songs/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
 
     if (!userId) {
-      return res.status(400).json({ success: false, message: "User ID is required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "User ID is required" });
     }
 
     const likedSongs = await Song.find({ likedBy: userId });
