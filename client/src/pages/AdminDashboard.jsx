@@ -166,6 +166,62 @@ const AdminDashboard = ({ setCurrentTrack }) => {
     }
   };
 
+  const handleDeactivateUser = async (userId, userName) => {
+    if (
+      window.confirm(
+        `Deactivate user "${userName}"? They won't be able to log in.`
+      )
+    ) {
+      try {
+        const response = await fetch(
+          `${backendUrl}/api/admin/users/deactivate/${userId}`,
+          {
+            method: "PUT",
+            credentials: "include",
+          }
+        );
+
+        const data = await response.json();
+        if (response.ok) {
+          toast.success(data.message || "User deactivated successfully");
+          await fetchUsers();
+        } else {
+          toast.error(data.message || "Failed to deactivate user");
+        }
+      } catch (error) {
+        toast.error("Network error while deactivating user");
+      }
+    }
+  };
+
+  const handleReactivateUser = async (userId, userName) => {
+    if (
+      window.confirm(
+        `Reactivate user "${userName}"? They will be able to log in again.`
+      )
+    ) {
+      try {
+        const response = await fetch(
+          `${backendUrl}/api/admin/users/reactivate/${userId}`,
+          {
+            method: "PUT",
+            credentials: "include",
+          }
+        );
+
+        const data = await response.json();
+        if (response.ok) {
+          toast.success(data.message || "User reactivated successfully");
+          await fetchUsers();
+        } else {
+          toast.error(data.message || "Failed to reactivate user");
+        }
+      } catch (error) {
+        toast.error("Network error while reactivating user");
+      }
+    }
+  };
+
   // Play song handler
   const handlePlaySong = (song) => {
     setCurrentTrack(song);
@@ -323,6 +379,25 @@ const AdminDashboard = ({ setCurrentTrack }) => {
                             >
                               View Profile
                             </button>
+                            {user.isActive ? (
+                              <button
+                                className="admin-deactivate-button"
+                                onClick={() =>
+                                  handleDeactivateUser(user._id, user.name)
+                                }
+                              >
+                                Deactivate
+                              </button>
+                            ) : (
+                              <button
+                                className="admin-reactivate-button"
+                                onClick={() =>
+                                  handleReactivateUser(user._id, user.name)
+                                }
+                              >
+                                Reactivate
+                              </button>
+                            )}
                             <button
                               className="admin-delete-button"
                               onClick={() =>
@@ -416,12 +491,7 @@ const AdminDashboard = ({ setCurrentTrack }) => {
                                       handleDeleteSong(song._id, song.title)
                                     }
                                   >
-                                    <span className="admin-delete-icon">
-                                      <img
-                                        src={assets.delete_icon}
-                                        alt="Delete"
-                                      />
-                                    </span>
+                                    <span className="admin-delete-icon">✖</span>
                                   </button>
                                 </div>
                               </td>

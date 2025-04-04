@@ -172,7 +172,7 @@ const UploadMusic = () => {
               src={assets.arrow_icon}
               alt="back"
               className="arrow-icon"
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/home")}
             />
             <h2 className="upload-music-title">Upload Music</h2>
           </div>

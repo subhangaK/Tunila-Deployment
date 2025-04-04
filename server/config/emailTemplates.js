@@ -262,3 +262,75 @@ export const ADMIN_REPLY_TEMPLATE = `
 </body>
 </html>
 `;
+
+export const ACCOUNT_DEACTIVATION_TEMPLATE = `
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { color: #d9534f; font-size: 24px; margin-bottom: 20px; }
+    .content { margin-bottom: 20px; }
+    .button { 
+      display: inline-block; padding: 10px 20px; 
+      background-color: #d9534f; color: white; 
+      text-decoration: none; border-radius: 5px; 
+    }
+    .footer { margin-top: 30px; font-size: 12px; color: #777; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">Account Deactivated</div>
+    <div class="content">
+      <p>Hello {{name}},</p>
+      <p>Your Tunila account has been deactivated. You will no longer be able to log in to your account.</p>
+      <p>If you believe this was done in error or have any questions, please contact our support team.</p>
+      <p>
+        <a href="{{contactLink}}" class="button">Contact Support</a>
+      </p>
+    </div>
+    <div class="footer">
+      <p>This is an automated message. Please do not reply to this email.</p>
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+export const ACCOUNT_REACTIVATION_TEMPLATE = `
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { color: #5cb85c; font-size: 24px; margin-bottom: 20px; }
+    .content { margin-bottom: 20px; }
+    .button { 
+      display: inline-block; padding: 10px 20px; 
+      background-color: #5cb85c; color: white; 
+      text-decoration: none; border-radius: 5px; 
+    }
+    .footer { margin-top: 30px; font-size: 12px; color: #777; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">Account Reactivated</div>
+    <div class="content">
+      <p>Hello {{name}},</p>
+      <p>Your Tunila account has been reactivated. You can now log in to your account as usual.</p>
+      <p>If you have any questions, please contact our support team.</p>
+      <p>
+        <a href="{{contactLink}}" class="button">Contact Support</a>
+      </p>
+    </div>
+    <div class="footer">
+      <p>This is an automated message. Please do not reply to this email.</p>
+    </div>
+  </div>
+</body>
+</html>
+`;

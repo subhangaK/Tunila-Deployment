@@ -14,6 +14,7 @@ import {
   FaUserAlt,
   FaCog,
   FaChevronLeft,
+  FaArchive,
 } from "react-icons/fa";
 import { BsBagHeart } from "react-icons/bs";
 import { FcLike } from "react-icons/fc";
@@ -77,6 +78,11 @@ function Layout() {
       path: "/merch",
       name: "Merch Store",
       icon: <FaStore className="sidebar-icon" />,
+    },
+    {
+      path: "/browse-playlists",
+      name: "Public Playlists",
+      icon: <FaArchive className="sidebar-icon" />,
     },
   ];
 

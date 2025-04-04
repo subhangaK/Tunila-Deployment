@@ -1,40 +1,78 @@
 import express from "express";
 import axios from "axios";
 import userAuth from "../middleware/userAuth.js";
+import Song from "../models/songModel.js";
 
 const router = express.Router();
 
-// Function to fetch recommendations with fallback
-const fetchRecommendations = async (userId) => {
-  //const hostedApiUrl = `https://tunila-music-recommendation-system.onrender.com/api/recommend/${userId}`;
-  const localApiUrl = `http://127.0.0.1:5000/api/recommend/${userId}`;
-
+// Helper function to get songs by IDs
+const getSongsByIds = async (songIds) => {
   try {
-    // Try the hosted API first
-    const response = await axios.get(hostedApiUrl);
-    return response.data;
+    const songs = await Song.find({ _id: { $in: songIds } });
+    return songs;
   } catch (error) {
-    console.error("Hosted API failed, falling back to local API:", error);
-    // If hosted API fails, try the local API
-    const response = await axios.get(localApiUrl);
-    return response.data;
+    console.error("Error fetching songs:", error);
+    return [];
   }
 };
 
-// Fetch recommendations for logged-in user
 router.get("/:userId", userAuth, async (req, res) => {
   try {
     const { userId } = req.params;
 
-    // Call the fetchRecommendations function
-    const recommendations = await fetchRecommendations(userId);
+    // First try the hosted recommendation service
+    try {
+      const response = await axios.get(
+        `https://tunila-music-recommendation-system.onrender.com/api/recommend/${userId}`
+      );
 
-    res.json(recommendations);
+      if (response.data.success) {
+        // Get full song details from our database
+        const recommendedSongs = await getSongsByIds(
+          response.data.recommended_songs
+        );
+        return res.json({
+          success: true,
+          recommendedSongs,
+        });
+      }
+    } catch (hostedError) {
+      console.log("Hosted recommendation service failed, trying local...");
+    }
+
+    // Fallback to local recommendation service
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:5000/api/recommend/${userId}`
+      );
+
+      if (response.data.success) {
+        // Get full song details from our database
+        const recommendedSongs = await getSongsByIds(
+          response.data.recommended_songs
+        );
+        return res.json({
+          success: true,
+          recommendedSongs,
+        });
+      }
+    } catch (localError) {
+      console.log("Local recommendation service also failed");
+    }
+
+    // Final fallback - return some popular songs
+    const popularSongs = await Song.find().sort({ likedBy: -1 }).limit(10);
+
+    return res.json({
+      success: true,
+      recommendedSongs: popularSongs,
+    });
   } catch (error) {
-    console.error("Error fetching recommendations:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Error fetching recommendations" });
+    console.error("Error in recommendation route:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error getting recommendations",
+    });
   }
 });
 

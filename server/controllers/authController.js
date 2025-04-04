@@ -75,6 +75,14 @@ export const login = async (req, res) => {
       return res.json({ success: false, message: "Invalid email" });
     }
 
+    if (!user.isActive) {
+      return res.json({
+        success: false,
+        message: "Your account has been deactivated. Please contact support.",
+        contactLink: "/contact-us",
+      });
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {

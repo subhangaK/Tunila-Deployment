@@ -170,4 +170,13 @@ router.get("/liked-songs/:userId", async (req, res) => {
   }
 });
 
+router.get("/popular", async (req, res) => {
+  try {
+    const songs = await Song.find().sort({ likedBy: -1 }).limit(20);
+    res.json({ success: true, songs });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 export default router;

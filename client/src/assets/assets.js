@@ -51,6 +51,7 @@ import testimonial_avatar2 from "./Testimonial2.jpg";
 import testimonial_avatar3 from "./Testimonial3.jpg";
 import music_note_icon from "./music-note.png";
 import about_mission from "./OurMission.png";
+import about_artist_showcase from "./about-artist.png";
 
 export const assets = {
   logo,
@@ -106,4 +107,5 @@ export const assets = {
   testimonial_avatar3,
   music_note_icon,
   about_mission,
+  about_artist_showcase,
 };

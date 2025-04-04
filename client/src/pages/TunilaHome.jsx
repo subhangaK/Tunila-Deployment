@@ -256,6 +256,44 @@ const TunilaHome = ({ setCurrentTrack }) => {
         </div>
       </section>
 
+      {/* Artist Showcase */}
+      <section className="about-artist-section">
+        <div className="about-artist-content">
+          <motion.div
+            className="about-artist-text"
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="about-section-title">Spotlight on Talent</h2>
+            <p className="about-section-description">
+              We're breaking down barriers in the music industry. Whether you're
+              a folk singer from Pokhara or a rapper from Kathmandu, Tunila
+              provides equal opportunities to shine. Our algorithm actively
+              promotes new voices while respecting Nepal's rich musical
+              heritage.
+            </p>
+            <Link to="/login" className="about-cta-btn">
+              Start Your Journey
+            </Link>
+          </motion.div>
+          <motion.div
+            className="about-artist-image"
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.8 }}
+          >
+            <img
+              src={assets.about_artist_showcase}
+              alt="Nepali Artists"
+              loading="lazy"
+            />
+          </motion.div>
+        </div>
+      </section>
+
       {/* Featured Artists Section with Animated Spotlights */}
       <section
         ref={artistsRef}
@@ -407,44 +445,6 @@ const TunilaHome = ({ setCurrentTrack }) => {
         </motion.div>
       </section>
 
-      {/* Artist Showcase */}
-      <section className="about-artist-section">
-        <div className="about-artist-content">
-          <motion.div
-            className="about-artist-text"
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h2 className="about-section-title">Spotlight on Talent</h2>
-            <p className="about-section-description">
-              We're breaking down barriers in the music industry. Whether you're
-              a folk singer from Pokhara or a rapper from Kathmandu, Tunila
-              provides equal opportunities to shine. Our algorithm actively
-              promotes new voices while respecting Nepal's rich musical
-              heritage.
-            </p>
-            <Link to="/login" className="about-cta-btn">
-              Start Your Journey
-            </Link>
-          </motion.div>
-          <motion.div
-            className="about-artist-image"
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.8 }}
-          >
-            <img
-              src={assets.about_artist_showcase}
-              alt="Nepali Artists"
-              loading="lazy"
-            />
-          </motion.div>
-        </div>
-      </section>
-
       {/* Features Section with Animated Icons */}
       <section
         ref={featuresRef}
@@ -471,7 +471,7 @@ const TunilaHome = ({ setCurrentTrack }) => {
               description: "Discover new music tailored to your unique taste",
             },
             {
-              icon: assets.merch_icon || "/icons/merch-icon.svg",
+              icon: assets.logo || "/icons/merch-icon.svg",
               title: "Support Artists",
               description:
                 "Buy exclusive merchandise directly from your favorite artists",

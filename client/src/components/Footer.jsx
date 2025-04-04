@@ -82,7 +82,7 @@ function Footer() {
             <FaTwitter />
           </a>
           <a
-            href="https://instagram.com/tunila"
+            href="https://instagram.com/subhangakhanal"
             target="_blank"
             rel="noopener noreferrer"
             className="footer-social-icon"

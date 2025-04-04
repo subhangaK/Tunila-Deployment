@@ -25,6 +25,7 @@ import MerchItemDetail from "./pages/MerchItemDetail.jsx";
 import Layout from "./components/Layout.jsx"; // Import the new Layout component
 import WishlistPage from "./pages/WishlistPage.jsx";
 import ContactPage from "./pages/ContactPage.jsx";
+import BrowsePlaylistsPage from "./pages/BrowsePlaylistsPage.jsx";
 
 import "./App.css";
 
@@ -131,6 +132,7 @@ const App = () => {
             element={<SearchResultsPage setCurrentTrack={handleTrackChange} />}
           />
           <Route path="/merch" element={<MerchStore />} />
+          <Route path="/browse-playlists" element={<BrowsePlaylistsPage />} />
           <Route path="/payment-verify" element={<PaymentVerify />} />
           <Route path="/merch/:itemId" element={<MerchItemDetail />} />
           <Route path="/artist/:userId/merch" element={<ArtistMerchPage />} />

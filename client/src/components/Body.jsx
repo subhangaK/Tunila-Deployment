@@ -625,13 +625,13 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
       <section className="tunila-playlists-section">
         <div className="tunila-section-header">
           <h2>Popular Playlists</h2>
-          <Link to="/public-playlists" className="tunila-see-all">
+          <Link to="/browse-playlists" className="tunila-see-all">
             Browse All
           </Link>
         </div>
 
         <div className="tunila-playlists-grid">
-          {publicPlaylists.slice(0, 6).map((playlist) => (
+          {publicPlaylists.slice(0, 7).map((playlist) => (
             <motion.div
               key={playlist._id}
               className="tunila-playlist-card"
