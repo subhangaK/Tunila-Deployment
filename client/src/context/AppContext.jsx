@@ -123,13 +123,15 @@ export const AppContextProvider = (props) => {
   };
 
   // ✅ Queue Management
-  const addToQueue = (song) => {
-    setQueue((prevQueue) => [...prevQueue, song]);
-
-    if (queue.length === 0) {
-      setCurrentTrackIndex(0);
-      setIsPlaying(true);
-    }
+  const addToQueue = (song, playImmediately = false) => {
+    setQueue((prevQueue) => {
+      const newQueue = [...prevQueue, song];
+      if (playImmediately || prevQueue.length === 0) {
+        setCurrentTrackIndex(newQueue.length - 1); // Play the newly added song
+        setIsPlaying(true);
+      }
+      return newQueue;
+    });
   };
 
   const removeFromQueue = (index) => {

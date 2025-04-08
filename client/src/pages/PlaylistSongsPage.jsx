@@ -40,8 +40,7 @@ const PlaylistSongsPage = ({ setCurrentTrack }) => {
 
   // Function to handle song play
   const handlePlaySong = (song) => {
-    setCurrentTrack(song);
-    addToQueue(song);
+    addToQueue(song, true); // true means play immediately
   };
 
   // Function to handle adding song to queue
@@ -203,7 +202,7 @@ const PlaylistSongsPage = ({ setCurrentTrack }) => {
                 key={song._id}
                 className="playlist-song-card playlist-song-recent-card"
                 whileHover={{ scale: 1.05 }}
-                onClick={() => setCurrentTrack(song)}
+                onClick={() => handlePlaySong(song)}
               >
                 <div className="playlist-song-artwork">
                   <img

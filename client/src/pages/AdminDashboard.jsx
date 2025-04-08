@@ -196,11 +196,9 @@ const AdminDashboard = ({ setCurrentTrack }) => {
     setShowUserStatusModal(true);
   };
 
-  // Play song handler
+  // Function to handle song play
   const handlePlaySong = (song) => {
-    setCurrentTrack(song);
-    addToQueue(song);
-    toast.success(`"${song.title}" added to queue`);
+    addToQueue(song, true); // true means play immediately
   };
 
   const handleConfirmUserStatus = async () => {

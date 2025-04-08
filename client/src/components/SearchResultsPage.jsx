@@ -27,8 +27,7 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
 
   // Function to handle song play
   const handlePlaySong = (song) => {
-    setCurrentTrack(song);
-    addToQueue(song);
+    addToQueue(song, true); // true means play immediately
   };
 
   useEffect(() => {
@@ -142,7 +141,7 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
               ) : (
                 <div
                   className="search-top-song"
-                  onClick={() => setCurrentTrack(topResult.data)}
+                  onClick={() => handlePlaySong(topResult.data)}
                 >
                   <div className="search-top-song-artwork">
                     <img
@@ -192,7 +191,7 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
                       <tr
                         key={song._id}
                         className="search-related-row"
-                        onClick={() => setCurrentTrack(song)}
+                        onClick={() => handlePlaySong(song)}
                       >
                         <td className="search-related-index">{index + 1}</td>
                         <td className="search-related-cover">
@@ -241,7 +240,7 @@ const SearchResultsPage = ({ setCurrentTrack }) => {
                 <div
                   key={song._id}
                   className="search-song-card"
-                  onClick={() => setCurrentTrack(song)}
+                  onClick={() => handlePlaySong(song)}
                 >
                   <div className="search-song-artwork">
                     <img

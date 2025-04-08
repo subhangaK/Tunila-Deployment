@@ -51,8 +51,7 @@ const PublishedMusic = ({ setCurrentTrack }) => {
 
   // Function to handle song play
   const handlePlaySong = (song) => {
-    setCurrentTrack(song);
-    addToQueue(song);
+    addToQueue(song, true); // true means play immediately
   };
 
   // Function to handle adding song to queue

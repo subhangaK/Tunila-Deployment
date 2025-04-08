@@ -54,8 +54,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
 
   // Function to handle song play
   const handlePlaySong = (song) => {
-    setCurrentTrack(song);
-    addToQueue(song);
+    addToQueue(song, true); // true means play immediately
   };
 
   // Fetch recommended songs when userData is available
@@ -287,7 +286,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
                 key={song._id}
                 className="tunila-song-card"
                 whileHover={{ y: -10, transition: { duration: 0.3 } }}
-                onClick={() => setCurrentTrack(song)}
+                onClick={() => handlePlaySong(song)}
               >
                 <div className="tunila-song-artwork">
                   <img
@@ -366,7 +365,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
               key={song._id}
               className="tunila-song-card tunila-recent-card"
               whileHover={{ scale: 1.05 }}
-              onClick={() => setCurrentTrack(song)}
+              onClick={() => handlePlaySong(song)}
             >
               <div className="tunila-song-artwork">
                 <img
@@ -440,7 +439,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
               key={song._id}
               className={`tunila-featured-card`}
               whileHover={{ scale: 1.02 }}
-              onClick={() => setCurrentTrack(song)}
+              onClick={() => handlePlaySong(song)}
             >
               <div className="tunila-featured-artwork">
                 <img
@@ -559,7 +558,7 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
               key={song._id}
               className="tunila-song-card tunila-recent-card"
               whileHover={{ scale: 1.05 }}
-              onClick={() => setCurrentTrack(song)}
+              onClick={() => handlePlaySong(song)}
             >
               <div className="tunila-song-artwork">
                 <img
