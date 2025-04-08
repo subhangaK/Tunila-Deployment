@@ -20,26 +20,6 @@ router.get("/:userId", userAuth, async (req, res) => {
   try {
     const { userId } = req.params;
 
-    // First try the hosted recommendation service
-    try {
-      const response = await axios.get(
-        `https://tunila-music-recommendation-system.onrender.com/api/recommend/${userId}`
-      );
-
-      if (response.data.success) {
-        // Get full song details from our database
-        const recommendedSongs = await getSongsByIds(
-          response.data.recommended_songs
-        );
-        return res.json({
-          success: true,
-          recommendedSongs,
-        });
-      }
-    } catch (hostedError) {
-      console.log("Hosted recommendation service failed, trying local...");
-    }
-
     // Fallback to local recommendation service
     try {
       const response = await axios.get(

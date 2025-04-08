@@ -103,6 +103,7 @@ export const initiatePayment = async (req, res) => {
     await Transaction.create({
       merch: merchId,
       quantity,
+      price: merch.price, // Add this line
       buyer: req.userId,
       artist: merch.artist,
       pidx: response.data.pidx,
@@ -355,5 +356,42 @@ export const getWishlistedMerchandise = async (req, res) => {
   } catch (error) {
     console.error("Error fetching wishlisted items:", error);
     res.status(500).json({ message: "Failed to fetch wishlisted items" });
+  }
+};
+
+export const getOrderHistory = async (req, res) => {
+  try {
+    const transactions = await Transaction.find({
+      buyer: req.userId,
+      status: "completed",
+    })
+      .populate({
+        path: "merch",
+        select: "name images artist",
+        populate: {
+          path: "artist",
+          select: "name profilePicture",
+        },
+      })
+      .sort({ createdAt: -1 });
+
+    const formattedTransactions = transactions.map((transaction) => ({
+      _id: transaction._id,
+      merch: {
+        _id: transaction.merch._id, // Make sure this is included
+        name: transaction.merch.name,
+        image: transaction.merch.images[0],
+        artist: transaction.merch.artist.name,
+        artistProfile: transaction.merch.artist.profilePicture,
+      },
+      quantity: transaction.quantity,
+      price: transaction.price, // Use the stored price
+      total: transaction.price * transaction.quantity,
+      purchaseDate: transaction.createdAt,
+    }));
+
+    res.status(200).json(formattedTransactions);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch order history" });
   }
 };

@@ -8,9 +8,7 @@ export const AppContextProvider = (props) => {
   axios.defaults.withCredentials = true;
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const hostedRecommendationApiUrl =
-    "https://tunila-music-recommendation-system.onrender.com/api/recommend";
-  const localRecommendationApiUrl = "http://127.0.0.1:5000/api/recommend";
+  const RecommendationApiUrl = import.meta.env.VITE_RECOMMENDATION_API_URL;
 
   // ✅ Authentication State
   const [isLoggedin, setIsLoggedin] = useState(false);
@@ -90,23 +88,10 @@ export const AppContextProvider = (props) => {
       return;
     }
 
-    try {
-      // Try the hosted API first
-      const { data } = await axios.get(
-        `${hostedRecommendationApiUrl}/${userId}`
-      );
-      if (data.success) {
-        setRecommendedSongs(data.recommended_songs);
-      }
-    } catch (error) {
-      console.error("Hosted API failed, falling back to local API:", error);
-      // If hosted API fails, try the local API
-      const { data } = await axios.get(
-        `${localRecommendationApiUrl}/${userId}`
-      );
-      if (data.success) {
-        setRecommendedSongs(data.recommended_songs);
-      }
+    // API for song Recommend
+    const { data } = await axios.get(`${RecommendationApiUrl}/${userId}`);
+    if (data.success) {
+      setRecommendedSongs(data.recommended_songs);
     }
   };
 

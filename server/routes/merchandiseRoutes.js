@@ -9,6 +9,7 @@ import {
   verifyPayment,
   getMerchandiseByArtist,
   getWishlistedMerchandise,
+  getOrderHistory,
 } from "../controllers/merchandiseController.js";
 import userAuth from "../middleware/userAuth.js";
 import multer from "multer";
@@ -35,5 +36,6 @@ router.post("/payment/initiate", userAuth, initiatePayment);
 router.get("/payment/verify", verifyPayment);
 router.get("/artist/:userId", getMerchandiseByArtist);
 router.get("/wishlist/my-items", userAuth, getWishlistedMerchandise);
+router.get("/orders/history", userAuth, getOrderHistory);
 
 export default router;

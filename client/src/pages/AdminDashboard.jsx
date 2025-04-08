@@ -21,6 +21,12 @@ const AdminDashboard = ({ setCurrentTrack }) => {
   const [activeTab, setActiveTab] = useState("users");
   const [loading, setLoading] = useState(false);
   const [allContacts, setAllContacts] = useState([]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+  const [deleteType, setDeleteType] = useState(null); // 'user' or 'song'
+  const [showUserStatusModal, setShowUserStatusModal] = useState(false);
+  const [userStatusAction, setUserStatusAction] = useState(null); // 'deactivate' or 'reactivate'
+  const [selectedUser, setSelectedUser] = useState(null);
   const replyTextAreaRef = useRef(null);
 
   // Fetch data based on active tab
@@ -110,25 +116,37 @@ const AdminDashboard = ({ setCurrentTrack }) => {
   );
 
   // Delete handlers
-  const handleDeleteUser = async (userId, userName) => {
-    if (window.confirm(`Delete user "${userName}"? This cannot be undone.`)) {
-      try {
-        await deleteUser(userId);
-        toast.success(`User "${userName}" deleted`);
-      } catch (error) {
-        toast.error(`Failed to delete user: ${error.message}`);
-      }
-    }
+  const handleDeleteUser = (userId, userName) => {
+    setItemToDelete({ id: userId, name: userName });
+    setDeleteType("user");
+    setShowDeleteModal(true);
   };
 
-  const handleDeleteSong = async (songId, songTitle) => {
-    if (window.confirm(`Delete song "${songTitle}"? This cannot be undone.`)) {
-      try {
-        await deleteSong(songId);
-        toast.success(`Song "${songTitle}" deleted`);
-      } catch (error) {
-        toast.error(`Failed to delete song: ${error.message}`);
+  const handleDeleteSong = (songId, songTitle) => {
+    setItemToDelete({ id: songId, name: songTitle });
+    setDeleteType("song");
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!itemToDelete || !deleteType) return;
+
+    try {
+      if (deleteType === "user") {
+        await deleteUser(itemToDelete.id);
+        toast.success(`User "${itemToDelete.name}" deleted`);
+      } else if (deleteType === "song") {
+        await deleteSong(itemToDelete.id);
+        toast.success(`Song "${itemToDelete.name}" deleted`);
       }
+
+      // Refresh data
+      if (activeTab === "users") await fetchUsers();
+      else if (activeTab === "songs") await fetchSongs();
+
+      setShowDeleteModal(false);
+    } catch (error) {
+      toast.error(`Failed to delete ${deleteType}: ${error.message}`);
     }
   };
 
@@ -166,60 +184,16 @@ const AdminDashboard = ({ setCurrentTrack }) => {
     }
   };
 
-  const handleDeactivateUser = async (userId, userName) => {
-    if (
-      window.confirm(
-        `Deactivate user "${userName}"? They won't be able to log in.`
-      )
-    ) {
-      try {
-        const response = await fetch(
-          `${backendUrl}/api/admin/users/deactivate/${userId}`,
-          {
-            method: "PUT",
-            credentials: "include",
-          }
-        );
-
-        const data = await response.json();
-        if (response.ok) {
-          toast.success(data.message || "User deactivated successfully");
-          await fetchUsers();
-        } else {
-          toast.error(data.message || "Failed to deactivate user");
-        }
-      } catch (error) {
-        toast.error("Network error while deactivating user");
-      }
-    }
+  const handleDeactivateUser = (userId, userName) => {
+    setSelectedUser({ id: userId, name: userName });
+    setUserStatusAction("deactivate");
+    setShowUserStatusModal(true);
   };
 
-  const handleReactivateUser = async (userId, userName) => {
-    if (
-      window.confirm(
-        `Reactivate user "${userName}"? They will be able to log in again.`
-      )
-    ) {
-      try {
-        const response = await fetch(
-          `${backendUrl}/api/admin/users/reactivate/${userId}`,
-          {
-            method: "PUT",
-            credentials: "include",
-          }
-        );
-
-        const data = await response.json();
-        if (response.ok) {
-          toast.success(data.message || "User reactivated successfully");
-          await fetchUsers();
-        } else {
-          toast.error(data.message || "Failed to reactivate user");
-        }
-      } catch (error) {
-        toast.error("Network error while reactivating user");
-      }
-    }
+  const handleReactivateUser = (userId, userName) => {
+    setSelectedUser({ id: userId, name: userName });
+    setUserStatusAction("reactivate");
+    setShowUserStatusModal(true);
   };
 
   // Play song handler
@@ -227,6 +201,34 @@ const AdminDashboard = ({ setCurrentTrack }) => {
     setCurrentTrack(song);
     addToQueue(song);
     toast.success(`"${song.title}" added to queue`);
+  };
+
+  const handleConfirmUserStatus = async () => {
+    if (!selectedUser || !userStatusAction) return;
+
+    try {
+      const endpoint =
+        userStatusAction === "deactivate"
+          ? `${backendUrl}/api/admin/users/deactivate/${selectedUser.id}`
+          : `${backendUrl}/api/admin/users/reactivate/${selectedUser.id}`;
+
+      const response = await fetch(endpoint, {
+        method: "PUT",
+        credentials: "include",
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        toast.success(data.message || `User ${userStatusAction}d successfully`);
+        await fetchUsers();
+      } else {
+        throw new Error(data.message || `Failed to ${userStatusAction} user`);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setShowUserStatusModal(false);
+    }
   };
 
   // Access control
@@ -603,6 +605,92 @@ const AdminDashboard = ({ setCurrentTrack }) => {
           )}
         </div>
       </div>
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <>
+          <div
+            className="modal-backdrop"
+            onClick={() => setShowDeleteModal(false)}
+          />
+          <div className="admin-confirmation-modal">
+            <div className="modal-header">
+              <h3>Delete {deleteType === "user" ? "User" : "Song"}</h3>
+              <button onClick={() => setShowDeleteModal(false)}>×</button>
+            </div>
+            <div className="modal-content">
+              <p>
+                Are you sure you want to delete "{itemToDelete?.name}"? This
+                action cannot be undone.
+              </p>
+              <div className="modal-actions">
+                <button
+                  className="cancel-button"
+                  onClick={() => setShowDeleteModal(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="confirm-delete-button"
+                  onClick={handleConfirmDelete}
+                >
+                  Delete Permanently
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* User Status Modal */}
+      {showUserStatusModal && (
+        <>
+          <div
+            className="modal-backdrop"
+            onClick={() => setShowUserStatusModal(false)}
+          />
+          <div className="admin-confirmation-modal">
+            <div className="modal-header">
+              <h3>
+                {userStatusAction === "deactivate"
+                  ? "Deactivate"
+                  : "Reactivate"}{" "}
+                User
+              </h3>
+              <button onClick={() => setShowUserStatusModal(false)}>×</button>
+            </div>
+            <div className="modal-content">
+              <p>
+                Are you sure you want to {userStatusAction} the user{" "}
+                <strong>"{selectedUser?.name}"</strong>?{" "}
+                {userStatusAction === "deactivate"
+                  ? "They won't be able to log in."
+                  : "They will regain access to their account."}
+              </p>
+              <div className="modal-actions">
+                <button
+                  className="cancel-button"
+                  onClick={() => setShowUserStatusModal(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className={`confirm-action-button ${
+                    userStatusAction === "deactivate"
+                      ? "confirm-deactivate"
+                      : "confirm-reactivate"
+                  }`}
+                  onClick={handleConfirmUserStatus}
+                >
+                  {userStatusAction === "deactivate"
+                    ? "Deactivate"
+                    : "Reactivate"}{" "}
+                  User
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

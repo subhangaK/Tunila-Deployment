@@ -279,9 +279,6 @@ const Body = ({ setCurrentTrack, filteredSongs }) => {
         <section className="tunila-section">
           <div className="tunila-section-header">
             <h2>Recommended For You</h2>
-            <Link to="/recommendations" className="tunila-see-all">
-              See All
-            </Link>
           </div>
 
           <div className="tunila-songs-carousel">

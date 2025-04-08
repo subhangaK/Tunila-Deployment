@@ -179,4 +179,31 @@ router.get("/popular", async (req, res) => {
   }
 });
 
+router.delete("/:songId", userAuth, async (req, res) => {
+  try {
+    const song = await Song.findById(req.params.songId);
+    if (!song) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Song not found" });
+    }
+
+    // Check if the logged-in user is the owner
+    if (song.artistId.toString() !== req.userId.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized to delete this song",
+      });
+    }
+
+    await Song.deleteOne({ _id: req.params.songId });
+    res
+      .status(200)
+      .json({ success: true, message: "Song deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting song:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 export default router;

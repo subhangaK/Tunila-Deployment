@@ -22,6 +22,7 @@ const UserProfilePage = ({ setCurrentTrack }) => {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("popular");
   const [publicPlaylists, setPublicPlaylists] = useState([]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const navigate = useNavigate();
 
   // Fetch user profile data
@@ -354,12 +355,22 @@ const UserProfilePage = ({ setCurrentTrack }) => {
             Popular Songs
           </button>
 
-          <button
-            className={`tab-button ${activeTab === "all" ? "active" : ""}`}
-            onClick={() => setActiveTab("all")}
-          >
-            All Songs
-          </button>
+          {/* Replace the All Songs button with this */}
+          {isLoggedin && userData?.userId === userId ? (
+            <button
+              className={`tab-button ${activeTab === "manage" ? "active" : ""}`}
+              onClick={() => setActiveTab("manage")}
+            >
+              Manage Songs
+            </button>
+          ) : (
+            <button
+              className={`tab-button ${activeTab === "all" ? "active" : ""}`}
+              onClick={() => setActiveTab("all")}
+            >
+              All Songs
+            </button>
+          )}
 
           <button
             className={`tab-button ${
@@ -606,6 +617,78 @@ const UserProfilePage = ({ setCurrentTrack }) => {
             </div>
           )}
 
+          {activeTab === "manage" &&
+            isLoggedin &&
+            userData?.userId === userId && (
+              <div className="manage-songs-container">
+                {profile.songs && profile.songs.length > 0 ? (
+                  <div className="songs-table-container">
+                    <table className="songs-table">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Title</th>
+                          <th>Genre</th>
+                          <th>Likes</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {profile.songs.map((song, index) => (
+                          <tr key={song._id} className="song-row">
+                            <td className="song-index">{index + 1}</td>
+                            <td className="song-title-cell">
+                              <div className="song-title-container">
+                                <img
+                                  src={`${backendUrl}${song.coverImage}`}
+                                  alt={song.title}
+                                  className="song-thumbnail"
+                                />
+                                <div className="song-title-details">
+                                  <span className="song-title">
+                                    {song.title}
+                                  </span>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="song-genre">
+                              <span className="genre-tag">{song.genre}</span>
+                            </td>
+                            <td className="song-likes">
+                              ♥ {formatNumber(song.likedBy.length)}
+                            </td>
+                            <td className="song-actions">
+                              <button
+                                className="action-button delete-button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedSong(song);
+                                  setShowDeleteModal(true);
+                                }}
+                              >
+                                <img src={assets.delete_icon} alt="Delete" />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="empty-state">
+                    <img src={assets.music_note_icon} alt="No songs" />
+                    <p>No songs uploaded yet</p>
+                    <button
+                      className="upload-cta-button"
+                      onClick={() => navigate("/upload-music")}
+                    >
+                      Upload Your First Track
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
           {activeTab === "public-playlists" && (
             <div className="public-playlists-container">
               {publicPlaylists.length > 0 ? (
@@ -782,6 +865,57 @@ const UserProfilePage = ({ setCurrentTrack }) => {
                   disabled={!newPlaylistName.trim()}
                 >
                   Create
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {showDeleteModal && (
+        <>
+          <div
+            className="modal-backdrop"
+            onClick={() => setShowDeleteModal(false)}
+          />
+          <div className="confirmation-modal">
+            <div className="modal-header">
+              <h3>Delete Song</h3>
+              <button onClick={() => setShowDeleteModal(false)}>×</button>
+            </div>
+            <div className="modal-content">
+              <p>Are you sure you want to delete "{selectedSong?.title}"?</p>
+              <div className="modal-actions">
+                <button
+                  className="cancel-button"
+                  onClick={() => setShowDeleteModal(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="confirm-delete-button"
+                  onClick={async () => {
+                    try {
+                      await axios.delete(
+                        `${backendUrl}/api/songs/${selectedSong._id}`,
+                        {
+                          withCredentials: true,
+                        }
+                      );
+                      setProfile((prev) => ({
+                        ...prev,
+                        songs: prev.songs.filter(
+                          (s) => s._id !== selectedSong._id
+                        ),
+                      }));
+                      setShowDeleteModal(false);
+                      toast.success("Song deleted successfully");
+                    } catch (error) {
+                      toast.error("Failed to delete song");
+                    }
+                  }}
+                >
+                  Delete Permanently
                 </button>
               </div>
             </div>

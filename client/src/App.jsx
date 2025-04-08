@@ -26,6 +26,7 @@ import Layout from "./components/Layout.jsx"; // Import the new Layout component
 import WishlistPage from "./pages/WishlistPage.jsx";
 import ContactPage from "./pages/ContactPage.jsx";
 import BrowsePlaylistsPage from "./pages/BrowsePlaylistsPage.jsx";
+import OrderHistory from "./pages/OrderHistory.jsx";
 
 import "./App.css";
 
@@ -138,6 +139,7 @@ const App = () => {
           <Route path="/artist/:userId/merch" element={<ArtistMerchPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/wishlist" element={<WishlistPage />} />
+          <Route path="/order-history" element={<OrderHistory />} />
           <Route
             path="/playlists/:id"
             element={<PlaylistSongsPage setCurrentTrack={handleTrackChange} />}
