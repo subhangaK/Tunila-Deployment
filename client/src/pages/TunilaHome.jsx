@@ -274,7 +274,7 @@ const TunilaHome = ({ setCurrentTrack }) => {
               promotes new voices while respecting Nepal's rich musical
               heritage.
             </p>
-            <Link to="/login" className="about-cta-btn">
+            <Link to="/home" className="about-cta-btn">
               Start Your Journey
             </Link>
           </motion.div>
@@ -496,75 +496,6 @@ const TunilaHome = ({ setCurrentTrack }) => {
               <p>{feature.description}</p>
             </motion.div>
           ))}
-        </div>
-      </section>
-
-      {/* Testimonials Section with Card Animation */}
-      <section className="tunila-home-testimonials-section">
-        <div className="tunila-home-testimonials-content">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            What Our Community Says
-          </motion.h2>
-          <div className="tunila-home-testimonials-grid">
-            {[
-              {
-                text: "Tunila helped me discover incredible new artists I would have never found elsewhere. The recommendations are spot on!",
-                name: "Balen Shah",
-                role: "Music Enthusiast, Mayor of Kathmandu",
-                avatar: assets.testimonial_avatar1 || "/avatars/user1.jpg",
-              },
-              {
-                text: "As an independent artist, Tunila has given me a platform to share my music with the world and connect with my fans on a deeper level.",
-                name: "Sacar.",
-                role: "Independent Artist and Professional Hater",
-                avatar: assets.testimonial_avatar2 || "/avatars/user2.jpg",
-              },
-              {
-                text: "The merchandise platform made it easy to create and sell custom merch to my fans. It's been a game-changer for my music career.",
-                name: "Uniq Poet",
-                role: "Verified Artist on Tunila",
-                avatar: assets.testimonial_avatar3 || "/avatars/user3.jpg",
-              },
-            ].map((testimonial, index) => (
-              <motion.div
-                key={index}
-                className="tunila-home-testimonial-card"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{
-                  y: -10,
-                  boxShadow: "0 15px 30px rgba(0,0,0,0.1)",
-                  transition: { duration: 0.3 },
-                }}
-              >
-                <div className="tunila-home-quote-mark">"</div>
-                <p className="tunila-home-testimonial-text">
-                  {testimonial.text}
-                </p>
-                <div className="tunila-home-testimonial-author">
-                  <img
-                    src={testimonial.avatar}
-                    alt={testimonial.name}
-                    className="tunila-home-testimonial-avatar"
-                    loading="lazy"
-                  />
-                  <div>
-                    <p className="tunila-home-author-name">
-                      {testimonial.name}
-                    </p>
-                    <p className="tunila-home-author-role">
-                      {testimonial.role}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
 

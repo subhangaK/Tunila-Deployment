@@ -17,12 +17,10 @@ export const submitContactForm = async (req, res) => {
     });
 
     await newContact.save();
-    res
-      .status(201)
-      .json({
-        success: true,
-        message: "Your message has been sent successfully!",
-      });
+    res.status(201).json({
+      success: true,
+      message: "Your message has been sent successfully!",
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

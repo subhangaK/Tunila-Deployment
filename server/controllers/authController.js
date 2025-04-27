@@ -33,12 +33,12 @@ export const register = async (req, res) => {
     );
 
     res.cookie("token", token, {
-      httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
-      secure: true, // Always true in production (cookies only sent over HTTPS)
-      sameSite: "none", // Always 'none' for cross-site cookies
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
       domain:
-        process.env.NODE_ENV === "production" ? ".onrender.com" : undefined, // Set domain for production
+        process.env.NODE_ENV === "production" ? ".onrender.com" : undefined,
     });
 
     // Sending welcome email

@@ -123,14 +123,28 @@ const Login = () => {
 
         <div className="login-switch-state">
           {state === "Sign Up" ? (
-            <p>
-              Already have an account?{" "}
-              <span onClick={() => setState("Login")}>Login</span>
-            </p>
+            <div>
+              {" "}
+              <p>
+                Already have an account?{" "}
+                <span onClick={() => setState("Login")}>Login</span>
+              </p>
+              <p>
+                Need Help?{" "}
+                <span onClick={() => navigate("/contact")}>Contact Us</span>
+              </p>
+            </div>
           ) : (
-            <p>
-              New here? <span onClick={() => setState("Sign Up")}>Sign Up</span>
-            </p>
+            <div>
+              <p>
+                New here?{" "}
+                <span onClick={() => setState("Sign Up")}>Sign Up</span>
+              </p>
+              <p>
+                Need Help?{" "}
+                <span onClick={() => navigate("/contact")}>Contact Us</span>
+              </p>
+            </div>
           )}
         </div>
       </div>

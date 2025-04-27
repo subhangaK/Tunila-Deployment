@@ -356,10 +356,10 @@ const MerchStore = () => {
                   merchandise
                 </p>
                 <div className="merch-cta-buttons">
-                  <Link to="/register" className="merch-cta-button primary">
-                    Sign Up Now
-                  </Link>
-                  <Link to="/artists" className="merch-cta-button secondary">
+                  <Link
+                    to="/featured-artists"
+                    className="merch-cta-button secondary"
+                  >
                     Explore Artists
                   </Link>
                 </div>
