@@ -29,23 +29,23 @@ function Footer() {
             <h3 className="footer-column-title">Company</h3>
             <ul className="footer-link-list">
               <li onClick={() => navigate("/contact")}>Contact Us</li>
-              <li onClick={() => navigate("/press")}>Press</li>
+              <li onClick={() => navigate("/contact")}>Press</li>
             </ul>
           </div>
 
           <div className="footer-links-column">
             <h3 className="footer-column-title">Community</h3>
             <ul className="footer-link-list">
-              <li onClick={() => navigate("/artists")}>For Artists</li>
-              <li onClick={() => navigate("/developers")}>Developers</li>
+              <li onClick={() => navigate("/contact")}>For Artists</li>
+              <li onClick={() => navigate("/contact")}>Developers</li>
             </ul>
           </div>
 
           <div className="footer-links-column">
             <h3 className="footer-column-title">Support</h3>
             <ul className="footer-link-list">
-              <li onClick={() => navigate("/help")}>Help Center</li>
-              <li onClick={() => navigate("/account")}>Account</li>
+              <li onClick={() => navigate("/contact")}>Help Center</li>
+              <li onClick={() => navigate("/contact")}>Account</li>
               <li onClick={() => navigate("/contact")}>Contact Us</li>
             </ul>
           </div>
