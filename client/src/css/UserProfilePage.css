@@ -778,10 +778,6 @@
   padding: 20px 0;
 }
 
-.delete-button {
-  background-color: #ffe6e6;
-}
-
 .delete-button:hover {
   background-color: #ffcccc;
 }
@@ -789,8 +785,6 @@
 .delete-button img {
   width: 18px;
   height: 18px;
-  filter: invert(26%) sepia(74%) saturate(2599%) hue-rotate(337deg)
-    brightness(98%) contrast(91%);
 }
 
 /* Confirmation Modal */

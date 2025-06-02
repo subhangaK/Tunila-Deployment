@@ -70,11 +70,6 @@ const UploadMusic = () => {
       setArtist(userData?.name || "");
       setGenre("");
       setFileName("");
-
-      // Navigate back to the home page after successful upload
-      setTimeout(() => {
-        navigate("/");
-      }, 3000);
     } catch (error) {
       toast.error("Failed to upload music. Please try again.", {
         position: "top-right",
