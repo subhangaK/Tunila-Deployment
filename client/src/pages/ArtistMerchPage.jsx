@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AppContext } from "../context/AppContext";
 import MerchItem from "../components/MerchItem";
@@ -11,6 +11,7 @@ import { assets } from "../assets/assets";
 
 const ArtistMerchPage = () => {
   const { userId } = useParams();
+  const navigate = useNavigate();
   const { backendUrl, userData, isLoggedin } = useContext(AppContext);
   const [merch, setMerch] = useState([]);
   const [artist, setArtist] = useState(null);
@@ -63,7 +64,7 @@ const ArtistMerchPage = () => {
     toast.success("New merchandise added successfully!");
   };
 
-  const handleItemClick = () => {
+  const handleItemClick = (item) => {
     navigate(`/merch/${item._id}`);
   };
 
@@ -105,14 +106,23 @@ const ArtistMerchPage = () => {
               </p>
             </div>
           </div>
-
           {isCurrentArtist && (
-            <button
-              onClick={() => setShowForm(!showForm)}
-              className="add-merch-button"
-            >
-              {showForm ? "Cancel" : "Add New Merchandise"}
-            </button>
+            <div className="artist-actions">
+              <button
+                onClick={() => setShowForm(!showForm)}
+                className="add-merch-button"
+              >
+                {showForm ? "Cancel" : "Add New Merchandise"}
+              </button>
+              {merch.length > 0 && (
+                <button
+                  onClick={() => navigate(`/artist/${userId}/manage-merch`)}
+                  className="manage-merch-button"
+                >
+                  Manage Merch
+                </button>
+              )}
+            </div>
           )}
         </div>
 
@@ -150,7 +160,7 @@ const ArtistMerchPage = () => {
           <div className="merch-grid">
             {filteredMerch.map((item) => (
               <MerchItem
-                onClick={handleItemClick}
+                onClick={() => handleItemClick(item)}
                 key={item._id}
                 item={item}
                 isOwner={isCurrentArtist}

@@ -1,8 +1,8 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
 import { toast } from "react-toastify";
 
-const MerchForm = ({ setShowForm }) => {
+const MerchForm = ({ setShowForm, onSuccess, item, isEditMode = false }) => {
   const { backendUrl, isLoggedin, userData } = useContext(AppContext);
   const [preview, setPreview] = useState([]);
   const [formData, setFormData] = useState({
@@ -14,6 +14,20 @@ const MerchForm = ({ setShowForm }) => {
     stock: 1,
   });
   const [isDragging, setIsDragging] = useState(false);
+
+  useEffect(() => {
+    if (isEditMode && item) {
+      setFormData({
+        name: item.name,
+        description: item.description,
+        price: item.price,
+        type: item.type,
+        stock: item.stock,
+        images: [],
+      });
+      setPreview(item.images.map((img) => `${backendUrl}${img}`));
+    }
+  }, [item, isEditMode, backendUrl]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +41,6 @@ const MerchForm = ({ setShowForm }) => {
       return;
     }
 
-    // Check if user has permission to sell
     if (!userData?.canSellMerch) {
       toast.error("You are not authorized to sell items.");
       return;
@@ -50,30 +63,51 @@ const MerchForm = ({ setShowForm }) => {
     }
 
     try {
-      const response = await fetch(`${backendUrl}/api/merch`, {
-        method: "POST",
-        credentials: "include", // This ensures cookies are sent with the request
+      const url = isEditMode
+        ? `${backendUrl}/api/merch/${item._id}`
+        : `${backendUrl}/api/merch`;
+      const method = isEditMode ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method,
+        credentials: "include",
         body: formDataToSend,
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        toast.success("Item listed successfully!");
+        toast.success(
+          isEditMode
+            ? "Item updated successfully!"
+            : "Item listed successfully!"
+        );
+        onSuccess(data.merch || data);
         setShowForm(false);
-        window.location.reload(); // Refresh the page to show the new item
+        if (!isEditMode) {
+          window.location.reload();
+        }
       } else {
-        toast.error(data.message || "Failed to create merchandise");
-        console.error("Failed to create merchandise:", data);
+        toast.error(
+          data.message ||
+            `Failed to ${isEditMode ? "update" : "create"} merchandise`
+        );
+        console.error(
+          `Failed to ${isEditMode ? "update" : "create"} merchandise:`,
+          data
+        );
       }
     } catch (error) {
-      toast.error("Error creating merchandise");
-      console.error("Error creating merchandise:", error);
+      toast.error(`Error ${isEditMode ? "updating" : "creating"} merchandise`);
+      console.error(
+        `Error ${isEditMode ? "updating" : "creating"} merchandise:`,
+        error
+      );
     }
   };
 
   const handleFileChange = (e) => {
-    const files = Array.from(e.target.files); // Convert FileList to array
+    const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
     handleImageFiles(files);
@@ -146,7 +180,7 @@ const MerchForm = ({ setShowForm }) => {
       toast.error("Please enter a valid stock quantity");
       return false;
     }
-    if (!formData.images.length) {
+    if (!isEditMode && !formData.images.length) {
       toast.error("Please upload at least one image");
       return false;
     }
@@ -155,7 +189,7 @@ const MerchForm = ({ setShowForm }) => {
 
   return (
     <form onSubmit={handleSubmit} className="merch-form fade-in">
-      <h2>List New Merchandise</h2>
+      <h2>{isEditMode ? "Edit Merchandise" : "List New Merchandise"}</h2>
 
       <label htmlFor="item-name">Item Name</label>
       <input
@@ -227,7 +261,7 @@ const MerchForm = ({ setShowForm }) => {
           multiple
           onChange={handleFileChange}
           accept="image/*"
-          required={formData.images.length === 0}
+          required={!isEditMode && formData.images.length === 0}
         />
         <p>Drag & drop images here or click to browse</p>
       </div>
@@ -250,7 +284,9 @@ const MerchForm = ({ setShowForm }) => {
       )}
 
       <div className="form-actions">
-        <button type="submit">List Item</button>
+        <button type="submit">
+          {isEditMode ? "Update Item" : "List Item"}
+        </button>
         <button
           type="button"
           onClick={() => setShowForm(false)}

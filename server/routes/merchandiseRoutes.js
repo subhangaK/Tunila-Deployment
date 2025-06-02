@@ -1,4 +1,3 @@
-// routes/merchandiseRoutes.js
 import express from "express";
 import {
   createMerchandise,
@@ -10,6 +9,9 @@ import {
   getMerchandiseByArtist,
   getWishlistedMerchandise,
   getOrderHistory,
+  updateMerchandise,
+  deleteMerchandise,
+  getAllMerchandiseByArtist,
 } from "../controllers/merchandiseController.js";
 import userAuth from "../middleware/userAuth.js";
 import multer from "multer";
@@ -31,10 +33,12 @@ router.post("/", userAuth, upload.array("images", 5), createMerchandise);
 router.get("/", getAllMerchandise);
 router.get("/:id", getMerchandiseById);
 router.post("/:id/wishlist", userAuth, addToWishlist);
-
+router.put("/:id", userAuth, upload.array("images", 5), updateMerchandise);
+router.delete("/:id", userAuth, deleteMerchandise);
 router.post("/payment/initiate", userAuth, initiatePayment);
 router.get("/payment/verify", verifyPayment);
 router.get("/artist/:userId", getMerchandiseByArtist);
+router.get("/artist/:userId/all", userAuth, getAllMerchandiseByArtist);
 router.get("/wishlist/my-items", userAuth, getWishlistedMerchandise);
 router.get("/orders/history", userAuth, getOrderHistory);
 

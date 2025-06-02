@@ -8,6 +8,8 @@ import {
   PURCHASE_CONFIRMATION_TEMPLATE,
   ARTIST_SALE_TEMPLATE,
 } from "../config/emailTemplates.js";
+import fs from "fs";
+import path from "path";
 
 const KHALTI_SECRET_KEY = process.env.KHALTI_SECRET_KEY;
 const KHALTI_BASE_URL = "https://a.khalti.com/api/v2";
@@ -52,6 +54,96 @@ export const createMerchandise = async (req, res) => {
   }
 };
 
+// Update merchandise
+export const updateMerchandise = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    const merch = await Merchandise.findById(req.params.id);
+
+    if (!user || !merch) {
+      return res.status(404).json({ message: "User or Merchandise not found" });
+    }
+
+    if (merch.artist.toString() !== req.userId) {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized to edit this item" });
+    }
+
+    const { name, description, price, type, stock } = req.body;
+
+    // Update fields
+    merch.name = name || merch.name;
+    merch.description = description || merch.description;
+    merch.price = price || merch.price;
+    merch.type = type || merch.type;
+    merch.stock = stock !== undefined ? stock : merch.stock;
+
+    // Handle new images if provided
+    if (req.files && req.files.length > 0) {
+      // Delete old images from server
+      merch.images.forEach((image) => {
+        const imagePath = path.join(process.cwd(), image);
+        if (fs.existsSync(imagePath)) {
+          fs.unlinkSync(imagePath);
+        }
+      });
+
+      // Add new images
+      merch.images = req.files.map((file) => `/uploads/merch/${file.filename}`);
+    }
+
+    await merch.save();
+    res.json({
+      success: true,
+      message: "Merchandise updated successfully",
+      merch,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Delete merchandise
+export const deleteMerchandise = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    const merch = await Merchandise.findById(req.params.id);
+
+    if (!user || !merch) {
+      return res.status(404).json({ message: "User or Merchandise not found" });
+    }
+
+    if (merch.artist.toString() !== req.userId) {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized to delete this item" });
+    }
+
+    // Delete images from server
+    merch.images.forEach((image) => {
+      const imagePath = path.join(process.cwd(), image);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    });
+
+    // Remove from user's merchItems
+    user.merchItems = user.merchItems.filter(
+      (item) => item.toString() !== merch._id.toString()
+    );
+    await user.save();
+
+    // Delete the merchandise
+    await Merchandise.deleteOne({ _id: merch._id });
+
+    res.json({ success: true, message: "Merchandise deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// ... (rest of the existing controller functions remain unchanged)
 // Initiate Khalti payment
 export const initiatePayment = async (req, res) => {
   try {
@@ -103,7 +195,7 @@ export const initiatePayment = async (req, res) => {
     await Transaction.create({
       merch: merchId,
       quantity,
-      price: merch.price, // Add this line
+      price: merch.price,
       buyer: req.userId,
       artist: merch.artist,
       pidx: response.data.pidx,
@@ -305,7 +397,7 @@ export const getMerchandiseByArtist = async (req, res) => {
   try {
     const merchItems = await Merchandise.find({
       artist: req.params.userId,
-      stock: { $gt: 0 }, // Only include items with stock > 0
+      stock: { $gt: 0 },
     }).lean();
 
     if (merchItems.length > 0) {
@@ -326,6 +418,38 @@ export const getMerchandiseByArtist = async (req, res) => {
     }
   } catch (error) {
     console.error("Error fetching merchandise by artist:", error);
+    res.status(500).json({
+      message: "Failed to fetch merchandise",
+      error: error.message,
+    });
+  }
+};
+
+// Get all merchandise by artist (including zero stock for manage page)
+export const getAllMerchandiseByArtist = async (req, res) => {
+  try {
+    const merchItems = await Merchandise.find({
+      artist: req.params.userId,
+    }).lean();
+
+    if (merchItems.length > 0) {
+      const artistId = merchItems[0].artist;
+      const artist = await User.findById(
+        artistId,
+        "name profilePicture"
+      ).lean();
+
+      const populatedMerch = merchItems.map((item) => ({
+        ...item,
+        artist: artist || null,
+      }));
+
+      res.status(200).json(populatedMerch);
+    } else {
+      res.status(200).json([]);
+    }
+  } catch (error) {
+    console.error("Error fetching all merchandise by artist:", error);
     res.status(500).json({
       message: "Failed to fetch merchandise",
       error: error.message,
@@ -378,14 +502,14 @@ export const getOrderHistory = async (req, res) => {
     const formattedTransactions = transactions.map((transaction) => ({
       _id: transaction._id,
       merch: {
-        _id: transaction.merch._id, // Make sure this is included
+        _id: transaction.merch._id,
         name: transaction.merch.name,
         image: transaction.merch.images[0],
         artist: transaction.merch.artist.name,
         artistProfile: transaction.merch.artist.profilePicture,
       },
       quantity: transaction.quantity,
-      price: transaction.price, // Use the stored price
+      price: transaction.price,
       total: transaction.price * transaction.quantity,
       purchaseDate: transaction.createdAt,
     }));

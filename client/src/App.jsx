@@ -27,6 +27,8 @@ import WishlistPage from "./pages/WishlistPage.jsx";
 import ContactPage from "./pages/ContactPage.jsx";
 import BrowsePlaylistsPage from "./pages/BrowsePlaylistsPage.jsx";
 import OrderHistory from "./pages/OrderHistory.jsx";
+import TunilaFAQ from "./pages/TunilaFAQ.jsx";
+import ManageMerchPage from "./pages/ManageMerchPage";
 
 import "./App.css";
 
@@ -140,6 +142,11 @@ const App = () => {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/order-history" element={<OrderHistory />} />
+          <Route
+            path="/artist/:userId/manage-merch"
+            element={<ManageMerchPage />}
+          />
+          <Route path="/faq" element={<TunilaFAQ />} />
           <Route
             path="/playlists/:id"
             element={<PlaylistSongsPage setCurrentTrack={handleTrackChange} />}
