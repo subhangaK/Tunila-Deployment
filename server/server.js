@@ -20,7 +20,7 @@ const port = process.env.PORT || 4000;
 connectDB();
 
 // Middleware
-const allowedOrigins = ["http://localhost:5173", "http://localhost:3000"]; // Frontend allowed origins
+const allowedOrigins = ["https://tunila.netlify.app", "http://localhost:3000"]; // Frontend allowed origins
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: allowedOrigins, credentials: true }));
