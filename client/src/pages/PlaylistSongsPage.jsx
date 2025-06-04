@@ -115,7 +115,10 @@ const PlaylistSongsPage = ({ setCurrentTrack }) => {
           return updated;
         });
       } else {
-        await axios.post(`${backendUrl}/api/songs/like`, { userId, songId });
+        await axios.post(`${backendUrl}/api/songs/like`, {
+          userId,
+          songId,
+        });
         setLikedSongs((prevLiked) => new Set(prevLiked).add(songId));
       }
     } catch (error) {

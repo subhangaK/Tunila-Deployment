@@ -168,8 +168,8 @@ export const initiatePayment = async (req, res) => {
     }
 
     const payload = {
-      return_url: `${process.env.FRONTEND_URL}/payment-verify`,
-      website_url: process.env.FRONTEND_URL,
+      return_url: "https://tunila.netlify.app/payment-verify",
+      website_url: "https://tunila.netlify.app",
       amount: Math.round(merch.price * 100) * quantity,
       purchase_order_id: `TUNILA_${Date.now()}`,
       purchase_order_name: merch.name,
@@ -240,7 +240,7 @@ export const verifyPayment = async (req, res) => {
       if (!transaction) throw new Error("Transaction not found");
 
       if (transaction.status === "completed") {
-        return res.redirect(`${process.env.FRONTEND_URL}/payment-success`);
+        return res.redirect("https://tunila.netlify.app/payment-success");
       }
 
       // Deduct stock only after successful payment verification
@@ -289,9 +289,9 @@ export const verifyPayment = async (req, res) => {
       await transporter.sendMail(buyerMailOptions);
       await transporter.sendMail(artistMailOptions);
 
-      return res.redirect(`${process.env.FRONTEND_URL}/payment-success`);
+      return res.redirect("https://tunila.netlify.app/payment-success");
     } else {
-      return res.redirect(`${process.env.FRONTEND_URL}/payment-failed`);
+      return res.redirect("https://tunila.netlify.app/payment-failed");
     }
   } catch (error) {
     console.error("Payment verification error:", error);

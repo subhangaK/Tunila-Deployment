@@ -101,7 +101,7 @@ export const deactivateUser = async (req, res) => {
       html: ACCOUNT_DEACTIVATION_TEMPLATE.replace(
         "{{name}}",
         user.name
-      ).replace("{{contactLink}}", `${process.env.FRONTEND_URL}/contact-us`),
+      ).replace("{{contactLink}}", "https://tunila.netlify.app/contact-us"),
     };
 
     await transporter.sendMail(mailOptions);
@@ -150,7 +150,7 @@ export const reactivateUser = async (req, res) => {
       html: ACCOUNT_REACTIVATION_TEMPLATE.replace(
         "{{name}}",
         user.name
-      ).replace("{{contactLink}}", `${process.env.FRONTEND_URL}/contact-us`),
+      ).replace("{{contactLink}}", "https://tunila.netlify.app/contact-us"),
     };
 
     await transporter.sendMail(mailOptions);

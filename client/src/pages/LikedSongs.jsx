@@ -72,7 +72,10 @@ const LikedSongs = ({ setCurrentTrack }) => {
   const handleUnlike = async (songId, e) => {
     e.stopPropagation();
     try {
-      await axios.post(`${backendUrl}/api/songs/unlike`, { userId, songId });
+      await axios.post(`${backendUrl}/api/songs/unlike`, {
+        userId,
+        songId,
+      });
       setLikedSongs((prevLiked) =>
         prevLiked.filter((song) => song._id !== songId)
       );
